@@ -5,6 +5,12 @@ from math import *
 import os
 import simple_generators as G
 
+# here we define the list of bits to choose from:
+#   6.35mm = 1/4"
+#   11.135mm = 7/16"
+bits = (6.35, 11.135)
+default_safe_Z = 100
+default_feed_rate = 1000
 
 # what's this for ?
 IN_AXIS = os.environ.has_key("AXIS_PROGRESS_BAR")
@@ -53,7 +59,7 @@ class Application(Frame):
         self.Z_safe_var = StringVar()
         self.Z_safe = Entry(self.EntryFrame, textvariable=self.Z_safe_var ,width=15)
         self.Z_safe.grid(row=1, column=1)
-        self.Z_safe.insert(0, 100)
+        self.Z_safe.insert(0, default_safe_Z)
 
         self.st02 = Label(self.EntryFrame, text='Stock thickness')
         self.st02.grid(row=2, column=0)
@@ -70,7 +76,7 @@ class Application(Frame):
         self.st04 = Label(self.EntryFrame, text='Cutter diameter')
         self.st04.grid(row=4, column=0)
         self.bit_diameter_var = IntVar()
-        self.bit_diameter = Spinbox(self.EntryFrame, values=(6.35, 11.135), width=13)
+        self.bit_diameter = Spinbox(self.EntryFrame, values=bits, width=13)
         self.bit_diameter.grid(row=4, column=1)
 
         self.st05 = Label(self.EntryFrame, text='Hole diameter')
@@ -84,7 +90,7 @@ class Application(Frame):
         self.feed_rate_var = StringVar()
         self.feed_rate = Entry(self.EntryFrame, textvariable=self.feed_rate_var ,width=15)
         self.feed_rate.grid(row=6, column=1)
-        self.feed_rate.insert(0, 1000)
+        self.feed_rate.insert(0, default_feed_rate)
 
 
     def GenerateCode(self):
