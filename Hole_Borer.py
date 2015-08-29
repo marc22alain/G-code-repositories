@@ -40,7 +40,7 @@ class Application(Frame):
 
         # not sure about this behaviour
         if IN_AXIS:
-            self.quitButton = Button(self, text='Write to AXIS and Quit',\
+            self.printButton = Button(self, text='Write to AXIS and Quit',\
                 command=self.WriteToAxis)
         else:
             self.printButton = Button(self, text='Print', command=self.Print)
