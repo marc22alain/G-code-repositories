@@ -18,7 +18,7 @@ def bore_hole(Z_safe, stock_thickness, max_cut, cutter_diameter,
     file_text += G.G0_Z(Z_safe)
     # XY-plane move to starting point
     file_text += G.set_INCR_mode()
-    file_text += G.G0_to((-off_set, 0))
+    file_text += G.G0_XY((-off_set, 0))
     # Z-axis move to starting point
     file_text += G.set_ABS_mode()
     file_text += G.G0_Z(stock_thickness)
