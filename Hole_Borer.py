@@ -75,8 +75,8 @@ class Application(Frame):
 
         self.st04 = Label(self.EntryFrame, text='Cutter diameter')
         self.st04.grid(row=4, column=0)
-        self.bit_diameter_var = IntVar()
-        self.bit_diameter = Spinbox(self.EntryFrame, values=bits, width=13)
+        self.bit_diameter_var = DoubleVar()
+        self.bit_diameter = Spinbox(self.EntryFrame, values=bits, textvariable=self.bit_diameter_var, width=13)
         self.bit_diameter.grid(row=4, column=1)
 
         self.st05 = Label(self.EntryFrame, text='Hole diameter')

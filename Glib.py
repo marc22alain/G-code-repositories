@@ -4,7 +4,7 @@ The purpose of this library is simple: provide G-code functions.
 """
 
 
-def G0_to(point):
+def G0_XY(point):
     '''
     Takes a tuple, returns a string;
     goes to (X,Y), not Z
@@ -12,7 +12,7 @@ def G0_to(point):
     return 'G0 X' + str(point[0]) + ' Y' + str(point[1]) + ' \n'
 
 
-def G1_to(point):
+def G1_XY(point):
     '''
     Takes a tuple, returns a string;
     almost same as above
