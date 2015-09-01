@@ -1,0 +1,26 @@
+What next?
+
+What dogfood do you need to prepare?
+
+What programs would be useful to have now?
+
+1. Cutting basic grooves
+	-lines
+	-curves defined many ways: radius, chord height
+	-three radio buttons: cut left/right/center... interface explains whether this means -X, =X, +X, or -Y, =Y, +Y; depends on the axis with most delta
+
+2. Cutting arbitrary outlines
+	-straight lines first
+	-then include curves
+
+3. Modify programs to make retention tabs	
+	-add a check box that modifies the behavior of the last cut
+
+4. Modify programs to do some input checking!
+	-sane values
+	-numbers not text
+	-should happen in the wizard
+
+5. Write program to drill multiple holes, defining a series or pattern of locations
+
+6. Extend Glib.py to include more of the G-codes used by LinuxCNC
