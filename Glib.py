@@ -124,4 +124,4 @@ def set_dwell(time):
     Takes a float representing seconds, returns a string.
     Sets the dwell time. G4.
     '''
-    return 'G4 ' + str(time) + ' \n'
+    return 'G4 P' + str(time) + ' \n'
