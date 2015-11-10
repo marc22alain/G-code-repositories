@@ -63,13 +63,13 @@ class Application(Frame):
 
         self.st02 = Label(self.EntryFrame, text='Stock thickness')
         self.st02.grid(row=2, column=0)
-        self.stock_thickness_var = IntVar()
+        self.stock_thickness_var = DoubleVar()
         self.stock_thickness = Entry(self.EntryFrame, textvariable=self.stock_thickness_var ,width=15)
         self.stock_thickness.grid(row=2, column=1)
 
         self.st03 = Label(self.EntryFrame, text='Maximum depth of cut')
         self.st03.grid(row=3, column=0)
-        self.cut_depth_var = IntVar()
+        self.cut_depth_var = DoubleVar()
         self.cut_depth = Entry(self.EntryFrame, textvariable=self.cut_depth_var ,width=15)
         self.cut_depth.grid(row=3, column=1)
 
@@ -81,7 +81,7 @@ class Application(Frame):
 
         self.st05 = Label(self.EntryFrame, text='Hole diameter')
         self.st05.grid(row=5, column=0)
-        self.hole_diameter_var = IntVar()
+        self.hole_diameter_var = DoubleVar()
         self.hole_diameter = Entry(self.EntryFrame, textvariable=self.hole_diameter_var ,width=15)
         self.hole_diameter.grid(row=5, column=1)
 
