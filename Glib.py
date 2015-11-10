@@ -125,3 +125,9 @@ def set_dwell(time):
     Sets the dwell time. G4.
     '''
     return 'G4 P' + str(time) + ' \n'
+
+def endProgram():
+    '''
+    Ends the program with an M2
+    '''
+    return 'M2 \n'

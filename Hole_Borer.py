@@ -100,6 +100,7 @@ class Application(Frame):
                           self.bit_diameter_var.get(),
                           self.hole_diameter_var.get(),
                           int(self.feed_rate_var.get()))
+        self.g_code = self.g_code + G.endProgram()
 
 
     def Print(self):

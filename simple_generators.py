@@ -33,8 +33,15 @@ def bore_hole(Z_safe, stock_thickness, max_cut, cutter_diameter,
         file_text += G.G2XY_to_INCR_FULL((0,0),(off_set, 0))
     # At end of cut, ensures that the program reaches the very bottom
     file_text += G.set_dwell(0.5)
+    # Then put the bit back to (0,0)
+    file_text += G.G0_XY((off_set, 0))
     # Z-axis move
     file_text += G.set_ABS_mode()
     file_text += G.G0_Z(Z_safe)
-    file_text += 'M2 \n'
     return file_text
+
+def endProgram():
+    '''
+    Ends the program with an M2
+    '''
+    return 'M2 \n'
