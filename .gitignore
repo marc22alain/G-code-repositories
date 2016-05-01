@@ -1,2 +1,6 @@
 
 *.pyc
+*.ngc
+
+cable_car_1.py
+cable_car_2.py
