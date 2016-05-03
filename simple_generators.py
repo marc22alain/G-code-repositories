@@ -4,13 +4,13 @@ accessed in the AXIS GUI.
 """
 import Glib as G
 
-def bore_hole(Z_safe, stock_thickness, max_cut, cutter_diameter,
-              hole_diameter, feed_rate):
+def bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter, circle_diameter, feed_rate):
     '''use G2; from specified diameter and thickness;
        cutter compensation in function.
        Note that this method mixes ABSOLUTE with INCREMENTAL modes:
        all moves in XY are in INCR and all moves in Z are ABS.'''
-    off_set = (hole_diameter  - cutter_diameter) / 2
+    off_set = (circle_diameter  - cutter_diameter) / 2
 
 ##    G.set_Z_safe(Z_safe)
 
@@ -22,10 +22,10 @@ def bore_hole(Z_safe, stock_thickness, max_cut, cutter_diameter,
     # Z-axis move to starting point
     file_text += G.set_ABS_mode()
     file_text += G.G0_Z(stock_thickness)
-    while stock_thickness > 0:
-        stock_thickness -= max_cut
-        if stock_thickness < 0:
-            stock_thickness = 0
+    while stock_thickness > target_depth:
+        stock_thickness -= cut_per_pass
+        if stock_thickness < target_depth:
+            stock_thickness = target_depth
         # Z-axis move 
         file_text += G.set_ABS_mode()
         file_text += G.G1_Z(stock_thickness)
@@ -39,6 +39,33 @@ def bore_hole(Z_safe, stock_thickness, max_cut, cutter_diameter,
     file_text += G.set_ABS_mode()
     file_text += G.G0_Z(Z_safe)
     return file_text
+
+
+def bore_circle_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter, circle_diameter, feed_rate):
+    ''' TODO: error check the off-set calculation.'''
+    off_set_hole_diam = circle_diameter  + (2 * cutter_diameter)
+    return bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter,off_set_hole_diam, feed_rate)
+
+
+def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter, circle_diameter, feed_rate):
+    ''' Cut three tabs.'''
+    off_set = (circle_diameter  - cutter_diameter) / 2
+    file_text = "% cutting bore_tabbed_ID \n"
+    file_text += G.G0_Z(Z_safe)
+    return file_text
+
+
+def bore_tabbed_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter, circle_diameter, feed_rate):
+    ''' TODO: leverage the bore_tabbed_ID.'''
+    off_set_hole_diam = circle_diameter  + cutter_diameter
+    file_text = "% cutting bore_tabbed_ID \n"
+    file_text += G.G0_Z(Z_safe)
+    return file_text
+
 
 def endProgram():
     '''
