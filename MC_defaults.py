@@ -4,3 +4,4 @@
 bits = (6.35, 11.135)
 default_safe_Z = 100
 default_feed_rate = 1000
+default_tab_width = 6.35

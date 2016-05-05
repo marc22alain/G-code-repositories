@@ -4,14 +4,8 @@ from Tkinter import *
 from math import *
 import os
 import simple_generators as G
+import MC_defaults as MC
 
-# here we define the list of bits to choose from:
-#   6.35mm = 1/4"
-#   11.135mm = 7/16"
-bits = (6.35, 11.135)
-default_safe_Z = 100
-default_feed_rate = 1000
-default_tab_width = 6.35
 
 # what's this for ?
 IN_AXIS = os.environ.has_key("AXIS_PROGRESS_BAR")
@@ -49,7 +43,7 @@ class Application(Frame):
         self.feed_rate_var = StringVar()
         self.feed_rate_input = Entry(self.EntryFrame, textvariable=self.feed_rate_var ,width=15)
         self.feed_rate_input.grid(row=1, column=1)
-        self.feed_rate_input.insert(0, default_feed_rate)
+        self.feed_rate_input.insert(0, MC.default_feed_rate)
 
         # row = 2
         self.Z_safe_label = Label(self.EntryFrame, text='Safe Z travel height')
@@ -57,7 +51,7 @@ class Application(Frame):
         self.Z_safe_var = StringVar()
         self.Z_safe_input = Entry(self.EntryFrame, textvariable=self.Z_safe_var ,width=15)
         self.Z_safe_input.grid(row=2, column=1)
-        self.Z_safe_input.insert(0, default_safe_Z)
+        self.Z_safe_input.insert(0, MC.default_safe_Z)
 
         # row = 3
         self.cut_per_pass_label = Label(self.EntryFrame, text='Maximum cut per pass')
@@ -70,7 +64,7 @@ class Application(Frame):
         self.bit_diameter_label = Label(self.EntryFrame, text='Cutter diameter')
         self.bit_diameter_label.grid(row=4, column=0)
         self.bit_diameter_var = DoubleVar()
-        self.bit_diameter_input = Spinbox(self.EntryFrame, values=bits, textvariable=self.bit_diameter_var, width=13)
+        self.bit_diameter_input = Spinbox(self.EntryFrame, values=MC.bits, textvariable=self.bit_diameter_var, width=13)
         self.bit_diameter_input.grid(row=4, column=1)
 
         # row = 5
@@ -93,7 +87,7 @@ class Application(Frame):
         self.tab_width_var = StringVar()
         self.tab_width_input = Entry(self.EntryFrame, textvariable=self.tab_width_var ,width=15)
         self.tab_width_input.grid(row=7, column=1)
-        self.tab_width_input.insert(0, default_tab_width)
+        self.tab_width_input.insert(0, MC.default_tab_width)
 
         # row = 8
         self.doughnut_OD_label = Label(self.EntryFrame, text='Doughnut OD')
@@ -141,7 +135,7 @@ class Application(Frame):
                           0,
                           self.bit_diameter_var.get(),
                           self.doughnut_ID_var.get(),
-                          self.tab_width_var.get())
+                          float(self.tab_width_var.get()))
         self.g_code += G.bore_circle_OD(int(self.Z_safe_var.get()),
                           self.stock_thickness_var.get(),
                           self.cut_per_pass_var.get(),
@@ -154,7 +148,7 @@ class Application(Frame):
                           0,
                           self.bit_diameter_var.get(),
                           self.doughnut_OD_var.get(),
-                          self.tab_width_var.get())    
+                          float(self.tab_width_var.get()))
         self.g_code += G.endProgram()
 
 
