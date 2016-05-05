@@ -8,47 +8,48 @@ assert cwd[-6:] == "/tests", "directory locations don't match"
 sys.path.append(cwd[0:-6])
 import simple_generators as sg
 
+
 class Test_bore_hole(unittest.TestCase):
 
     def basic_match1(self):
-        return "F1000 \nG0 Z100 \nG91 \nG0 X-1.825 Y0 \nG90 \nG0 Z4 \nG90 \nG1 Z1 \nG91 G17 G2 X0 Y0 I1.825 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I1.825 J0 P1 \nG4 P0.5 \nG0 X1.825 Y0 \nG90 \nG0 Z100 \n"
+        return "G90 \nG0 Z100 \nG91 \nG0 X-1.825 Y0 \nG90 \nG0 Z4 \nG90 \nG1 Z1 \nG91 G17 G2 X0 Y0 I1.825 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I1.825 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X1.825 Y0 \n"
 
     def basic_match2(self):
-        return "F50 \nG0 Z100 \nG91 \nG0 X-4.5 Y0 \nG90 \nG0 Z1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG4 P0.5 \nG0 X4.5 Y0 \nG90 \nG0 Z100 \n"
+        return "G90 \nG0 Z100 \nG91 \nG0 X-4.5 Y0 \nG90 \nG0 Z1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X4.5 Y0 \n"
 
     def basic_match3(self):
-        return "F50 \nG0 Z100 \nG91 \nG0 X-4.5 Y0 \nG90 \nG0 Z5 \nG90 \nG1 Z4 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z3 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z2 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z1 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG4 P0.5 \nG0 X4.5 Y0 \nG90 \nG0 Z100 \n"
+        return "G90 \nG0 Z100 \nG91 \nG0 X-4.5 Y0 \nG90 \nG0 Z5 \nG90 \nG1 Z4 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z3 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z2 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z1 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X4.5 Y0 \n"
 
     def basic_match4(self):
-        return "F50 \nG0 Z100 \nG91 \nG0 X-4.2 Y0 \nG90 \nG0 Z3.5 \nG90 \nG1 Z2.3 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG90 \nG1 Z1.1 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG4 P0.5 \nG0 X4.2 Y0 \nG90 \nG0 Z100 \n"
+        return "G90 \nG0 Z100 \nG91 \nG0 X-4.2 Y0 \nG90 \nG0 Z3.5 \nG90 \nG1 Z2.3 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG90 \nG1 Z1.1 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X4.2 Y0 \n"
 
     def basic_bore(self):
-        g_code = sg.bore_hole(100, 4, 3, 6.35, 10, 1000)
+        g_code = sg.bore_hole(100, 4, 3, 6.35, 10)
         match = self.basic_match1()
         self.assertEqual(g_code, match, "not a match")
 
     def basic_bore_FAIL(self):
-        g_code = sg.bore_hole(100, 4, 3, 6.35, 11, 1000)
+        g_code = sg.bore_hole(100, 4, 3, 6.35, 11)
         match = self.basic_match1()
         self.assertNotEqual(g_code, match, "not a match")
 
     def max_cut_more_than_thickness(self):
-        g_code = sg.bore_hole(100, 1, 10, 1, 10, 50)
+        g_code = sg.bore_hole(100, 1, 10, 1, 10)
         match = self.basic_match2()
         self.assertEqual(g_code, match, "not a match")
 
     def max_cut_equal_to_thickness(self):
-        g_code = sg.bore_hole(100, 1, 1, 1, 10, 50)
+        g_code = sg.bore_hole(100, 1, 1, 1, 10)
         match = self.basic_match2()
         self.assertEqual(g_code, match, "not a match")
 
     def many_cuts(self):
-        g_code = sg.bore_hole(100, 5, 1, 1, 10, 50)
+        g_code = sg.bore_hole(100, 5, 1, 1, 10)
         match = self.basic_match3()
         self.assertEqual(g_code, match, "not a match")
 
     def all_floats(self):
-        g_code = sg.bore_hole(100, 3.5, 1.2, 1.9, 10.3, 50)
+        g_code = sg.bore_hole(100, 3.5, 1.2, 1.9, 10.3)
         match = self.basic_match4()
         self.assertEqual(g_code, match, "not a match")
 

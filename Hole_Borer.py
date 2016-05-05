@@ -4,13 +4,9 @@ from Tkinter import *
 from math import *
 import os
 import simple_generators as G
+import MC_defaults as MC
 
-# here we define the list of bits to choose from:
-#   6.35mm = 1/4"
-#   11.135mm = 7/16"
-bits = (6.35, 11.135)
-default_safe_Z = 100
-default_feed_rate = 1000
+
 
 # what's this for ?
 IN_AXIS = os.environ.has_key("AXIS_PROGRESS_BAR")
@@ -59,7 +55,7 @@ class Application(Frame):
         self.Z_safe_var = StringVar()
         self.Z_safe = Entry(self.EntryFrame, textvariable=self.Z_safe_var ,width=15)
         self.Z_safe.grid(row=1, column=1)
-        self.Z_safe.insert(0, default_safe_Z)
+        self.Z_safe.insert(0, MC.default_safe_Z)
 
         self.st02 = Label(self.EntryFrame, text='Stock thickness')
         self.st02.grid(row=2, column=0)
@@ -76,7 +72,7 @@ class Application(Frame):
         self.st04 = Label(self.EntryFrame, text='Cutter diameter')
         self.st04.grid(row=4, column=0)
         self.bit_diameter_var = DoubleVar()
-        self.bit_diameter = Spinbox(self.EntryFrame, values=bits, textvariable=self.bit_diameter_var, width=13)
+        self.bit_diameter = Spinbox(self.EntryFrame, values=MC.bits, textvariable=self.bit_diameter_var, width=13)
         self.bit_diameter.grid(row=4, column=1)
 
         self.st05 = Label(self.EntryFrame, text='Hole diameter')
@@ -90,17 +86,17 @@ class Application(Frame):
         self.feed_rate_var = StringVar()
         self.feed_rate = Entry(self.EntryFrame, textvariable=self.feed_rate_var ,width=15)
         self.feed_rate.grid(row=6, column=1)
-        self.feed_rate.insert(0, default_feed_rate)
+        self.feed_rate.insert(0, MC.default_feed_rate)
 
 
     def GenerateCode(self):
-        self.g_code = G.bore_hole(int(self.Z_safe_var.get()),
+        self.g_code = G.startProgram(int(self.feed_rate_var.get()))
+        self.g_code += G.bore_hole(int(self.Z_safe_var.get()),
                           self.stock_thickness_var.get(),
                           self.cut_depth_var.get(),
                           self.bit_diameter_var.get(),
-                          self.hole_diameter_var.get(),
-                          int(self.feed_rate_var.get()))
-        self.g_code = self.g_code + G.endProgram()
+                          self.hole_diameter_var.get())
+        self.g_code += G.endProgram()
 
 
     def Print(self):
