@@ -7,20 +7,16 @@ import math
 
 
 def bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
-              cutter_diameter, circle_diameter, feed_rate):
-# =======
-# def bore_hole(Z_safe, stock_thickness, max_cut, cutter_diameter,
-#               hole_diameter):
-# >>>>>>> master
+              cutter_diameter, circle_diameter):
     '''use G2; from specified diameter and thickness;
        cutter compensation in function.
        Note that this method mixes ABSOLUTE with INCREMENTAL modes:
        all moves in XY are in INCR and all moves in Z are ABS.'''
 
-    assert cutter_diameter <= hole_diameter, "bit is too large for desired hole"
+    assert cutter_diameter <= circle_diameter, "bit is too large for desired hole"
     assert Z_safe > stock_thickness, "Z_safe is too short for stock thickness"
 
-    off_set = (hole_diameter  - cutter_diameter) / 2.0
+    off_set = (circle_diameter  - cutter_diameter) / 2.0
 
     file_text = G.set_ABS_mode()
     file_text += G.G0_Z(Z_safe)
@@ -52,15 +48,15 @@ def bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
 
 
 def bore_circle_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
-              cutter_diameter, circle_diameter, feed_rate):
+              cutter_diameter, circle_diameter):
     ''' TODO: error check the off-set calculation.'''
     off_set_hole_diam = circle_diameter  + (2 * cutter_diameter)
     return bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
-              cutter_diameter,off_set_hole_diam, feed_rate)
+              cutter_diameter, off_set_hole_diam)
 
 
 def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
-              cutter_diameter, circle_diameter, feed_rate, tab_width):
+              cutter_diameter, circle_diameter, tab_width):
     ''' Cut three tabs.'''
     assert target_depth <= cut_per_pass, "script not set to handle cut_per_pass when it's less than tab thickness"
 
@@ -91,18 +87,18 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
     file_text += G.set_ABS_mode()
     file_text += G.G1_Z(0)
     file_text += G.G2XY_to_INCR_FULL((math.cos((math.pi / 3) - gap_radians), - math.sin((math.pi / 3) - gap_radians), \
-        (- math.cos((math.pi / 3) - gap_radians), - math.sin((math.pi / 3) - gap_radians)))
+        (- math.cos((math.pi / 3) - gap_radians), - math.sin((math.pi / 3) - gap_radians))))
 
     # create the third tab
     file_text += G.G0_Z(target_depth)
     file_text += G.G2XY_to_INCR_FULL((math.cos(math.pi / 3), - math.sin(math.pi / 3), \
-        (- math.cos((math.pi / 3) - gap_radians), math.sin((math.pi / 3) - gap_radians)))
+        (- math.cos((math.pi / 3) - gap_radians), math.sin((math.pi / 3) - gap_radians))))
 
     # cut after the third tab
     file_text += G.set_ABS_mode()
     file_text += G.G1_Z(0)
     file_text += G.G2XY_to_INCR_FULL((math.cos(math.pi - gap_radians), - math.sin(math.pi - gap_radians), \
-        (- math.cos(math.pi / 3), math.sin(math.pi / 3)))
+        (- math.cos(math.pi / 3), math.sin(math.pi / 3))))
 
 
 
@@ -120,12 +116,12 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
 
 
 def bore_tabbed_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
-              cutter_diameter, circle_diameter, feed_rate, tab_width):
+              cutter_diameter, circle_diameter, tab_width):
     ''' TODO: leverage the bore_tabbed_ID.'''
     off_set_hole_diam = circle_diameter  + (2 * cutter_diameter)
     file_text = "% cutting bore_tabbed_ID \n"
     return bore_tabbed_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
-              cutter_diameter, off_set_hole_diam, feed_rate, tab_width)
+              cutter_diameter, off_set_hole_diam, tab_width)
 
 
 def startProgram(feed_rate):

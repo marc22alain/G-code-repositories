@@ -128,37 +128,32 @@ class Application(Frame):
 
 
     def GenerateCode(self):
-    	# in hold for updates upstream
-    	#self.g_code = G.startProgram(int(self.feed_rate_var.get()))
-        self.g_code = G.bore_hole(int(self.Z_safe_var.get()),
+        self.g_code = G.startProgram(int(self.feed_rate_var.get()))
+        self.g_code += G.bore_hole(int(self.Z_safe_var.get()),
                           self.stock_thickness_var.get(),
                           self.cut_per_pass_var.get(),
                           self.tab_thickness_var.get(),
                           self.bit_diameter_var.get(),
-                          self.doughnut_ID_var.get(),
-                          int(self.feed_rate_var.get()))
+                          self.doughnut_ID_var.get())
         self.g_code += G.bore_tabbed_ID(int(self.Z_safe_var.get()),
                           self.tab_thickness_var.get(),
                           self.cut_per_pass_var.get(),
                           0,
                           self.bit_diameter_var.get(),
                           self.doughnut_ID_var.get(),
-                          int(self.feed_rate_var.get()),
                           self.tab_width_var.get())
         self.g_code += G.bore_circle_OD(int(self.Z_safe_var.get()),
                           self.stock_thickness_var.get(),
                           self.cut_per_pass_var.get(),
                           self.tab_thickness_var.get(),
                           self.bit_diameter_var.get(),
-                          self.doughnut_OD_var.get(),
-                          int(self.feed_rate_var.get()))
+                          self.doughnut_OD_var.get())
         self.g_code += G.bore_tabbed_OD(int(self.Z_safe_var.get()),
                           self.tab_thickness_var.get(),
                           self.cut_per_pass_var.get(),
                           0,
                           self.bit_diameter_var.get(),
                           self.doughnut_OD_var.get(),
-                          int(self.feed_rate_var.get()),
                           self.tab_width_var.get())    
         self.g_code += G.endProgram()
 
