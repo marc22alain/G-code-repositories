@@ -143,7 +143,8 @@ class Application(Frame):
                           0,
                           self.bit_diameter_var.get(),
                           self.doughnut_ID_var.get(),
-                          int(self.feed_rate_var.get()))
+                          int(self.feed_rate_var.get()),
+                          self.tab_width_var.get())
         self.g_code += G.bore_circle_OD(int(self.Z_safe_var.get()),
                           self.stock_thickness_var.get(),
                           self.cut_per_pass_var.get(),
@@ -157,7 +158,8 @@ class Application(Frame):
                           0,
                           self.bit_diameter_var.get(),
                           self.doughnut_OD_var.get(),
-                          int(self.feed_rate_var.get()))       
+                          int(self.feed_rate_var.get()),
+                          self.tab_width_var.get())    
         self.g_code += G.endProgram()
 
 
