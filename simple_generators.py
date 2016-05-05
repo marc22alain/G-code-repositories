@@ -10,7 +10,7 @@ def bore_hole(Z_safe, stock_thickness, max_cut, cutter_diameter,
        cutter compensation in function.
        Note that this method mixes ABSOLUTE with INCREMENTAL modes:
        all moves in XY are in INCR and all moves in Z are ABS.'''
-    off_set = (hole_diameter  - cutter_diameter) / 2
+    off_set = (hole_diameter  - cutter_diameter) / 2.0
 
 ##    G.set_Z_safe(Z_safe)
 
