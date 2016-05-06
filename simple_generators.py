@@ -50,7 +50,7 @@ def bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
 def bore_circle_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter):
     ''' TODO: error check the off-set calculation.'''
-    off_set_hole_diam = circle_diameter  + (2 * cutter_diameter)
+    off_set_hole_diam = circle_diameter  + (2.0 * cutter_diameter)
     return bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, off_set_hole_diam)
 
@@ -60,7 +60,7 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
     ''' Cut three tabs.'''
     assert target_depth <= cut_per_pass, "script not set to handle cut_per_pass when it's less than tab thickness"
 
-    off_set = (circle_diameter  - cutter_diameter) / 2
+    off_set = (circle_diameter  - cutter_diameter) / 2.0
     # NOTE: radius = off_set
     # circumference = math.pi * off_set * 2
     gap_radians = (cutter_diameter + tab_width) / off_set
@@ -69,36 +69,42 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
 
     # XY-plane move to starting point, creating the first tab
     file_text += G.set_INCR_mode()
-    file_text += G.G0_XY((-math.cos(gap_radians), \
-        math.sin(gap_radians)))
+    x = -math.cos(gap_radians) * off_set;
+    y = math.sin(gap_radians) * off_set;
+    file_text += G.G0_XY( (x, y) )
     file_text += G.set_ABS_mode()
 
-    # cut after the first tab
+    # 1 G2 cut after the first tab
     file_text += G.G1_Z(0)
-    file_text += G.G2XY_to_INCR_FULL((math.cos(math.pi / 3), math.sin(math.pi / 3)), \
-        (math.cos(gap_radians), -math.sin(gap_radians)))
+    x = ( math.cos(gap_radians) + math.cos(math.pi / 3.0) ) * off_set
+    y = ( - math.sin(gap_radians) + math.sin((2 * math.pi) / 3.0) ) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (math.cos(gap_radians) * off_set, - math.sin(gap_radians) * off_set) )
 
-    # create the second tab
+    # 2 G2 create the second tab
     file_text += G.G0_Z(target_depth)
-    file_text += G.G2XY_to_INCR_FULL((math.cos((math.pi / 3) - gap_radians), math.sin((math.pi / 3) - gap_radians)), \
-        (- math.cos(math.pi / 3), - math.sin(math.pi / 3)))
+    x = (math.cos((math.pi / 3.0) - gap_radians) - math.cos(math.pi / 3.0)) * off_set
+    y = (math.sin((math.pi / 3.0) - gap_radians) - math.sin(math.pi / 3.0)) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (- math.cos(math.pi / 3.0) * off_set, - math.sin(math.pi / 3.0) * off_set) )
 
-    # cut after the second tab
+    # 3 G2 cut after the second tab
     file_text += G.set_ABS_mode()
     file_text += G.G1_Z(0)
-    file_text += G.G2XY_to_INCR_FULL((math.cos((math.pi / 3) - gap_radians), - math.sin((math.pi / 3) - gap_radians)), \
-        (- math.cos((math.pi / 3) - gap_radians), - math.sin((math.pi / 3) - gap_radians)))
+    x = 0
+    y = - 2 * math.sin((math.pi / 3.0) - gap_radians) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (- math.cos((math.pi / 3.0) - gap_radians) * off_set, - math.sin((math.pi / 3.0) - gap_radians) * off_set) )
 
-    # create the third tab
+    # 4 G2 create the third tab
     file_text += G.G0_Z(target_depth)
-    file_text += G.G2XY_to_INCR_FULL((math.cos(math.pi / 3), - math.sin(math.pi / 3)), \
-        (- math.cos((math.pi / 3) - gap_radians), math.sin((math.pi / 3) - gap_radians)))
+    x = - (math.cos((math.pi / 3.0) - gap_radians) - math.cos(math.pi / 3.0)) * off_set
+    y = (math.sin((math.pi / 3.0) - gap_radians) - math.sin(math.pi / 3.0)) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (- math.cos((math.pi / 3.0) - gap_radians) * off_set, math.sin((math.pi / 3.0) - gap_radians) * off_set) )
 
-    # cut after the third tab
+    # 5 G2 cut after the third tab
     file_text += G.set_ABS_mode()
     file_text += G.G1_Z(0)
-    file_text += G.G2XY_to_INCR_FULL((math.cos(math.pi - gap_radians), - math.sin(math.pi - gap_radians)), \
-        (- math.cos(math.pi / 3), math.sin(math.pi / 3)))
+    x = (1 + math.cos(math.pi / 3.0)) * off_set
+    y = math.sin(math.pi / 3.0) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (- math.cos(math.pi / 3.0) * off_set, math.sin(math.pi / 3.0) * off_set))
 
     # return to Z_safe and origin
     file_text += G.set_ABS_mode()
@@ -112,7 +118,7 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
 def bore_tabbed_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter, tab_width):
     ''' TODO: leverage the bore_tabbed_ID.'''
-    off_set_hole_diam = circle_diameter  + (2 * cutter_diameter)
+    off_set_hole_diam = circle_diameter  + (2.0 * cutter_diameter)
     file_text = "% cutting bore_tabbed_OD \n"
     file_text += bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, off_set_hole_diam, tab_width)
