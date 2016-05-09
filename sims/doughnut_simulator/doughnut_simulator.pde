@@ -1,6 +1,6 @@
-float circle_diameter = 700;
-float cutter_diameter = 16.35;
-float tab_width = 16.35;
+float circle_diameter = 150.0;
+float cutter_diameter = 6.35;
+float tab_width = 6.35;
 float off_set = (circle_diameter  - cutter_diameter) / 2.0;
 float gap_radians = (cutter_diameter + tab_width) / off_set;
 int circ = (int)(1.1 * circle_diameter);
@@ -85,6 +85,7 @@ void draw() {
   fill(0,255,0);
   i = x - (cos(PI / 3.0) * off_set);
   j = y + (sin(PI / 3.0) * off_set);
+  println(x , y);
   line(x, y, i, j);
   x = x - ((1 + cos(PI / 3.0)) * off_set);
   y = y + (sin(PI / 3.0) * off_set);
