@@ -65,7 +65,8 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
     # circumference = math.pi * off_set * 2
     gap_radians = (cutter_diameter + tab_width) / off_set
     # file_text = "% cutting bore_tabbed_ID \n"
-    file_text = G.G0_Z(Z_safe)
+    file_text = G.set_ABS_mode()
+    file_text += G.G0_Z(Z_safe)
 
     # XY-plane move to starting point, creating the first tab
     file_text += G.set_INCR_mode()
