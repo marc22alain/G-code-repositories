@@ -132,7 +132,7 @@ class Application(Frame):
         self.g_code += G.bore_tabbed_ID(int(self.Z_safe_var.get()),
                           self.tab_thickness_var.get(),
                           self.cut_per_pass_var.get(),
-                          0,
+                          self.tab_thickness_var.get(),
                           self.bit_diameter_var.get(),
                           self.doughnut_ID_var.get(),
                           float(self.tab_width_var.get()))
@@ -145,7 +145,7 @@ class Application(Frame):
         self.g_code += G.bore_tabbed_OD(int(self.Z_safe_var.get()),
                           self.tab_thickness_var.get(),
                           self.cut_per_pass_var.get(),
-                          0,
+                          self.tab_thickness_var.get(),
                           self.bit_diameter_var.get(),
                           self.doughnut_OD_var.get(),
                           float(self.tab_width_var.get()))

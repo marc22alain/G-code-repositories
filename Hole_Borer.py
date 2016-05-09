@@ -94,6 +94,7 @@ class Application(Frame):
         self.g_code += G.bore_hole(int(self.Z_safe_var.get()),
                           self.stock_thickness_var.get(),
                           self.cut_depth_var.get(),
+                          0,
                           self.bit_diameter_var.get(),
                           self.hole_diameter_var.get())
         self.g_code += G.endProgram()
