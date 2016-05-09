@@ -63,8 +63,8 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
     off_set = (circle_diameter  - cutter_diameter) / 2.0
     path_length = math.pi * off_set * 2
     # NOTE: radius = off_set, path_length is circumference of the circle that the cutter will be tracing
-    
-    assert path_length >= 3.0 * (tab_width + cutter_diameter), "tabs and/or bit are too large for the circle to cut"
+
+    assert path_length > 6.0 * (tab_width + cutter_diameter), "tabs and/or bit are too large for the circle to cut"
 
     gap_radians = (cutter_diameter + tab_width) / off_set
     # file_text = "% cutting bore_tabbed_ID \n"
