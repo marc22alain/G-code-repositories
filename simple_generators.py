@@ -61,8 +61,11 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
     assert tab_thickness <= cut_per_pass, "script not set to handle cut_per_pass when it's less than tab thickness"
 
     off_set = (circle_diameter  - cutter_diameter) / 2.0
-    # NOTE: radius = off_set
-    # circumference = math.pi * off_set * 2
+    path_length = math.pi * off_set * 2
+    # NOTE: radius = off_set, path_length is circumference of the circle that the cutter will be tracing
+    
+    assert path_length >= 3.0 * (tab_width + cutter_diameter), "tabs and/or bit are too large for the circle to cut"
+
     gap_radians = (cutter_diameter + tab_width) / off_set
     # file_text = "% cutting bore_tabbed_ID \n"
     file_text = G.set_ABS_mode()
