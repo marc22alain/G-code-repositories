@@ -123,7 +123,7 @@ class Application(Frame):
 
     def GenerateCode(self):
         self.g_code = G.startProgram(int(self.feed_rate_var.get()))
-        self.g_code += G.bore_hole(int(self.Z_safe_var.get()),
+        self.g_code += G.bore_circle_ID(int(self.Z_safe_var.get()),
                           self.stock_thickness_var.get(),
                           self.cut_per_pass_var.get(),
                           self.tab_thickness_var.get(),

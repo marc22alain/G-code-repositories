@@ -9,7 +9,7 @@ sys.path.append(cwd[0:-6])
 import simple_generators as sg
 
 
-class Test_bore_hole(unittest.TestCase):
+class Test_bore_circle(unittest.TestCase):
 
     def basic_match1(self):
         return "G90 \nG0 Z100 \nG91 \nG0 X-1.825 Y0 \nG90 \nG0 Z4 \nG90 \nG1 Z1 \nG91 G17 G2 X0 Y0 I1.825 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I1.825 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X1.825 Y0 \n"
@@ -24,50 +24,50 @@ class Test_bore_hole(unittest.TestCase):
         return "G90 \nG0 Z100 \nG91 \nG0 X-4.2 Y0 \nG90 \nG0 Z3.5 \nG90 \nG1 Z2.3 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG90 \nG1 Z1.1 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X4.2 Y0 \n"
 
     def basic_bore(self):
-        g_code = sg.bore_hole(100, 4, 3, 0, 6.35, 10)
+        g_code = sg.bore_circle_ID(100, 4, 3, 0, 6.35, 10)
         match = self.basic_match1()
         self.assertEqual(g_code, match, "not a match")
 
     def basic_bore_FAIL(self):
-        g_code = sg.bore_hole(100, 4, 3, 0, 6.35, 11)
+        g_code = sg.bore_circle_ID(100, 4, 3, 0, 6.35, 11)
         match = self.basic_match1()
         self.assertNotEqual(g_code, match, "not a match")
 
     def max_cut_more_than_thickness(self):
-        g_code = sg.bore_hole(100, 1, 10, 0, 1, 10)
+        g_code = sg.bore_circle_ID(100, 1, 10, 0, 1, 10)
         match = self.basic_match2()
         self.assertEqual(g_code, match, "not a match")
 
     def max_cut_equal_to_thickness(self):
-        g_code = sg.bore_hole(100, 1, 1, 0, 1, 10)
+        g_code = sg.bore_circle_ID(100, 1, 1, 0, 1, 10)
         match = self.basic_match2()
         self.assertEqual(g_code, match, "not a match")
 
     def many_cuts(self):
-        g_code = sg.bore_hole(100, 5, 1, 0, 1, 10)
+        g_code = sg.bore_circle_ID(100, 5, 1, 0, 1, 10)
         match = self.basic_match3()
         self.assertEqual(g_code, match, "not a match")
 
     def all_floats(self):
-        g_code = sg.bore_hole(100, 3.5, 1.2, 0, 1.9, 10.3)
+        g_code = sg.bore_circle_ID(100, 3.5, 1.2, 0, 1.9, 10.3)
         match = self.basic_match4()
         self.assertEqual(g_code, match, "not a match")
 
     def bore_OD_equal_ID(self):
-        g_code_ID = sg.bore_hole(100, 11.3, 3, 1.1, 2.5, 15)
+        g_code_ID = sg.bore_circle_ID(100, 11.3, 3, 1.1, 2.5, 15)
         g_code_OD = sg.bore_circle_OD(100, 11.3, 3, 1.1, 2.5, 10)
         self.assertEqual(g_code_ID, g_code_OD, "not a match")
 
 
 def suiteAdd():
     suite = unittest.TestSuite()
-    suite.addTest(Test_bore_hole("basic_bore"))
-    suite.addTest(Test_bore_hole("basic_bore_FAIL"))
-    suite.addTest(Test_bore_hole("max_cut_more_than_thickness"))
-    suite.addTest(Test_bore_hole("max_cut_equal_to_thickness"))
-    suite.addTest(Test_bore_hole("many_cuts"))
-    suite.addTest(Test_bore_hole("all_floats"))
-    suite.addTest(Test_bore_hole("bore_OD_equal_ID"))
+    suite.addTest(Test_bore_circle("basic_bore"))
+    suite.addTest(Test_bore_circle("basic_bore_FAIL"))
+    suite.addTest(Test_bore_circle("max_cut_more_than_thickness"))
+    suite.addTest(Test_bore_circle("max_cut_equal_to_thickness"))
+    suite.addTest(Test_bore_circle("many_cuts"))
+    suite.addTest(Test_bore_circle("all_floats"))
+    suite.addTest(Test_bore_circle("bore_OD_equal_ID"))
     return suite
 
 
@@ -89,11 +89,11 @@ def suiteAdd():
 #     suite = unittest.TestSuite()
 #     suite.addTest(Test_bore_circle_OD("basic_bore"))
 #     suite.addTest(Test_bore_circle_OD("bore_OD_equal_ID"))
-#     # suite.addTest(Test_bore_hole("basic_bore_FAIL"))
-#     # suite.addTest(Test_bore_hole("max_cut_more_than_thickness"))
-#     # suite.addTest(Test_bore_hole("max_cut_equal_to_thickness"))
-#     # suite.addTest(Test_bore_hole("many_cuts"))
-#     # suite.addTest(Test_bore_hole("all_floats"))
+#     # suite.addTest(Test_bore_circle("basic_bore_FAIL"))
+#     # suite.addTest(Test_bore_circle("max_cut_more_than_thickness"))
+#     # suite.addTest(Test_bore_circle("max_cut_equal_to_thickness"))
+#     # suite.addTest(Test_bore_circle("many_cuts"))
+#     # suite.addTest(Test_bore_circle("all_floats"))
 #     return suite
 
 
@@ -103,17 +103,17 @@ class Test_bore_tabbed_ID(unittest.TestCase):
     """
 
     def tabbed_bore_OD_equal_ID(self):
-        g_code_ID = sg.bore_tabbed_ID(100, 11.3, 3, 1.1, 2.5, 15, 6.35)
-        g_code_OD = sg.bore_tabbed_OD(100, 11.3, 3, 1.1, 2.5, 10, 6.35)
+        g_code_ID = sg.bore_tabbed_ID(100, 11.3, 3, 1.1, 2.5, 55, 6.35)
+        g_code_OD = sg.bore_tabbed_OD(100, 11.3, 3, 1.1, 2.5, 50, 6.35)
         self.assertEqual(g_code_ID, g_code_OD, "not a match")
 
 
 def bore_tabbed_ID_suite():
     suite = unittest.TestSuite()
     suite.addTest(Test_bore_tabbed_ID("tabbed_bore_OD_equal_ID"))
-    # suite.addTest(Test_bore_hole("basic_bore_FAIL"))
-    # suite.addTest(Test_bore_hole("max_cut_more_than_thickness"))
-    # suite.addTest(Test_bore_hole("max_cut_equal_to_thickness"))
-    # suite.addTest(Test_bore_hole("many_cuts"))
-    # suite.addTest(Test_bore_hole("all_floats"))
+    # suite.addTest(Test_bore_circle("basic_bore_FAIL"))
+    # suite.addTest(Test_bore_circle("max_cut_more_than_thickness"))
+    # suite.addTest(Test_bore_circle("max_cut_equal_to_thickness"))
+    # suite.addTest(Test_bore_circle("many_cuts"))
+    # suite.addTest(Test_bore_circle("all_floats"))
     return suite

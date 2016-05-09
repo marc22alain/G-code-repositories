@@ -6,7 +6,7 @@ import Glib as G
 import math
 
 
-def bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
+def bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter):
     '''use G2; from specified diameter and thickness;
        cutter compensation in function.
@@ -51,7 +51,7 @@ def bore_circle_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter):
     ''' TODO: error check the off-set calculation.'''
     off_set_hole_diam = circle_diameter  + (2.0 * cutter_diameter)
-    return bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
+    return bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, off_set_hole_diam)
 
 
