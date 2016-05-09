@@ -53,6 +53,11 @@ class Test_bore_hole(unittest.TestCase):
         match = self.basic_match4()
         self.assertEqual(g_code, match, "not a match")
 
+    def bore_OD_equal_ID(self):
+        g_code_ID = sg.bore_hole(100, 11.3, 3, 1.1, 2.5, 15)
+        g_code_OD = sg.bore_circle_OD(100, 11.3, 3, 1.1, 2.5, 10)
+        self.assertEqual(g_code_ID, g_code_OD, "not a match")
+
 
 def suiteAdd():
     suite = unittest.TestSuite()
@@ -62,4 +67,53 @@ def suiteAdd():
     suite.addTest(Test_bore_hole("max_cut_equal_to_thickness"))
     suite.addTest(Test_bore_hole("many_cuts"))
     suite.addTest(Test_bore_hole("all_floats"))
+    suite.addTest(Test_bore_hole("bore_OD_equal_ID"))
+    return suite
+
+
+# class Test_bore_tabbed_circle(unittest.TestCase):
+#     """ arguments: (Z_safe, stock_thickness, cut_per_pass, target_depth,
+#               cutter_diameter, circle_diameter)
+#     """
+
+
+#     def tabbed_bore_OD_equal_ID(self):
+#         g_code_ID = sg.bore_tabbed_ID(100, 11.3, 3, 1.1, 2.5, 15)
+#         g_code_OD = sg.bore_tabbed_OD(100, 11.3, 3, 1.1, 2.5, 10)
+#         match = self.basic_match3()
+#         self.assertEqual(g_code_ID, g_code_OD, "not a match")
+
+
+
+# def bore_circle_OD_suite():
+#     suite = unittest.TestSuite()
+#     suite.addTest(Test_bore_circle_OD("basic_bore"))
+#     suite.addTest(Test_bore_circle_OD("bore_OD_equal_ID"))
+#     # suite.addTest(Test_bore_hole("basic_bore_FAIL"))
+#     # suite.addTest(Test_bore_hole("max_cut_more_than_thickness"))
+#     # suite.addTest(Test_bore_hole("max_cut_equal_to_thickness"))
+#     # suite.addTest(Test_bore_hole("many_cuts"))
+#     # suite.addTest(Test_bore_hole("all_floats"))
+#     return suite
+
+
+class Test_bore_tabbed_ID(unittest.TestCase):
+    """ arguments: (Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter, circle_diameter, tab_width)
+    """
+
+    def tabbed_bore_OD_equal_ID(self):
+        g_code_ID = sg.bore_tabbed_ID(100, 11.3, 3, 1.1, 2.5, 15, 6.35)
+        g_code_OD = sg.bore_tabbed_OD(100, 11.3, 3, 1.1, 2.5, 10, 6.35)
+        self.assertEqual(g_code_ID, g_code_OD, "not a match")
+
+
+def bore_tabbed_ID_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(Test_bore_tabbed_ID("tabbed_bore_OD_equal_ID"))
+    # suite.addTest(Test_bore_hole("basic_bore_FAIL"))
+    # suite.addTest(Test_bore_hole("max_cut_more_than_thickness"))
+    # suite.addTest(Test_bore_hole("max_cut_equal_to_thickness"))
+    # suite.addTest(Test_bore_hole("many_cuts"))
+    # suite.addTest(Test_bore_hole("all_floats"))
     return suite

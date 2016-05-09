@@ -50,78 +50,93 @@ def bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
 def bore_circle_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter):
     ''' TODO: error check the off-set calculation.'''
-    off_set_hole_diam = circle_diameter  + (2 * cutter_diameter)
+    off_set_hole_diam = circle_diameter  + (2.0 * cutter_diameter)
     return bore_hole(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, off_set_hole_diam)
 
 
-def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
+def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
               cutter_diameter, circle_diameter, tab_width):
     ''' Cut three tabs.'''
-    assert target_depth <= cut_per_pass, "script not set to handle cut_per_pass when it's less than tab thickness"
+    assert tab_thickness <= cut_per_pass, "script not set to handle cut_per_pass when it's less than tab thickness"
 
-    off_set = (circle_diameter  - cutter_diameter) / 2
-    # NOTE: radius = off_set
-    # circumference = math.pi * off_set * 2
+    off_set = (circle_diameter  - cutter_diameter) / 2.0
+    path_length = math.pi * off_set * 2
+    # NOTE: radius = off_set, path_length is circumference of the circle that the cutter will be tracing
+
+    assert path_length > 6.0 * (tab_width + cutter_diameter), "tabs and/or bit are too large for the circle to cut"
+
     gap_radians = (cutter_diameter + tab_width) / off_set
-    file_text = "% cutting bore_tabbed_ID \n"
+    # file_text = "% cutting bore_tabbed_ID \n"
+    file_text = G.set_ABS_mode()
     file_text += G.G0_Z(Z_safe)
 
     # XY-plane move to starting point, creating the first tab
     file_text += G.set_INCR_mode()
-    file_text += G.G0_XY((-math.cos(gap_radians), \
-        math.sin(gap_radians)))
+    x = -math.cos(gap_radians) * off_set;
+    y = math.sin(gap_radians) * off_set;
+    file_text += G.G0_XY( (x, y) )
     file_text += G.set_ABS_mode()
 
-    # cut after the first tab
+    # 1 G2 cut after the first tab
     file_text += G.G1_Z(0)
-    file_text += G.G2XY_to_INCR_FULL((math.cos(math.pi / 3), math.sin(math.pi / 3)), \
-        (math.cos(gap_radians), -math.sin(gap_radians)))
+    x = ( math.cos(gap_radians) + math.cos(math.pi / 3.0) ) * off_set
+    y = ( - math.sin(gap_radians) + math.sin((2 * math.pi) / 3.0) ) * off_set
+    i = math.cos(gap_radians) * off_set
+    j = - math.sin(gap_radians) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (i, j) )
 
-    # create the second tab
-    file_text += G.G0_Z(target_depth)
-    file_text += G.G2XY_to_INCR_FULL((math.cos((math.pi / 3) - gap_radians), math.sin((math.pi / 3) - gap_radians)), \
-        (- math.cos(math.pi / 3), - math.sin(math.pi / 3)))
+    # 2 G2 create the second tab
+    file_text += G.G0_Z(tab_thickness)
+    x = (math.cos((math.pi / 3.0) - gap_radians) - math.cos(math.pi / 3.0)) * off_set
+    y = (math.sin((math.pi / 3.0) - gap_radians) - math.sin(math.pi / 3.0)) * off_set
+    i = - math.cos(math.pi / 3.0) * off_set
+    j = - math.sin(math.pi / 3.0) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (i, j) )
 
-    # cut after the second tab
+    # 3 G2 cut after the second tab
     file_text += G.set_ABS_mode()
     file_text += G.G1_Z(0)
-    file_text += G.G2XY_to_INCR_FULL((math.cos((math.pi / 3) - gap_radians), - math.sin((math.pi / 3) - gap_radians), \
-        (- math.cos((math.pi / 3) - gap_radians), - math.sin((math.pi / 3) - gap_radians))))
+    x = 0
+    y = - 2 * math.sin((math.pi / 3.0) - gap_radians) * off_set
+    i = - math.cos((math.pi / 3.0) - gap_radians) * off_set
+    j = - math.sin((math.pi / 3.0) - gap_radians) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (i, j) )
 
-    # create the third tab
-    file_text += G.G0_Z(target_depth)
-    file_text += G.G2XY_to_INCR_FULL((math.cos(math.pi / 3), - math.sin(math.pi / 3), \
-        (- math.cos((math.pi / 3) - gap_radians), math.sin((math.pi / 3) - gap_radians))))
+    # 4 G2 create the third tab
+    file_text += G.G0_Z(tab_thickness)
+    x = - (math.cos((math.pi / 3.0) - gap_radians) - math.cos(math.pi / 3.0)) * off_set
+    y = (math.sin((math.pi / 3.0) - gap_radians) - math.sin(math.pi / 3.0)) * off_set
+    i = - math.cos((math.pi / 3.0) - gap_radians) * off_set
+    j = math.sin((math.pi / 3.0) - gap_radians) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (i, j) )
 
-    # cut after the third tab
+    # 5 G2 cut after the third tab
     file_text += G.set_ABS_mode()
     file_text += G.G1_Z(0)
-    file_text += G.G2XY_to_INCR_FULL((math.cos(math.pi - gap_radians), - math.sin(math.pi - gap_radians), \
-        (- math.cos(math.pi / 3), math.sin(math.pi / 3))))
+    x = - (1 + math.cos(math.pi / 3.0)) * off_set
+    y = math.sin(math.pi / 3.0) * off_set
+    i = - math.cos(math.pi / 3.0) * off_set
+    j = math.sin(math.pi / 3.0) * off_set
+    file_text += G.G2XY_to_INCR_FULL( (x, y), (i, j))
 
-
-
-    # OPTIONS:
-    # - get radius, get sin & cos (of target point ?) to get radians and quadrant
-    # for three tabs, need to make 5 point calculations
-
+    # return to Z_safe and origin
     file_text += G.set_ABS_mode()
     file_text += G.G0_Z(Z_safe)
     file_text += G.set_INCR_mode()
-    file_text += G0_XY((math.cos(gap_radians), math.sin(gap_radians)))
-    file_text += G.set_ABS_mode()
+    file_text += G.G0_XY((off_set, 0))
 
     return file_text
 
 
-def bore_tabbed_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
+def bore_tabbed_OD(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
               cutter_diameter, circle_diameter, tab_width):
     ''' TODO: leverage the bore_tabbed_ID.'''
-    off_set_hole_diam = circle_diameter  + (2 * cutter_diameter)
-    file_text = "% cutting bore_tabbed_ID \n"
-    return bore_tabbed_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
+    off_set_hole_diam = circle_diameter  + (2.0 * cutter_diameter)
+    # file_text = "% cutting bore_tabbed_OD \n"
+    file_text = bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
               cutter_diameter, off_set_hole_diam, tab_width)
+    return file_text
 
 
 def startProgram(feed_rate):
