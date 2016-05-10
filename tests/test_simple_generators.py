@@ -117,3 +117,23 @@ def bore_tabbed_ID_suite():
     # suite.addTest(Test_bore_circle("many_cuts"))
     # suite.addTest(Test_bore_circle("all_floats"))
     return suite
+
+
+class Test_polar_holes(unittest.TestCase):
+    """ arguments: (Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter, circle_diameter, num_holes, hole_circle_diameter)
+    """
+
+    def basic_match1(self):
+        return "G90 \nG0 Z100 \nG91 \nG0 X10.0 Y0.0 \nG90 \nG0 Z100 \nG91 \nG0 X-2.0 Y0 \nG90 \nG0 Z3.0 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0 Y0 I2.0 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X2.0 Y0 \nG91 \nG0 X-20.0 Y1.22464679915e-15 \nG90 \nG0 Z100 \nG91 \nG0 X-2.0 Y0 \nG90 \nG0 Z3.0 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0 Y0 I2.0 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X2.0 Y0 \nG90 \nG0 Z100 \nG91 \nG0 X10.0 Y-1.22464679915e-15 \n"
+
+    def tabbed_two_polar_holes(self):
+        g_code = sg.polar_holes(100, 3.0, 3.0, 0, 1, 5, 2, 10)
+        match = self.basic_match1()
+        self.assertEqual(g_code, match, "not a match")
+
+
+def polar_holes_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(Test_polar_holes("tabbed_two_polar_holes"))
+    return suite

@@ -131,11 +131,46 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
 
 def bore_tabbed_OD(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
               cutter_diameter, circle_diameter, tab_width):
-    ''' TODO: leverage the bore_tabbed_ID.'''
     off_set_hole_diam = circle_diameter  + (2.0 * cutter_diameter)
     # file_text = "% cutting bore_tabbed_OD \n"
     file_text = bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
               cutter_diameter, off_set_hole_diam, tab_width)
+    return file_text
+
+
+def polar_holes(Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter, circle_diameter, num_holes, hole_circle_diameter):
+    assert num_holes > 1, "too few holes to form a circle of holes; must be at least 2"
+    file_text = G.set_ABS_mode()
+    file_text += G.G0_Z(Z_safe)
+
+    radians_increment = 2 * math.pi / num_holes;
+
+    # drill first hole
+    x = math.cos(0) * hole_circle_diameter
+    y = math.sin(0) * hole_circle_diameter
+    file_text += G.set_INCR_mode()
+    file_text += G.G0_XY( (x, y) )
+    file_text += bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter, circle_diameter)
+
+    # drill all other holes
+    for i in xrange(1, int(num_holes)):
+        x = - (math.cos((i - 1) * radians_increment) * hole_circle_diameter) + (math.cos(i * radians_increment) * hole_circle_diameter)
+        y = - (math.sin((i - 1) * radians_increment) * hole_circle_diameter) + (math.sin(i * radians_increment) * hole_circle_diameter)
+        file_text += G.set_INCR_mode()
+        file_text += G.G0_XY( (x, y) )
+        file_text += bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
+                  cutter_diameter, circle_diameter)
+
+    # return to Z_safe and origin
+    file_text += G.set_ABS_mode()
+    file_text += G.G0_Z(Z_safe)
+    file_text += G.set_INCR_mode()
+    x = - (math.cos((num_holes - 1) * radians_increment) * hole_circle_diameter)
+    y = - (math.sin((num_holes - 1) * radians_increment) * hole_circle_diameter)
+    file_text += G.G0_XY( (x, y) )
+
     return file_text
 
 
