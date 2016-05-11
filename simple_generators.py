@@ -16,6 +16,15 @@ def bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
     assert cutter_diameter <= circle_diameter, "bit is too large for desired hole"
     assert Z_safe > stock_thickness, "Z_safe is too short for stock thickness"
 
+    # alternate path: do a straight drill
+    if cutter_diameter == circle_diameter:
+        file_text = G.set_ABS_mode()
+        file_text += G.G0_Z(stock_thickness)
+        file_text += G.G1_Z(target_depth)
+        file_text += G.set_dwell(0.5)
+        file_text += G.G0_Z(Z_safe)
+        return file_text
+
     off_set = (circle_diameter  - cutter_diameter) / 2.0
 
     file_text = G.set_ABS_mode()
