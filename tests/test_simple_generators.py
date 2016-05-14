@@ -12,16 +12,16 @@ import simple_generators as sg
 class Test_bore_circle(unittest.TestCase):
 
     def basic_match1(self):
-        return "G90 \nG0 Z100 \nG91 \nG0 X-1.825 Y0 \nG90 \nG0 Z4 \nG90 \nG1 Z1 \nG91 G17 G2 X0 Y0 I1.825 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I1.825 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X1.825 Y0 \n"
+        return "G90 \nG0 Z100.0 \nG91 \nG0 X-1.825 Y0.0 \nG90 \nG0 Z4.0 \nG90 \nG1 Z1.0 \nG91 G17 G2 X0.0 Y0.0 I1.825 J0.0 P1 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I1.825 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X1.825 Y0.0 \n"
 
     def basic_match2(self):
-        return "G90 \nG0 Z100 \nG91 \nG0 X-4.5 Y0 \nG90 \nG0 Z1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X4.5 Y0 \n"
+        return "G90 \nG0 Z100.0 \nG91 \nG0 X-4.5 Y0.0 \nG90 \nG0 Z1.0 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X4.5 Y0.0 \n"
 
     def basic_match3(self):
-        return "G90 \nG0 Z100 \nG91 \nG0 X-4.5 Y0 \nG90 \nG0 Z5 \nG90 \nG1 Z4 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z3 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z2 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z1 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.5 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X4.5 Y0 \n"
+        return "G90 \nG0 Z100.0 \nG91 \nG0 X-4.5 Y0.0 \nG90 \nG0 Z5.0 \nG90 \nG1 Z4.0 \nG91 G17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG90 \nG1 Z3.0 \nG91 G17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG90 \nG1 Z2.0 \nG91 G17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG90 \nG1 Z1.0 \nG91 G17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X4.5 Y0.0 \n"
 
     def basic_match4(self):
-        return "G90 \nG0 Z100 \nG91 \nG0 X-4.2 Y0 \nG90 \nG0 Z3.5 \nG90 \nG1 Z2.3 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG90 \nG1 Z1.1 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG90 \nG1 Z0 \nG91 G17 G2 X0 Y0 I4.2 J0 P1 \nG4 P0.5 \nG90 \nG0 Z100 \nG91 \nG0 X4.2 Y0 \n"
+        return "G90 \nG0 Z100.0 \nG91 \nG0 X-4.2 Y0.0 \nG90 \nG0 Z3.5 \nG90 \nG1 Z2.3 \nG91 G17 G2 X0.0 Y0.0 I4.2 J0.0 P1 \nG90 \nG1 Z1.1 \nG91 G17 G2 X0.0 Y0.0 I4.2 J0.0 P1 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I4.2 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X4.2 Y0.0 \n"
 
     def basic_bore(self):
         g_code = sg.bore_circle_ID(100, 4, 3, 0, 6.35, 10)
@@ -116,4 +116,24 @@ def bore_tabbed_ID_suite():
     # suite.addTest(Test_bore_circle("max_cut_equal_to_thickness"))
     # suite.addTest(Test_bore_circle("many_cuts"))
     # suite.addTest(Test_bore_circle("all_floats"))
+    return suite
+
+
+class Test_polar_holes(unittest.TestCase):
+    """ arguments: (Z_safe, stock_thickness, cut_per_pass, target_depth,
+              cutter_diameter, circle_diameter, num_holes, hole_circle_diameter)
+    """
+
+    def basic_match1(self):
+        return "G90 \nG0 Z100.0 \nG91 \nG0 X10.0 Y0.0 \nG90 \nG0 Z100.0 \nG91 \nG0 X-2.0 Y0.0 \nG90 \nG0 Z3.0 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I2.0 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X2.0 Y0.0 \nG91 \nG0 X-20.0 Y0.0 \nG90 \nG0 Z100.0 \nG91 \nG0 X-2.0 Y0.0 \nG90 \nG0 Z3.0 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I2.0 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X2.0 Y0.0 \nG90 \nG0 Z100.0 \nG91 \nG0 X10.0 Y-0.0 \n"
+
+    def tabbed_two_polar_holes(self):
+        g_code = sg.polar_holes(100, 3.0, 3.0, 0, 1, 5, 2, 10)
+        match = self.basic_match1()
+        self.assertEqual(g_code, match, "not a match")
+
+
+def polar_holes_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(Test_polar_holes("tabbed_two_polar_holes"))
     return suite
