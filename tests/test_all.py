@@ -7,6 +7,6 @@ unittest.TextTestRunner().run(tsg.suiteAdd())
 # TODO:
 # unittest.TextTestRunner().run(tsg.bore_circle_OD_suite())
 
-unittest.TextTestRunner().run(tsg.bore_tabbed_ID_suite())
+unittest.TextTestRunner().run(tsg.bore_tabbed_circle_suite())
 
 unittest.TextTestRunner().run(tsg.polar_holes_suite())

@@ -71,52 +71,39 @@ def suiteAdd():
     return suite
 
 
-# class Test_bore_tabbed_circle(unittest.TestCase):
-#     """ arguments: (Z_safe, stock_thickness, cut_per_pass, target_depth,
-#               cutter_diameter, circle_diameter)
-#     """
 
-
-#     def tabbed_bore_OD_equal_ID(self):
-#         g_code_ID = sg.bore_tabbed_ID(100, 11.3, 3, 1.1, 2.5, 15)
-#         g_code_OD = sg.bore_tabbed_OD(100, 11.3, 3, 1.1, 2.5, 10)
-#         match = self.basic_match3()
-#         self.assertEqual(g_code_ID, g_code_OD, "not a match")
-
-
-
-# def bore_circle_OD_suite():
-#     suite = unittest.TestSuite()
-#     suite.addTest(Test_bore_circle_OD("basic_bore"))
-#     suite.addTest(Test_bore_circle_OD("bore_OD_equal_ID"))
-#     # suite.addTest(Test_bore_circle("basic_bore_FAIL"))
-#     # suite.addTest(Test_bore_circle("max_cut_more_than_thickness"))
-#     # suite.addTest(Test_bore_circle("max_cut_equal_to_thickness"))
-#     # suite.addTest(Test_bore_circle("many_cuts"))
-#     # suite.addTest(Test_bore_circle("all_floats"))
-#     return suite
-
-
-class Test_bore_tabbed_ID(unittest.TestCase):
+class Test_bore_tabbed_circle(unittest.TestCase):
     """ arguments: (Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter, tab_width)
     """
+
+    def proven_doughnut(self):
+        # example run with machine on 16-05-13
+        return 'F1000.0 \nG90 \nG0 Z40.0 \nG91 \nG0 X-56.6185 Y0.0 \nG90 \nG0 Z4.5 \nG90 \nG1 Z1.5 \nG91 G17 G2 X0.0 Y0.0 I56.6185 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z40.0 \nG91 \nG0 X56.6185 Y0.0 \nG90 \nG0 Z40.0 \nG91 \nG0 X-55.53137 Y11.04178 \nG90 \nG1 Z0.0 \nG91 G17 G2 X83.84062 Y37.99128 I55.53137 J-11.04178 P1 \nG0 Z1.5 \nG91 G17 G2 X9.0189 Y-6.46237 I-28.30925 J-49.03306 P1 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y-85.14138 I-37.32815 J-42.57069 P1 \nG0 Z1.5 \nG91 G17 G2 X-9.0189 Y-6.46237 I-37.32815 J42.57069 P1 \nG90 \nG1 Z0.0 \nG91 G17 G2 X-84.92775 Y49.03306 I-28.30925 J49.03306 P1 \nG90 \nG0 Z40.0 \nG91 \nG0 X56.6185 Y0.0 \nG90 \nG0 Z40.0 \nG91 \nG0 X-77.3815 Y0.0 \nG90 \nG0 Z4.5 \nG90 \nG1 Z1.5 \nG91 G17 G2 X0.0 Y0.0 I77.3815 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z40.0 \nG91 \nG0 X77.3815 Y0.0 \nG90 \nG0 Z40.0 \nG91 \nG0 X-76.58488 Y11.07484 \nG90 \nG1 Z0.0 \nG91 G17 G2 X115.27563 Y55.93951 I76.58488 J-11.07484 P1 \nG0 Z1.5 \nG91 G17 G2 X9.19278 Y-6.22731 I-38.69075 J-67.01434 P1 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y-121.57407 I-47.88353 J-60.78704 P1 \nG0 Z1.5 \nG91 G17 G2 X-9.19278 Y-6.22731 I-47.88353 J60.78704 P1 \nG90 \nG1 Z0.0 \nG91 G17 G2 X-116.07225 Y67.01434 I-38.69075 J67.01434 P1 \nG90 \nG0 Z40.0 \nG91 \nG0 X77.3815 Y0.0 \nG90 \nM2 \n'
 
     def tabbed_bore_OD_equal_ID(self):
         g_code_ID = sg.bore_tabbed_ID(100, 11.3, 3, 1.1, 2.5, 55, 6.35)
         g_code_OD = sg.bore_tabbed_OD(100, 11.3, 3, 1.1, 2.5, 50, 6.35)
         self.assertEqual(g_code_ID, g_code_OD, "not a match")
 
+    def full_doughnut(self):
+        g_code = sg.startProgram(1000)
+        g_code += sg.bore_circle_ID(40, 4.5, 3, 1.5, 4.763, 118)
+        g_code += sg.bore_tabbed_ID(40, 1.5, 3, 1.5, 4.763, 118, 6.35)
+        g_code += sg.bore_circle_OD(40, 4.5, 3, 1.5, 4.763, 150)
+        g_code += sg.bore_tabbed_OD(40, 1.5, 3, 1.5, 4.763, 150, 6.35)
+        g_code += sg.endProgram()
+        match = self.proven_doughnut()
+        self.assertEqual(g_code, match, "not a match")
 
-def bore_tabbed_ID_suite():
+def bore_tabbed_circle_suite():
     suite = unittest.TestSuite()
-    suite.addTest(Test_bore_tabbed_ID("tabbed_bore_OD_equal_ID"))
-    # suite.addTest(Test_bore_circle("basic_bore_FAIL"))
-    # suite.addTest(Test_bore_circle("max_cut_more_than_thickness"))
-    # suite.addTest(Test_bore_circle("max_cut_equal_to_thickness"))
-    # suite.addTest(Test_bore_circle("many_cuts"))
-    # suite.addTest(Test_bore_circle("all_floats"))
+    suite.addTest(Test_bore_tabbed_circle("tabbed_bore_OD_equal_ID"))
+    suite.addTest(Test_bore_tabbed_circle("full_doughnut"))
     return suite
+
+
+
 
 
 class Test_polar_holes(unittest.TestCase):
@@ -125,15 +112,32 @@ class Test_polar_holes(unittest.TestCase):
     """
 
     def basic_match1(self):
-        return "G90 \nG0 Z100.0 \nG91 \nG0 X10.0 Y0.0 \nG90 \nG0 Z100.0 \nG91 \nG0 X-2.0 Y0.0 \nG90 \nG0 Z3.0 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I2.0 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X2.0 Y0.0 \nG91 \nG0 X-20.0 Y0.0 \nG90 \nG0 Z100.0 \nG91 \nG0 X-2.0 Y0.0 \nG90 \nG0 Z3.0 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I2.0 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X2.0 Y0.0 \nG90 \nG0 Z100.0 \nG91 \nG0 X10.0 Y-0.0 \n"
+        return "G90 \nG0 Z100.0 \nG91 \nG0 X5.0 Y0.0 \nG90 \nG0 Z100.0 \nG91 \nG0 X-2.0 Y0.0 \nG90 \nG0 Z3.0 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I2.0 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X2.0 Y0.0 \nG91 \nG0 X-10.0 Y0.0 \nG90 \nG0 Z100.0 \nG91 \nG0 X-2.0 Y0.0 \nG90 \nG0 Z3.0 \nG90 \nG1 Z0.0 \nG91 G17 G2 X0.0 Y0.0 I2.0 J0.0 P1 \nG4 P0.5 \nG90 \nG0 Z100.0 \nG91 \nG0 X2.0 Y0.0 \nG90 \nG0 Z100.0 \nG91 \nG0 X5.0 Y-0.0 \n"
+
+    def proven_drill(self):
+        # example run with machine on 16-05-13
+        return "G90 \nG0 Z40.0 \nG91 \nG0 X65.75 Y0.0 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z40.0 \nG91 \nG0 X-32.875 Y56.94117 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z40.0 \nG91 \nG0 X-65.75 Y0.0 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z40.0 \nG91 \nG0 X-32.875 Y-56.94117 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z40.0 \nG91 \nG0 X32.875 Y-56.94117 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z40.0 \nG91 \nG0 X65.75 Y-0.0 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z40.0 \nG90 \nG0 Z40.0 \nG91 \nG0 X-32.875 Y56.94117 \n"
 
     def tabbed_two_polar_holes(self):
         g_code = sg.polar_holes(100, 3.0, 3.0, 0, 1, 5, 2, 10)
         match = self.basic_match1()
         self.assertEqual(g_code, match, "not a match")
 
+    def proven_straight_drill1(self):
+        g_code = sg.polar_holes(40, 4.5, 3, 0, 2, 2, 6, 131.5)
+        match = self.proven_drill()
+        self.assertEqual(g_code, match, "not a match")
+
+    def proven_straight_drill2(self):
+        # challenging that different bit sizes do not change the program
+        g_code = sg.polar_holes(40, 4.5, 3, 0, 4.763, 4.763, 6, 131.5)
+        match = self.proven_drill()
+        self.assertEqual(g_code, match, "not a match")
+
 
 def polar_holes_suite():
     suite = unittest.TestSuite()
     suite.addTest(Test_polar_holes("tabbed_two_polar_holes"))
+    suite.addTest(Test_polar_holes("proven_straight_drill1"))
+    suite.addTest(Test_polar_holes("proven_straight_drill2"))
     return suite
