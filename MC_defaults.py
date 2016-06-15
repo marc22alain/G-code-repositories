@@ -4,6 +4,7 @@
 #   6.35mm = 1/4"
 #   11.135mm = 7/16"
 bits = (3.175, 4.763, 6.35, 11.135)
+ball_noses = (12.7, 19.05)
 default_safe_Z = 100
 default_feed_rate = 1000
 default_tab_width = 6.35
