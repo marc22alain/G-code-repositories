@@ -186,6 +186,49 @@ def polar_holes(Z_safe, stock_thickness, cut_per_pass, target_depth,
     return file_text
 
 
+def rectArea(area, bit_diameter):
+    """ Required arguments: area (as (x=length, y=width), bit_diameter.
+    Assumes that the bit is already in the origin corner at required depth of cut.
+    """
+    length, width = area
+    if bit_diameter > length or bit_diameter > width:
+        raise ValueError("Bit is too large to cut specified area")
+    file_text = G.set_INCR_mode()
+    # magic number 0.5 is the pass-to-pass overlap
+    pass_width = bit_diameter - 0.5
+    current_x = 0
+
+    # first pass
+    file_text += G.G1_Y(width - bit_diameter)
+
+    # sentinel to track the pass direction; out is opposite to back, and the
+    # bit is now ready to come back
+    out = False
+    while current_x < (length - bit_diameter):
+        # prepare for the next pass
+        # current_x = min(current_x + pass_width, length - bit_diameter)
+        # file_text += G.G1_X(current_x)
+
+        if current_x + pass_width <= length - bit_diameter:
+            file_text += G.G1_X(pass_width)
+            current_x = current_x + pass_width
+        else:
+            file_text += G.G1_X( length - bit_diameter - current_x)
+            current_x = length - bit_diameter
+
+        if out == True:
+            file_text += G.G1_Y(width - bit_diameter)
+        else:
+            file_text += G.G1_Y( - (width - bit_diameter) )
+
+        out = not out
+
+    # last move is a return to relative origin
+    file_text += G.G1_XY(( -(length - bit_diameter), -(width - bit_diameter)))
+    file_text += G.set_ABS_mode()
+    return file_text
+
+
 def startProgram(feed_rate):
     return G.F_rate(feed_rate)
 
