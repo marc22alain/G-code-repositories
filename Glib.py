@@ -30,6 +30,13 @@ def G1_to_XZ(point):
     return 'G1 X' + sane(point[0]) + ' Z' + sane(point[2]) + ' \n'
 
 
+def G0_X(plane):
+    """
+    Takes an int, returns a string;
+    """
+    return 'G0 X' + sane(plane) + ' \n'
+
+
 def G0_Y(plane):
     """
     Takes an int, returns a string;
