@@ -6,10 +6,10 @@ cwd = os.getcwd()
 assert cwd[-6:] == "/tests", "directory locations don't match"
 
 sys.path.append(cwd[0:-6])
-from Polar_Holes import Application
+from Polar_Holes_class import PolarHolesBorer
 
 
-Polar_Holes = Application()
+Polar_Holes = PolarHolesBorer()
 
 class Test_polar_holes_wizard(unittest.TestCase):
 
@@ -32,7 +32,7 @@ class Test_polar_holes_wizard(unittest.TestCase):
         Polar_Holes.hole_diameter_var.set(8)
         Polar_Holes.num_holes_var.set(5)
         Polar_Holes.HCD_var.set(75)
-        Polar_Holes.GenerateCode()
+        Polar_Holes.generateCode()
         g_code = Polar_Holes.g_code
         self.assertEquals(self.polar_match1(), g_code)
 
@@ -47,7 +47,7 @@ class Test_polar_holes_wizard(unittest.TestCase):
         Polar_Holes.hole_diameter_var.set(3.175)
         Polar_Holes.num_holes_var.set(6)
         Polar_Holes.HCD_var.set(131.5)
-        Polar_Holes.GenerateCode()
+        Polar_Holes.generateCode()
         g_code = Polar_Holes.g_code
         self.assertEquals(self.polar_match2(), g_code)
 
