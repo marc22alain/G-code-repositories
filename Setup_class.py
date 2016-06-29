@@ -99,7 +99,7 @@ class Setup(object):
     	return self.stock_thickness_var.get()
 
     def getAllData(self):
-        return self.feed_rate_var.get(), self.Z_safe_var.get(), self.cut_per_pass_var.get(),\
+        return int(self.feed_rate_var.get()), int(self.Z_safe_var.get()), self.cut_per_pass_var.get(),\
                    self.bit_diameter_var.get(), self.stock_thickness_var.get()
 
 

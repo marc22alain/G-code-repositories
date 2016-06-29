@@ -22,8 +22,9 @@ INPUT elements:
     -depth of cut (default is full depth)
 """
 class HoleBorer(Frame):
-    def __init__(self, master=None):
+    def __init__(self, master=None, setup=None):
         Frame.__init__(self, master)
+        self.setup = setup
         self.grid()
         self.createWidgets()
 
@@ -31,63 +32,32 @@ class HoleBorer(Frame):
         self.EntryFrame = Frame(self,bd=5)
         self.EntryFrame.grid(row=0, column=1)
 
+        row_num = 0
         self.st00 = Label(self.EntryFrame, text='Bore a hole (G2 is CW)')
-        self.st00.grid(row=0, column=0, columnspan=2)
+        self.st00.grid(row=row_num, column=0, columnspan=2)
 
-        # not sure about this behaviour
-        if IN_AXIS:
-            self.printButton = Button(self, text='Write to AXIS and Quit',\
-                command=self.writeToAxis)
-        else:
-            self.printButton = Button(self, text='Print', command=self.printToConsole)
-        self.printButton.grid(row=13, column=1, sticky=S)
+        row_num += 1
+        self.setup.createWidgets(self.EntryFrame, row_num)
 
-        self.st01 = Label(self.EntryFrame, text='Safe Z travel height')
-        self.st01.grid(row=1, column=0)
-        self.Z_safe_var = StringVar()
-        self.Z_safe = Entry(self.EntryFrame, textvariable=self.Z_safe_var ,width=15)
-        self.Z_safe.grid(row=1, column=1)
-        self.Z_safe.insert(0, MC.default_safe_Z)
-
-        self.st02 = Label(self.EntryFrame, text='Stock thickness')
-        self.st02.grid(row=2, column=0)
-        self.stock_thickness_var = DoubleVar()
-        self.stock_thickness = Entry(self.EntryFrame, textvariable=self.stock_thickness_var ,width=15)
-        self.stock_thickness.grid(row=2, column=1)
-
-        self.st03 = Label(self.EntryFrame, text='Maximum depth of cut')
-        self.st03.grid(row=3, column=0)
-        self.cut_depth_var = DoubleVar()
-        self.cut_depth = Entry(self.EntryFrame, textvariable=self.cut_depth_var ,width=15)
-        self.cut_depth.grid(row=3, column=1)
-
-        self.st04 = Label(self.EntryFrame, text='Cutter diameter')
-        self.st04.grid(row=4, column=0)
-        self.bit_diameter_var = DoubleVar()
-        self.bit_diameter = Spinbox(self.EntryFrame, values=MC.bits, textvariable=self.bit_diameter_var, width=13)
-        self.bit_diameter.grid(row=4, column=1)
-
-        self.st05 = Label(self.EntryFrame, text='Hole diameter')
-        self.st05.grid(row=5, column=0)
+        row_num += 1
+        self.hole_diameter_label = Label(self.EntryFrame, text='Hole diameter')
+        self.hole_diameter_label.grid(row=5, column=0)
         self.hole_diameter_var = DoubleVar()
-        self.hole_diameter = Entry(self.EntryFrame, textvariable=self.hole_diameter_var ,width=15)
-        self.hole_diameter.grid(row=5, column=1)
+        self.hole_diameter_input = Entry(self.EntryFrame, textvariable=self.hole_diameter_var ,width=15)
+        self.hole_diameter_input.grid(row=5, column=1)
 
-        self.st06 = Label(self.EntryFrame, text='Feed rate')
-        self.st06.grid(row=6, column=0)
-        self.feed_rate_var = StringVar()
-        self.feed_rate = Entry(self.EntryFrame, textvariable=self.feed_rate_var ,width=15)
-        self.feed_rate.grid(row=6, column=1)
-        self.feed_rate.insert(0, MC.default_feed_rate)
-
+        row_num += 1
+        self.setup.makePrintButton(self.EntryFrame, row_num, self)
 
     def generateCode(self):
-        self.g_code = G.startProgram(int(self.feed_rate_var.get()))
-        self.g_code += G.bore_circle_ID(int(self.Z_safe_var.get()),
-                          self.stock_thickness_var.get(),
-                          self.cut_depth_var.get(),
+        feed_rate, safe_Z, max_cut_per_pass, bit_diameter, stock_thickness = self.setup.getAllData()
+
+        self.g_code = G.startProgram(feed_rate)
+        self.g_code += G.bore_circle_ID(safe_Z,
+                          stock_thickness,
+                          max_cut_per_pass,
                           0,
-                          self.bit_diameter_var.get(),
+                          bit_diameter,
                           self.hole_diameter_var.get())
         self.g_code += G.endProgram()
 

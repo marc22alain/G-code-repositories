@@ -46,8 +46,6 @@ class DoughnutCutter(Frame):
         row_num += 1
         self.setup.createWidgets(self.EntryFrame, row_num)
 
-
-
         row_num += 1
         self.tab_thickness_label = Label(self.EntryFrame, text='Tab thickness')
         self.tab_thickness_label.grid(row=row_num, column=0)
@@ -77,7 +75,6 @@ class DoughnutCutter(Frame):
         self.doughnut_ID_input = Entry(self.EntryFrame, textvariable=self.doughnut_ID_var ,width=15)
         self.doughnut_ID_input.grid(row=row_num, column=1)
 
-
         row_num += 1
         self.setup.makePrintButton(self.EntryFrame, row_num, self)
 
@@ -88,27 +85,27 @@ class DoughnutCutter(Frame):
         feed_rate, safe_Z, max_cut_per_pass, bit_diameter, stock_thickness = self.setup.getAllData()
 
 
-        self.g_code = G.startProgram(int(feed_rate))
-        self.g_code += G.bore_circle_ID(int(safe_Z),
+        self.g_code = G.startProgram(feed_rate)
+        self.g_code += G.bore_circle_ID(safe_Z,
                           stock_thickness,
                           max_cut_per_pass,
                           self.tab_thickness_var.get(),
                           bit_diameter,
                           self.doughnut_ID_var.get())
-        self.g_code += G.bore_tabbed_ID(int(safe_Z),
+        self.g_code += G.bore_tabbed_ID(safe_Z,
                           stock_thickness,
                           max_cut_per_pass,
                           self.tab_thickness_var.get(),
                           bit_diameter,
                           self.doughnut_ID_var.get(),
                           float(self.tab_width_var.get()))
-        self.g_code += G.bore_circle_OD(int(safe_Z),
+        self.g_code += G.bore_circle_OD(safe_Z,
                           stock_thickness,
                           max_cut_per_pass,
                           self.tab_thickness_var.get(),
                           bit_diameter,
                           self.doughnut_OD_var.get())
-        self.g_code += G.bore_tabbed_OD(int(safe_Z),
+        self.g_code += G.bore_tabbed_OD(safe_Z,
                           self.tab_thickness_var.get(),
                           max_cut_per_pass,
                           self.tab_thickness_var.get(),

@@ -7,9 +7,11 @@ assert cwd[-6:] == "/tests", "directory locations don't match"
 
 sys.path.append(cwd[0:-6])
 from Polar_Holes_class import PolarHolesBorer
+from Setup_class import Setup
 
+setup = Setup()
 
-Polar_Holes = PolarHolesBorer()
+Polar_Holes = PolarHolesBorer(None,  setup)
 
 class Test_polar_holes_wizard(unittest.TestCase):
 
@@ -24,11 +26,12 @@ class Test_polar_holes_wizard(unittest.TestCase):
         return "F500.0 \nG90 \nG0 Z80.0 \nG91 \nG0 X65.75 Y0.0 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z80.0 \nG91 \nG0 X-32.875 Y56.94117 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z80.0 \nG91 \nG0 X-65.75 Y0.0 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z80.0 \nG91 \nG0 X-32.875 Y-56.94117 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z80.0 \nG91 \nG0 X32.875 Y-56.94117 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z80.0 \nG91 \nG0 X65.75 Y-0.0 \nG90 \nG0 Z4.5 \nG1 Z0.0 \nG4 P0.5 \nG0 Z80.0 \nG90 \nG0 Z80.0 \nG91 \nG0 X-32.875 Y56.94117 \nG90 \nM2 \n"
 
     def test_polar_match1(self):
-        Polar_Holes.feed_rate_var.set("1000")
-        Polar_Holes.Z_safe_var.set("100")
-        Polar_Holes.stock_thickness_var.set(11)
-        Polar_Holes.cut_per_pass_var.set(3)
-        Polar_Holes.bit_diameter_var.set(6.35)
+        Polar_Holes.setup.feed_rate_var.set("1000")
+        Polar_Holes.setup.Z_safe_var.set("100")
+        Polar_Holes.setup.stock_thickness_var.set(11)
+        Polar_Holes.setup.cut_per_pass_var.set(3)
+        Polar_Holes.setup.bit_diameter_var.set(6.35)
+
         Polar_Holes.hole_diameter_var.set(8)
         Polar_Holes.num_holes_var.set(5)
         Polar_Holes.HCD_var.set(75)
@@ -39,11 +42,12 @@ class Test_polar_holes_wizard(unittest.TestCase):
     def test_polar_match2(self):
         """ This example from successful work for the Contender. 
         Inspection port hole backing plate. """
-        Polar_Holes.feed_rate_var.set("500")
-        Polar_Holes.Z_safe_var.set("80")
-        Polar_Holes.stock_thickness_var.set(4.5)
-        Polar_Holes.cut_per_pass_var.set(3)
-        Polar_Holes.bit_diameter_var.set(3.175)
+        Polar_Holes.setup.feed_rate_var.set("500")
+        Polar_Holes.setup.Z_safe_var.set("80")
+        Polar_Holes.setup.stock_thickness_var.set(4.5)
+        Polar_Holes.setup.cut_per_pass_var.set(3)
+        Polar_Holes.setup.bit_diameter_var.set(3.175)
+        
         Polar_Holes.hole_diameter_var.set(3.175)
         Polar_Holes.num_holes_var.set(6)
         Polar_Holes.HCD_var.set(131.5)

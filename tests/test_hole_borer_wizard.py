@@ -7,9 +7,11 @@ assert cwd[-6:] == "/tests", "directory locations don't match"
 
 sys.path.append(cwd[0:-6])
 from Hole_Borer_class import HoleBorer
+from Setup_class import Setup
 
+setup = Setup()
 
-HB = HoleBorer()
+HB = HoleBorer(None,  setup)
 
 class Test_hole_borer_wizard(unittest.TestCase):
 
@@ -22,11 +24,11 @@ class Test_hole_borer_wizard(unittest.TestCase):
 		return "F1000.0 \nG90 \nG0 Z12.0 \nG1 Z0.0 \nG4 P0.5 \nG0 Z100.0 \nG90 \nM2 \n"
 
 	def test_hole_match1(self):
-		HB.feed_rate_var.set("1000")
-		HB.Z_safe_var.set("100")
-		HB.cut_depth_var.set(3)
-		HB.bit_diameter_var.set(6.35)
-		HB.stock_thickness_var.set(10)
+		HB.setup.feed_rate_var.set("1000")
+		HB.setup.Z_safe_var.set("100")
+		HB.setup.cut_per_pass_var.set(3)
+		HB.setup.bit_diameter_var.set(6.35)
+		HB.setup.stock_thickness_var.set(10)
 
 		HB.hole_diameter_var.set(15)
 		HB.generateCode()
@@ -36,11 +38,11 @@ class Test_hole_borer_wizard(unittest.TestCase):
 
 
 	def test_hole_match2(self):
-		HB.feed_rate_var.set("1000")
-		HB.Z_safe_var.set("100")
-		HB.cut_depth_var.set(4)
-		HB.bit_diameter_var.set(3.175)
-		HB.stock_thickness_var.set(12)
+		HB.setup.feed_rate_var.set("1000")
+		HB.setup.Z_safe_var.set("100")
+		HB.setup.cut_per_pass_var.set(4)
+		HB.setup.bit_diameter_var.set(3.175)
+		HB.setup.stock_thickness_var.set(12)
 
 		HB.hole_diameter_var.set(3.175)
 		HB.generateCode()
