@@ -5,6 +5,7 @@ from math import *
 import os
 import simple_generators as G
 import MC_defaults as MC
+from Canvas_Geometry_classes import *
 
 
 # what's this for ?
@@ -84,16 +85,7 @@ class DoughnutCutter(Frame):
 
     def generateCode(self):
 
-
-        feed_rate = self.setup.getFeed()
-
-        safe_Z = self.setup.getSafeZ()
-
-        max_cut_per_pass = self.setup.getMaxCut()
-
-        bit_diameter = self.setup.getCutter()
-
-        stock_thickness = self.setup.getStock()
+        feed_rate, safe_Z, max_cut_per_pass, bit_diameter, stock_thickness = self.setup.getAllData()
 
 
         self.g_code = G.startProgram(int(feed_rate))
@@ -127,4 +119,8 @@ class DoughnutCutter(Frame):
 
         return self.g_code
 
-
+    def makeGeometricEntities(self):
+        entities = []
+        entities.append(Circle(65, (0,0), {"outline":"white"}))
+        entities.append(Circle(97, (0,0), {"outline":"white"}))
+        return entities
