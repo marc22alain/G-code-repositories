@@ -11,4 +11,4 @@ default_tab_width = 6.35
 
 
 # the marcotypes machine's spacings between rows of locating holes
-spoil_board_spacings = (270 ,800, 1070)
+spoil_board_spacings = (0, 270 ,800, 1070)
