@@ -10,3 +10,6 @@ unittest.TextTestRunner().run(tsg.suiteAdd())
 unittest.TextTestRunner().run(tsg.bore_tabbed_circle_suite())
 
 unittest.TextTestRunner().run(tsg.polar_holes_suite())
+
+
+unittest.TextTestRunner().run(tsg.rect_area_suite())

@@ -135,9 +135,46 @@ class Test_polar_holes(unittest.TestCase):
         self.assertEqual(g_code, match, "not a match")
 
 
+
 def polar_holes_suite():
     suite = unittest.TestSuite()
     suite.addTest(Test_polar_holes("tabbed_two_polar_holes"))
     suite.addTest(Test_polar_holes("proven_straight_drill1"))
     suite.addTest(Test_polar_holes("proven_straight_drill2"))
+    return suite
+
+
+class Test_rectangular_area(unittest.TestCase):
+    """ arguments: (area, bit_diameter), with
+    area as (length, width)
+    """
+
+    def bit_too_large(self):
+        return sg.rectArea((1,1), 20)
+
+    def test_bit_too_large(self):
+        self.assertRaises(ValueError, self.bit_too_large)
+
+    def test_single_pass(self):
+        g_code = sg.rectArea((10,20), 10)
+        match = "G91 \nG1 Y10.0 \nG1 X0.0 Y-10.0 \nG90 \n"
+        self.assertEqual(g_code, match, "not a match, got \n%s" % g_code)
+
+    def test_two_passes(self):
+        g_code = sg.rectArea((15,20), 10)
+        match = "G91 \nG1 Y10.0 \nG1 X5.0 \nG1 Y-10.0 \nG1 X-5.0 Y-10.0 \nG90 \n"
+        self.assertEqual(g_code, match, "not a match, got \n%s" % g_code)
+
+    def test_three_passes(self):
+        g_code = sg.rectArea((25,20), 10)
+        match = "G91 \nG1 Y10.0 \nG1 X9.5 \nG1 Y-10.0 \nG1 X5.5 \nG1 Y10.0 \nG1 X-15.0 Y-10.0 \nG90 \n"
+        self.assertEqual(g_code, match, "not a match, got \n%s" % g_code)
+
+
+def rect_area_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(Test_rectangular_area("test_bit_too_large"))
+    suite.addTest(Test_rectangular_area("test_single_pass"))
+    suite.addTest(Test_rectangular_area("test_two_passes"))
+    suite.addTest(Test_rectangular_area("test_three_passes"))
     return suite

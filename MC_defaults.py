@@ -8,3 +8,7 @@ ball_noses = (12.7, 19.05)
 default_safe_Z = 100
 default_feed_rate = 1000
 default_tab_width = 6.35
+
+
+# the marcotypes machine's spacings between rows of locating holes
+spoil_board_spacings = (270 ,800, 1070)
