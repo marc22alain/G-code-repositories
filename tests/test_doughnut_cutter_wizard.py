@@ -6,10 +6,12 @@ cwd = os.getcwd()
 assert cwd[-6:] == "/tests", "directory locations don't match"
 
 sys.path.append(cwd[0:-6])
-from Doughnut_Cutter import Application
+from Doughnut_Cutter_class import DoughnutCutter
+from Setup_class import Setup
 
+setup = Setup()
 
-Doughnut_Cutter = Application()
+Doughnut_Cutter = DoughnutCutter(None,  setup)
 
 class Test_doughnut_cutter_wizard(unittest.TestCase):
 
@@ -26,18 +28,18 @@ class Test_doughnut_cutter_wizard(unittest.TestCase):
         """ This example from successful work for the Contender. 
         Inspection port hole backing plate. """
 
-        Doughnut_Cutter.feed_rate_var.set("500")
-        Doughnut_Cutter.Z_safe_var.set("80")
-        Doughnut_Cutter.cut_per_pass_var.set(3)
-        Doughnut_Cutter.bit_diameter_var.set(3.175)
-        Doughnut_Cutter.stock_thickness_var.set(4.5)
+        Doughnut_Cutter.setup.feed_rate_var.set("500")
+        Doughnut_Cutter.setup.Z_safe_var.set("80")
+        Doughnut_Cutter.setup.cut_per_pass_var.set(3)
+        Doughnut_Cutter.setup.bit_diameter_var.set(3.175)
+        Doughnut_Cutter.setup.stock_thickness_var.set(4.5)
 
         Doughnut_Cutter.tab_thickness_var.set(1.5)
         Doughnut_Cutter.tab_width_var.set("6.35")
         Doughnut_Cutter.doughnut_OD_var.set(150)
         Doughnut_Cutter.doughnut_ID_var.set(118)
 
-        Doughnut_Cutter.GenerateCode()
+        Doughnut_Cutter.generateCode()
         g_code = Doughnut_Cutter.g_code
 
         self.assertEquals(self.doughnut_match1(), g_code)
@@ -46,18 +48,18 @@ class Test_doughnut_cutter_wizard(unittest.TestCase):
     def test_doughnut_match2(self):
         """ This example is actually unknown. """
 
-        Doughnut_Cutter.feed_rate_var.set("1000")
-        Doughnut_Cutter.Z_safe_var.set("100")
-        Doughnut_Cutter.cut_per_pass_var.set(3)
-        Doughnut_Cutter.bit_diameter_var.set(6.35)
-        Doughnut_Cutter.stock_thickness_var.set(7)
+        Doughnut_Cutter.setup.feed_rate_var.set("1000")
+        Doughnut_Cutter.setup.Z_safe_var.set("100")
+        Doughnut_Cutter.setup.cut_per_pass_var.set(3)
+        Doughnut_Cutter.setup.bit_diameter_var.set(6.35)
+        Doughnut_Cutter.setup.stock_thickness_var.set(7)
 
         Doughnut_Cutter.tab_thickness_var.set(1.5)
         Doughnut_Cutter.tab_width_var.set("6.35")
         Doughnut_Cutter.doughnut_OD_var.set(120.3)
         Doughnut_Cutter.doughnut_ID_var.set(75.1)
 
-        Doughnut_Cutter.GenerateCode()
+        Doughnut_Cutter.generateCode()
         g_code = Doughnut_Cutter.g_code
 
         self.assertEquals(self.doughnut_match2(), g_code)
