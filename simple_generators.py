@@ -4,8 +4,8 @@ accessed in the AXIS GUI.
 
 BONUS!
 Can also call these from the command line to save programs, like so:
-
-python -c 'from simple_generators import *; print rectArea((200,220),19.05)' >> 200x220x19.05.txt
+:$ python -c 'from simple_generators import *; print rectArea((200,220),19.05)' >> 200x220x19.05.ngc
+... but this does leave out important lines such as feed rate and program end.
 
 """
 import Glib as G
@@ -230,7 +230,11 @@ def rectArea(area, bit_diameter):
         out = not out
 
     # last move is a return to relative origin
-    file_text += G.G1_XY(( -(length - bit_diameter), -(width - bit_diameter)))
+    if out == True:
+        file_text += G.G1_XY(( -(length - bit_diameter), 0))
+    else:
+        file_text += G.G1_XY(( -(length - bit_diameter), -(width - bit_diameter)))
+    
     file_text += G.set_ABS_mode()
     return file_text
 

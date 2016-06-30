@@ -104,8 +104,6 @@ def bore_tabbed_circle_suite():
 
 
 
-
-
 class Test_polar_holes(unittest.TestCase):
     """ arguments: (Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter, num_holes, hole_circle_diameter)
@@ -135,13 +133,13 @@ class Test_polar_holes(unittest.TestCase):
         self.assertEqual(g_code, match, "not a match")
 
 
-
 def polar_holes_suite():
     suite = unittest.TestSuite()
     suite.addTest(Test_polar_holes("tabbed_two_polar_holes"))
     suite.addTest(Test_polar_holes("proven_straight_drill1"))
     suite.addTest(Test_polar_holes("proven_straight_drill2"))
     return suite
+
 
 
 class Test_rectangular_area(unittest.TestCase):
@@ -162,7 +160,7 @@ class Test_rectangular_area(unittest.TestCase):
 
     def test_two_passes(self):
         g_code = sg.rectArea((15,20), 10)
-        match = "G91 \nG1 Y10.0 \nG1 X5.0 \nG1 Y-10.0 \nG1 X-5.0 Y-10.0 \nG90 \n"
+        match = "G91 \nG1 Y10.0 \nG1 X5.0 \nG1 Y-10.0 \nG1 X-5.0 Y0.0 \nG90 \n"
         self.assertEqual(g_code, match, "not a match, got \n%s" % g_code)
 
     def test_three_passes(self):
