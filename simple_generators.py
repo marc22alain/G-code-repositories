@@ -4,7 +4,7 @@ accessed in the AXIS GUI.
 
 BONUS!
 Can also call these from the command line to save programs, like so:
-:$ python -c 'from simple_generators import *; print rectArea((200,220),19.05)' >> 200x220x19.05.ngc
+:$ python -c 'from simple_generators import *; print rectArea((200,220),19.05)' >> plane_200x220x19.05.ngc
 ... but this does leave out important lines such as feed rate and program end.
 
 """

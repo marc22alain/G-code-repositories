@@ -168,6 +168,17 @@ class Test_rectangular_area(unittest.TestCase):
         match = "G91 \nG1 Y10.0 \nG1 X9.5 \nG1 Y-10.0 \nG1 X5.5 \nG1 Y10.0 \nG1 X-15.0 Y-10.0 \nG90 \n"
         self.assertEqual(g_code, match, "not a match, got \n%s" % g_code)
 
+    def test_odd_multi_pass(self):
+        g_code = sg.rectArea((200,220),19.05)
+        match = "G91 \nG1 Y200.95 \nG1 X18.55 \nG1 Y-200.95 \nG1 X18.55 \nG1 Y200.95 \nG1 X18.55 \nG1 Y-200.95 \nG1 X18.55 \nG1 Y200.95 \nG1 X18.55 \nG1 Y-200.95 \nG1 X18.55 \nG1 Y200.95 \nG1 X18.55 \nG1 Y-200.95 \nG1 X18.55 \nG1 Y200.95 \nG1 X18.55 \nG1 Y-200.95 \nG1 X14.0 \nG1 Y200.95 \nG1 X-180.95 Y-200.95 \nG90 \n"
+        self.assertEqual(g_code, match)
+
+    def test_even_multi_pass(self):
+        """ Tested on the machine. """
+        g_code = sg.rectArea((100,220),19.05)
+        match = "G91 \nG1 Y200.95 \nG1 X18.55 \nG1 Y-200.95 \nG1 X18.55 \nG1 Y200.95 \nG1 X18.55 \nG1 Y-200.95 \nG1 X18.55 \nG1 Y200.95 \nG1 X6.75 \nG1 Y-200.95 \nG1 X-80.95 Y0.0 \nG90 \n"
+        self.assertEqual(g_code, match)
+
 
 def rect_area_suite():
     suite = unittest.TestSuite()
@@ -175,4 +186,6 @@ def rect_area_suite():
     suite.addTest(Test_rectangular_area("test_single_pass"))
     suite.addTest(Test_rectangular_area("test_two_passes"))
     suite.addTest(Test_rectangular_area("test_three_passes"))
+    suite.addTest(Test_rectangular_area("test_odd_multi_pass"))
+    suite.addTest(Test_rectangular_area("test_even_multi_pass"))
     return suite
