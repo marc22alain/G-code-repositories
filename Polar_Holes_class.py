@@ -91,18 +91,20 @@ class PolarHolesBorer(Frame):
 
         self.g_code += G.endProgram()
 
-
-    def printToConsole(self):
-        self.generateCode()
-        print self.g_code
-        # since self.quit() does not work on OSX
-        os._exit(0)
+        return self.g_code
 
 
-    def writeToAxis(self):
-        self.generateCode()
-        sys.stdout.write(self.g_code)
-        # may want to keep this alive, for writing many similar holes
-        # of course if AXIS does not delete the program, then maybe this
-        # does work fine for UI
-        self.quit()
+    # def printToConsole(self):
+    #     self.generateCode()
+    #     print self.g_code
+    #     # since self.quit() does not work on OSX
+    #     os._exit(0)
+
+
+    # def writeToAxis(self):
+    #     self.generateCode()
+    #     sys.stdout.write(self.g_code)
+    #     # may want to keep this alive, for writing many similar holes
+    #     # of course if AXIS does not delete the program, then maybe this
+    #     # does work fine for UI
+    #     self.quit()
