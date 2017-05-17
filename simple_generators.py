@@ -278,8 +278,8 @@ def rectAreaByOutline(area, bit_diameter):
         file_text += G.G1_XY((x_step, y_step))
         current_x += x_step
         current_y += y_step
-        length -= x_step
-        width -= y_step
+        length -= (2 * x_step)
+        width -= (2 * y_step)
         file_text += _rectOutline(length, width, bit_diameter)
         min_passes -= 2
     file_text += G.G0_XY((- current_x, - current_y))
