@@ -231,9 +231,18 @@ def rectArea(area, bit_diameter):
 
     # last move is a return to relative origin
     if out == True:
-        file_text += G.G1_XY(( -(length - bit_diameter), 0))
+        # Moves straight back along original side wall
+        # file_text += G.G1_XY(( -(length - bit_diameter), 0))
+        # Change to: move across to other side, move straight back, then back to origin
+        file_text += G.G1_Y(( 0, (width - bit_diameter)))
+        file_text += G.G1_X(( -(length - bit_diameter), 0))
+        file_text += G.G0_Y(( 0, -(width - bit_diameter)))
     else:
-        file_text += G.G1_XY(( -(length - bit_diameter), -(width - bit_diameter)))
+        # Moves diagonally across the cut area
+        # file_text += G.G1_XY(( -(length - bit_diameter), -(width - bit_diameter)))
+        # Change to: move straight back, then back to origin
+        file_text += G.G1_X(( -(length - bit_diameter), 0))
+        file_text += G.G0_Y(( 0, -(width - bit_diameter)))
     
     file_text += G.set_ABS_mode()
     return file_text
