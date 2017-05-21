@@ -247,6 +247,62 @@ def rectArea(area, bit_diameter):
     file_text += G.set_ABS_mode()
     return file_text
 
+def rectAreaByOutline(area, bit_diameter):
+    """ Required arguments: area (as (x=length, y=width), bit_diameter.
+    Assumes that the bit is already in the origin corner at required depth of cut.
+    This version just cuts progressively smaller rectangles. It may be slower due to
+    the more limited travel speed of the X-axis.
+    """
+    length, width = area
+    if bit_diameter > length or bit_diameter > width:
+        raise ValueError("Bit is too large to cut specified area")
+    # magic number 0.5 is the pass-to-pass overlap
+    pass_width = bit_diameter - 0.5
+
+    file_text = G.set_INCR_mode()
+    # Let's first cut the whole outline of the area
+    file_text += _rectOutline(length, width, bit_diameter)
+    current_x = 0
+    current_y = 0
+    # TODO: fix the guard, it was written with the point of view of bullnose bits
+    while (length - (2 * bit_diameter) >= - pass_width) || (width - (2 * bit_diameter) >= - pass_width):
+        if (length - (2 * bit_diameter) >= - pass_width) && (width - (2 * bit_diameter) >= - pass_width):
+            file_text += G.G1_XY((bit_diameter - pass_width, bit_diameter - pass_width))
+            current_x += bit_diameter - pass_width
+            current_y += bit_diameter - pass_width
+            length -= 2 * (bit_diameter - pass_width)
+            width -= 2 * (bit_diameter - pass_width)
+            file_text += _rectOutline(length, width, bit_diameter)
+        elif (length - (2 * bit_diameter) < - pass_width) && (width - (2 * bit_diameter) >= - pass_width):
+            file_text += G.G1_XY((length / 2.0, bit_diameter - pass_width))
+            current_x += length / 2.0
+            current_y += bit_diameter - pass_width
+            width -= 2 * (bit_diameter - pass_width)
+            file_text += G.G1_Y(width)
+            current_y += width
+        else:
+            file_text += G.G1_XY((bit_diameter - pass_width, width / 2.0))
+            current_x += bit_diameter - pass_width
+            current_y += width / 2.0
+            length -= 2 * (bit_diameter - pass_width)
+            file_text += G.G1_X(length)
+            current_x += length
+
+    file_text += G.G0_XY((- current_x, - current_y))
+    file_text += G.set_ABS_mode()
+    return file_text
+
+def _rectOutline(length, width, bit_diameter):
+    """ Assumes it's in INCREMENTAL MODE. 
+    Since length and width arguments are not related to any position."""
+    # TODO: consider whether to climb-cut or not.
+    # Cut the whole outline of the area, returning to the origin.
+    file_text = G.G1_X(length - bit_diameter)
+    file_text += G.G1_Y(width - bit_diameter)
+    file_text += G.G1_X(-(length - bit_diameter))
+    file_text += G.G1_Y(-(width - bit_diameter))
+    return file_text
+
 
 def startProgram(feed_rate):
     return G.F_rate(feed_rate)
