@@ -2,11 +2,7 @@
 from Tkinter import *
 
 from ViewSpace_class import ViewSpace
-from Setup_class import Setup
 from RoundBottomedDado_class import RoundBottomedDado
-import MC_defaults as MC
-from SpinboxQuery_class import SpinboxQuery
-from EntryQuery_class import EntryQuery
 
 
 # Determine the window size
@@ -21,7 +17,6 @@ class Application(Frame):
     def __init__(self, master, machined_geometry_class):
         Frame.__init__(self, master)
         self.machined_geometry_engine = machined_geometry_class()
-        self.setup = Setup()
         self.grid()
         self.createSubframes()
         self.createMoreWidgets()
@@ -32,22 +27,13 @@ class Application(Frame):
     def createSubframes(self):
         self.geo_frame = Frame(self)
         self.geo_frame.grid(row=0, column=0)
-        self.view_space = ViewSpace(self.geo_frame, canvas_options, grid_options)
+        self.view_space = ViewSpace(self.geo_frame, self.machined_geometry_engine.getViewSpaceInit())
 
         self.entry_frame = Frame(self)
         self.entry_frame.grid(row=0, column=1)
 
     def createMoreWidgets(self):
-        # TODO: generalize this method to import a purpose-built class
-        queries = [{"name":"Feed rate", "type":DoubleVar, "default":MC.default_feed_rate, "input_type": EntryQuery}, \
-                        {"name":"Safe Z travel height", "type":DoubleVar, "default":MC.default_safe_Z, "input_type": EntryQuery}, \
-                        {"name":"Maximum cut per pass", "type":DoubleVar, "input_type": EntryQuery}, \
-                        {"name":"Cutter diameter", "type":DoubleVar, "input_type": SpinboxQuery, "values":MC.bits}]
-
         self.queries = []
-        for query in queries:
-            self.queries.append(query["input_type"](query))
-
         self.queries += self.machined_geometry_engine.getDataQueries()
 
         row_num = 1
@@ -56,11 +42,37 @@ class Application(Frame):
             row_num += 1
 
         row_num += 1
-        self.refresh_view = Button(self.entry_frame,text="Refresh_view",command=self.refreshView, width=30)
+        self.refresh_view = Button(self.entry_frame,text="Refresh view",command=self.refreshView, width=30)
         self.refresh_view.grid(row=row_num, column=0, columnspan=2, pady=5)
 
+        if self.machined_geometry_engine.implements_toolpass_view:
+            row_num += 1
+            self.toolpass_view = Button(self.entry_frame,text="Show tool passes",command=self.showToolPasses, width=30)
+            self.toolpass_view.grid(row=row_num, column=0, columnspan=2, pady=5)
+
+
     def refreshView(self):
-        print self.extractRowData()
+        data = self.extractRowData()
+        # example:
+        # {'Bottom Radius': 30.0, 'Stock Width - Y': 100.0, 'Maximum cut per pass': 3.0,
+        #  'Stock Height - Z': 50.0, 'Cutter diameter': 3.175, 'Stock Length - X': 200.0,
+        #  'Safe Z travel height': 100.0, 'Feed rate': 1000.0}
+        print data
+        geometry = self.machined_geometry_engine.getGeometry(data)
+        # example:
+        # {'arc': [(20.0, 20.0, 80.0, 80.0, 180, 180)],
+        #  'extents': {'width': 100.0, 'center': (50.0, 25.0), 'height': 50.0},
+        #  'rectangle': [(0, 0, 100.0, 50.0)]}
+        print geometry
+        self.view_space.drawGeometry(geometry)
+
+
+    def showToolPasses(self):
+        data = self.extractRowData()
+        tool_passes = self.machined_geometry_engine.getToolPasses(data)
+        geometry = self.machined_geometry_engine.getGeometry(data)
+        self.view_space.drawGeometry(tool_passes, geometry)
+
 
     def extractRowData(self):
         data = {}
