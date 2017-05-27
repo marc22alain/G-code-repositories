@@ -99,10 +99,10 @@ class ViewSpace(Frame):
                 self.canvas.create_arc(self.x_conv(arc[0]), self.y_conv(arc[1]), \
                     self.x_conv(arc[2]), self.y_conv(arc[3]), start=arc[4], \
                     extent=arc[5], outline=arc[6]["outline"], tag=arc[6]["tag"], fill=arc[6]["fill"])
-            for arc in geometry["circle"]:
-                self.canvas.create_oval(self.x_conv(arc[0]), self.y_conv(arc[1]), \
-                    self.x_conv(arc[2]), self.y_conv(arc[3]), \
-                    outline=arc[4]["outline"], tag=arc[4]["tag"], fill=arc[4]["fill"])
+            for circle in geometry["circle"]:
+                self.canvas.create_oval(self.x_conv(circle[0]), self.y_conv(circle[1]), \
+                    self.x_conv(circle[2]), self.y_conv(circle[3]), \
+                    outline=circle[4]["outline"], tag=circle[4]["tag"], fill=circle[4]["fill"])
             for rect in geometry["rectangle"]:
                 self.canvas.create_rectangle(self.x_conv(rect[0]), self.y_conv(rect[1]), \
                     self.x_conv(rect[2]), self.y_conv(rect[3]),\
