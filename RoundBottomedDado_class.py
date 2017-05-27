@@ -9,12 +9,13 @@ from Tkinter import *
 from SpinboxQuery_class import SpinboxQuery
 from EntryQuery_class import EntryQuery
 from default_query_sets import setup_queries
+import simple_generators as G
 import math
 
 
 
 class RoundBottomedDado(MachinedGeometry):
-    # static class variables:
+    # class variables:
     data_query_defs =  [{"name":"Stock Width - Y", "type":DoubleVar, "input_type": EntryQuery}, \
                         {"name":"Stock Height - Z", "type":DoubleVar, "input_type": EntryQuery}, \
                         {"name":"Stock Length - X", "type":DoubleVar, "input_type": EntryQuery}, \
@@ -88,6 +89,64 @@ class RoundBottomedDado(MachinedGeometry):
     def assertValid(self, data):
         pass
 
+    def generateGcode(self, data):
+        feed_rate = data["Feed rate"]
+        safe_Z = data["Safe Z travel height"]
+        max_cut_per_pass = data["Maximum cut per pass"]
+        bit_diameter = data["Cutter diameter"]
+        stock_thickness = data["Stock Height - Z"]
+        stock_width = data["Stock Width - Y"]
+        stock_length = data["Stock Length - X"]
+        bottom_radius = data["Bottom Radius"]
+
+        bit_radius = bit_diameter / 2.0
+        mid_stock_w = stock_width / 2.0
+        rad_center = { "x": mid_stock_w, "y": stock_thickness }
+
+        self.g_code = G.startProgram(feed_rate)
+
+        # POSITIONING ASSUMPTIONS:
+        #   - y-coord location of bit is at centerline of the dado
+        #   - x-coord location of bit is adjacent to the stock
+        #   - z-coord location is at or around Z-safe
+        self.g_code += G.G.G0_Z(stock_thickness)
+
+        # Putting the tip of the bit on the top surface of the stock.
+        bit_center_Y = stock_thickness + bit_radius
+        length = stock_length + (2 * bit_diameter)
+        # The guard will always leave the center cut left to make.
+        while (bit_center_Y - bit_radius - max_cut_per_pass > stock_thickness - bottom_radius ):
+            bit_center_Y -= max_cut_per_pass
+            if bit_center_Y > stock_thickness:
+                bit_center_from_middle = bottom_radius - bit_radius
+            else:
+                # Applying Pythagoras:
+                #    - (bottom_radius - bit_radius) is the hypotenuse
+                #    - (stock_thickness - bit_center_Y) is the
+                bit_center_from_middle = math.sqrt( ((bottom_radius - bit_radius)**2) - ((stock_thickness - bit_center_Y)**2) )
+            # Move the bit to start of x-coord, then z-coord
+            self.g_code += G.G.set_INCR_mode()
+            self.g_code += G.G.G0_Y(- bit_center_from_middle)
+            self.g_code += G.G.G1_Z(- max_cut_per_pass)
+            self.g_code += G.G.set_ABS_mode()
+
+            width = (bit_center_from_middle * 2) + bit_diameter
+            self.g_code += G.rectArea((length, width), bit_diameter)
+
+            # Wastes time, but moves the bit back to dado centerline.
+            self.g_code += G.G.set_INCR_mode()
+            self.g_code += G.G.G0_Y(bit_center_from_middle)
+            self.g_code += G.G.set_ABS_mode()
+
+        self.g_code += G.G.G1_Z(stock_thickness - bottom_radius)
+        self.g_code += G.G.set_INCR_mode()
+        self.g_code += G.G.G1_X(length)
+        self.g_code += G.G.set_ABS_mode()
+
+        self.g_code += G.G.G0_Z(safe_Z)
+        self.g_code += G.endProgram()
+        return self.g_code
+
     def _makeEntryQueries(self):
         entry_queries = []
 
@@ -97,6 +156,3 @@ class RoundBottomedDado(MachinedGeometry):
         for query in self.data_query_defs:
             entry_queries.append(query["input_type"](query))
         return entry_queries
-
-    def mutateStaticClassVar(self):
-        self.implements_toolpass_view = False

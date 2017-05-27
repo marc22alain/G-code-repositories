@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+
+"""
+How to add additional generator apps to the Mother Of All Apps:
+- import the new generator
+- write a new method to call Application(<new generator>)
+- add a button that calls the new method
+"""
+
 from Tkinter import *
 
 from Application_class import runApp
@@ -23,6 +31,7 @@ class AllApps(Frame):
 
     def startRoundBottomedDado(self):
         runApp(Toplevel(self), RoundBottomedDado)
+
 
 allApp = AllApps()
 allApp.master.title("Run All the Apps")

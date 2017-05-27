@@ -3,7 +3,11 @@ from Tkinter import *
 
 from ViewSpace_class import ViewSpace
 from RoundBottomedDado_class import RoundBottomedDado
+import os
+import sys
+import time
 
+IN_AXIS = os.environ.has_key("AXIS_PROGRESS_BAR")
 
 # Determine the window size
 # TODO: generalize to obtain the total view size
@@ -50,9 +54,22 @@ class Application(Frame):
             self.toolpass_view = Button(self.entry_frame,text="Show tool passes",command=self.showToolPasses, width=30)
             self.toolpass_view.grid(row=row_num, column=0, columnspan=2, pady=5)
 
+        if IN_AXIS:
+            output_button_text="Write g-code to AXIS"
+            output_button_function = self.writeToAXIS
+        else:
+            output_button_text="Save g-code to file"
+            output_button_function = self.writeToFile
+            row_num += 1
+            self.file_name_label = Label(self.entry_frame, text='File name')
+            self.file_name_label.grid(row=row_num, column=0)
+            self.file_name_var = StringVar()
+            self.file_name_input = Entry(self.entry_frame, textvariable=self.file_name_var ,width=15)
+            self.file_name_input.grid(row=row_num, column=1)
+
         row_num += 1
-        self.gen_code = Button(self.entry_frame,text="Refresh view",command=self.generateGcode, width=30)
-        self.gen_code.grid(row=row_num, column=0, columnspan=2, pady=5)
+        self.output_button = Button(self.entry_frame,text=output_button_text,command=output_button_function, width=30)
+        self.output_button.grid(row=row_num, column=0, columnspan=2, pady=5)
 
 
     def refreshView(self):
@@ -78,7 +95,28 @@ class Application(Frame):
         self.view_space.drawGeometry(tool_passes, geometry)
 
     def generateGcode(self):
-        pass
+        """
+        Delegates the generates a G-code file, and submits it to LinuxCNC if it is open, otherwise saves
+        as a file with the given (or default) name.
+        """
+        data = self.extractRowData()
+        return self.machined_geometry_engine.generateGcode(data)
+
+    def writeToAXIS(self):
+        self.g_code = self.generateGcode()
+        sys.stdout.write(self.g_code)
+
+    def writeToFile(self):
+        self.g_code = self.generateGcode()
+        print self.g_code
+
+        file_name = self.file_name_var.get() + ".ngc"
+        # If user forgets, or wants the default name:
+        if file_name == ".ngc":
+            file_name = type(self.machined_geometry_engine).__name__ + "-" + time.ctime() + ".ngc"
+        with open(file_name, 'w') as myFile:
+            myFile.write(self.g_code)
+        # TODO: consider returning it for testing.
 
     def extractRowData(self):
         data = {}
