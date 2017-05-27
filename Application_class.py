@@ -50,6 +50,10 @@ class Application(Frame):
             self.toolpass_view = Button(self.entry_frame,text="Show tool passes",command=self.showToolPasses, width=30)
             self.toolpass_view.grid(row=row_num, column=0, columnspan=2, pady=5)
 
+        row_num += 1
+        self.gen_code = Button(self.entry_frame,text="Refresh view",command=self.generateGcode, width=30)
+        self.gen_code.grid(row=row_num, column=0, columnspan=2, pady=5)
+
 
     def refreshView(self):
         data = self.extractRowData()
@@ -73,6 +77,8 @@ class Application(Frame):
         geometry = self.machined_geometry_engine.getGeometry(data)
         self.view_space.drawGeometry(tool_passes, geometry)
 
+    def generateGcode(self):
+        pass
 
     def extractRowData(self):
         data = {}

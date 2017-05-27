@@ -265,15 +265,15 @@ def rectAreaByOutline(area, bit_diameter):
     current_x = 0
     current_y = 0
     # TODO: fix the guard, it was written with the point of view of bullnose bits
-    while (length - (2 * bit_diameter) >= - pass_width) || (width - (2 * bit_diameter) >= - pass_width):
-        if (length - (2 * bit_diameter) >= - pass_width) && (width - (2 * bit_diameter) >= - pass_width):
+    while (length - (2 * bit_diameter) >= - pass_width) or (width - (2 * bit_diameter) >= - pass_width):
+        if (length - (2 * bit_diameter) >= - pass_width) and (width - (2 * bit_diameter) >= - pass_width):
             file_text += G.G1_XY((bit_diameter - pass_width, bit_diameter - pass_width))
             current_x += bit_diameter - pass_width
             current_y += bit_diameter - pass_width
             length -= 2 * (bit_diameter - pass_width)
             width -= 2 * (bit_diameter - pass_width)
             file_text += _rectOutline(length, width, bit_diameter)
-        elif (length - (2 * bit_diameter) < - pass_width) && (width - (2 * bit_diameter) >= - pass_width):
+        elif (length - (2 * bit_diameter) < - pass_width) and (width - (2 * bit_diameter) >= - pass_width):
             file_text += G.G1_XY((length / 2.0, bit_diameter - pass_width))
             current_x += length / 2.0
             current_y += bit_diameter - pass_width

@@ -91,6 +91,15 @@ class ViewSpace(Frame):
 
 
     def drawGeometry(self, *geometries):
+        """
+        Generic function to draw any kind of geometry.
+        Expects each geometry argument to a dict with all keys present:
+        { "rectangle":[], "circle": [], "arc": []}
+        The entities are tuples within each list.
+        Further, each tuple's last element must be a dict with all keys present:
+        {"tag":"","outline":"","fill":""}, note that 'None' is an acceptable value for some.
+        TODO: make tolerant of missing keys.
+        """
         for geometry in geometries:
             self.convertOptions(geometry)
         self.canvas.delete("geometry")
