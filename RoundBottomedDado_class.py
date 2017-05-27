@@ -8,6 +8,9 @@ from MachinedGeometry_class import MachinedGeometry
 from Tkinter import *
 from SpinboxQuery_class import SpinboxQuery
 from EntryQuery_class import EntryQuery
+from Rectangle_class import Rectangle
+from Circle_class import Circle
+from Arc_class import Arc
 from default_query_sets import machine_params
 import simple_generators as G
 import math
@@ -55,19 +58,20 @@ class RoundBottomedDado(MachinedGeometry):
         radius = self.bottom_radius_param.getValue()
         mid_stock_w = stock_w / 2.0
         mid_stock_h = stock_h / 2.0
-        return {"rectangle":[(0,0,stock_w,stock_h, {"tag":"geometry","outline":"yellow","fill":None})], \
-                "arc":[(mid_stock_w - radius,stock_h - radius, mid_stock_w + radius, stock_h + radius, 180, 180, {"tag":"geometry","outline":"yellow","fill":None})],
-                "circle":[], "extents": {"width": stock_w, "height": stock_h, "center": (mid_stock_w, mid_stock_h)}}
+
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        return {"entities":[Rectangle().setAll((0,0,stock_w,stock_h), options),
+                            Arc().setAllByCenterRadius((mid_stock_w, stock_h, radius, 180, 180), options)],
+                "extents": {"width": stock_w, "height": stock_h, "center": (mid_stock_w, mid_stock_h)}}
 
     def getToolPasses(self):
         self.assertValid()
-        tool_passes = {"rectangle":[], "arc":[], "circle":[]}
+        tool_passes = {"entities":[]}
 
         stock_w = self.stock_width_param.getValue()
         stock_h = self.stock_height_param.getValue()
         radius = self.bottom_radius_param.getValue()
         mid_stock_w = stock_w / 2.0
-        mid_stock_h = stock_h / 2.0
         rad_center = { "x": mid_stock_w, "y": stock_h }
         max_cut_per_pass = self.machine_params["Maximum cut per pass"].getValue()
         bit_radius = self.machine_params["Cutter diameter"].getValue() / 2.0
@@ -78,8 +82,10 @@ class RoundBottomedDado(MachinedGeometry):
                 bit_center_from_middle = radius - bit_radius
             else:
                 bit_center_from_middle = math.sqrt( ((radius - bit_radius)**2) - ((rad_center["y"] - bit_center_Y)**2) )
-            tool_passes["circle"].append((mid_stock_w - bit_center_from_middle - bit_radius, bit_center_Y - bit_radius, mid_stock_w - bit_center_from_middle + bit_radius, bit_center_Y + bit_radius, {"tag":"geometry","outline":"white","fill":"white"}))
-            tool_passes["circle"].append((mid_stock_w + bit_center_from_middle - bit_radius, bit_center_Y - bit_radius, mid_stock_w + bit_center_from_middle + bit_radius, bit_center_Y + bit_radius, {"tag":"geometry","outline":"white","fill":"white"}))
+                options = {"tag":"geometry","outline":"white","fill":"white"}
+
+                tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w - bit_center_from_middle, bit_center_Y, bit_radius), options))
+                tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w + bit_center_from_middle, bit_center_Y, bit_radius), options))
             bit_center_Y -= max_cut_per_pass
 
         return tool_passes

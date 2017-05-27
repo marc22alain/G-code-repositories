@@ -46,7 +46,8 @@ class ViewSpace(Frame):
         self.canvas.create_line(self.x_conv(0), self.y_conv(-25), self.x_conv(0), self.y_conv(425), fill="green", arrow=LAST, dash=(16, 4, 4, 4))
         # TODO: generalize the axis lines per quadrant.
         self.canvas.create_text(self.x_conv(440), self.y_conv(0), text="X", fill="green")
-        self.canvas.create_text(self.x_conv(0), self.y_conv(435), text="Y", fill="green")
+        g = self.canvas.create_text(self.x_conv(0), self.y_conv(435), text="Y", fill="green")
+        print g
 
 
     def convertOptions(self, options):
@@ -104,15 +105,6 @@ class ViewSpace(Frame):
             self.convertOptions(geometry)
         self.canvas.delete("geometry")
         for geometry in geometries:
-            for arc in geometry["arc"]:
-                self.canvas.create_arc(self.x_conv(arc[0]), self.y_conv(arc[1]), \
-                    self.x_conv(arc[2]), self.y_conv(arc[3]), start=arc[4], \
-                    extent=arc[5], outline=arc[6]["outline"], tag=arc[6]["tag"], fill=arc[6]["fill"])
-            for circle in geometry["circle"]:
-                self.canvas.create_oval(self.x_conv(circle[0]), self.y_conv(circle[1]), \
-                    self.x_conv(circle[2]), self.y_conv(circle[3]), \
-                    outline=circle[4]["outline"], tag=circle[4]["tag"], fill=circle[4]["fill"])
-            for rect in geometry["rectangle"]:
-                self.canvas.create_rectangle(self.x_conv(rect[0]), self.y_conv(rect[1]), \
-                    self.x_conv(rect[2]), self.y_conv(rect[3]),\
-                    outline=rect[4]["outline"], tag=rect[4]["tag"], fill=rect[4]["fill"])
+            for entity in geometry["entities"]:
+                entity.draw(self.canvas, self.x_conv, self.y_conv)
+
