@@ -8,7 +8,7 @@ from MachinedGeometry_class import MachinedGeometry
 from Tkinter import *
 from SpinboxQuery_class import SpinboxQuery
 from EntryQuery_class import EntryQuery
-from default_query_sets import setup_queries
+from default_query_sets import machine_params
 import simple_generators as G
 import math
 
@@ -16,17 +16,18 @@ import math
 
 class RoundBottomedDado(MachinedGeometry):
     # class variables:
-    data_query_defs =  [{"name":"Stock Width - Y", "type":DoubleVar, "input_type": EntryQuery}, \
-                        {"name":"Stock Height - Z", "type":DoubleVar, "input_type": EntryQuery}, \
-                        {"name":"Stock Length - X", "type":DoubleVar, "input_type": EntryQuery}, \
-                        {"name":"Bottom Radius", "type":DoubleVar, "input_type": EntryQuery}]
-
     name = "Round Bottomed Dado"
     version = "0.9"
     implements_toolpass_view = True
 
     def __init__(self):
-        self.entry_queries = self._makeEntryQueries()
+        self.stock_length_param = EntryQuery({"name":"Stock Length - X", "type":DoubleVar})
+        self.stock_width_param = EntryQuery({"name":"Stock Width - Y", "type":DoubleVar})
+        self.stock_height_param = EntryQuery({"name":"Stock Height - Z", "type":DoubleVar})
+        self.bottom_radius_param = EntryQuery({"name":"Bottom Radius", "type":DoubleVar})
+        self.params = [self.stock_length_param, self.stock_width_param, self.stock_height_param, self.bottom_radius_param]
+        self.machine_params = machine_params
+        self.entry_queries = self.machine_params.values() + self.params
 
     def getViewSpaceInit(self):
         # Quadrants:
@@ -45,34 +46,31 @@ class RoundBottomedDado(MachinedGeometry):
     def getDataQueries(self):
         return self.entry_queries
 
-    def getGeometry(self, data):
-        self.assertValid(data)
+    def getGeometry(self):
+        self.assertValid()
         # Define a rectangle for the end of the stock (width and height).
         # Define an arc with center point at the midpoint of the top width line of the rectangle.
-        stock_w = data["Stock Width - Y"]
-        stock_h = data["Stock Height - Z"]
-        radius = data["Bottom Radius"]
+        stock_w = self.stock_width_param.getValue()
+        stock_h = self.stock_height_param.getValue()
+        radius = self.bottom_radius_param.getValue()
         mid_stock_w = stock_w / 2.0
         mid_stock_h = stock_h / 2.0
         return {"rectangle":[(0,0,stock_w,stock_h, {"tag":"geometry","outline":"yellow","fill":None})], \
                 "arc":[(mid_stock_w - radius,stock_h - radius, mid_stock_w + radius, stock_h + radius, 180, 180, {"tag":"geometry","outline":"yellow","fill":None})],
                 "circle":[], "extents": {"width": stock_w, "height": stock_h, "center": (mid_stock_w, mid_stock_h)}}
 
-    def getToolPasses(self, data):
+    def getToolPasses(self):
+        self.assertValid()
         tool_passes = {"rectangle":[], "arc":[], "circle":[]}
-        """
-        {'Bottom Radius': 35.0, 'Stock Width - Y': 100.0, 'Maximum cut per pass': 0.0,
-        'Stock Height - Z': 50.0, 'Cutter diameter': 3.175, 'Stock Length - X': 1000.0,
-        'Safe Z travel height': 100.0, 'Feed rate': 1000.0}
-        """
-        stock_w = data["Stock Width - Y"]
-        stock_h = data["Stock Height - Z"]
-        radius = data["Bottom Radius"]
+
+        stock_w = self.stock_width_param.getValue()
+        stock_h = self.stock_height_param.getValue()
+        radius = self.bottom_radius_param.getValue()
         mid_stock_w = stock_w / 2.0
         mid_stock_h = stock_h / 2.0
         rad_center = { "x": mid_stock_w, "y": stock_h }
-        max_cut_per_pass = data["Maximum cut per pass"]
-        bit_radius = data["Cutter diameter"] / 2.0
+        max_cut_per_pass = self.machine_params["Maximum cut per pass"].getValue()
+        bit_radius = self.machine_params["Cutter diameter"].getValue() / 2.0
         bit_center_Y = stock_h - max_cut_per_pass + bit_radius
 
         while (bit_center_Y > rad_center["y"] - radius + bit_radius):
@@ -86,18 +84,32 @@ class RoundBottomedDado(MachinedGeometry):
 
         return tool_passes
 
-    def assertValid(self, data):
-        pass
+    def assertValid(self):
+        # TODO: consider progressive checking as impacts can arise.
+        # Ensure that the program terminates, during G-code generation.
+        # Only critical during G-code generation.
+        if self.machine_params["Maximum cut per pass"].getValue() <= 0:
+            raise ValueError("Cut per pass must be greater than zero!")
+        # Prevent the tool from crashing into the spoil board.
+        # Only critical during G-code generation.
+        if self.bottom_radius_param.getValue() >= self.stock_height_param.getValue():
+            raise ValueError("Radius is too large for stock height!")
+        # Prevent the tool from crashing into the stock during G0 moves.
+        # Only critical during G-code generation.
+        if self.stock_height_param.getValue() >= self.machine_params["Safe Z travel height"].getValue():
+            raise ValueError("Stock height is above Safe Z!")
+        # Is it NOT OK if the bottom diameter exceeds the stock width ?
 
-    def generateGcode(self, data):
-        feed_rate = data["Feed rate"]
-        safe_Z = data["Safe Z travel height"]
-        max_cut_per_pass = data["Maximum cut per pass"]
-        bit_diameter = data["Cutter diameter"]
-        stock_thickness = data["Stock Height - Z"]
-        stock_width = data["Stock Width - Y"]
-        stock_length = data["Stock Length - X"]
-        bottom_radius = data["Bottom Radius"]
+    def generateGcode(self):
+        self.assertValid()
+        feed_rate = self.machine_params["Feed rate"].getValue()
+        safe_Z = self.machine_params["Safe Z travel height"].getValue()
+        max_cut_per_pass = self.machine_params["Maximum cut per pass"].getValue()
+        bit_diameter = self.machine_params["Cutter diameter"].getValue()
+        stock_length = self.stock_length_param.getValue()
+        stock_width = self.stock_width_param.getValue()
+        stock_thickness = self.stock_height_param.getValue()
+        bottom_radius = self.bottom_radius_param.getValue()
 
         bit_radius = bit_diameter / 2.0
         mid_stock_w = stock_width / 2.0
@@ -146,13 +158,3 @@ class RoundBottomedDado(MachinedGeometry):
         self.g_code += G.G.G0_Z(safe_Z)
         self.g_code += G.endProgram()
         return self.g_code
-
-    def _makeEntryQueries(self):
-        entry_queries = []
-
-        for query in setup_queries:
-            entry_queries.append(query["input_type"](query))
-
-        for query in self.data_query_defs:
-            entry_queries.append(query["input_type"](query))
-        return entry_queries

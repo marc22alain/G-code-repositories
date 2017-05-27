@@ -12,7 +12,7 @@ class Query:
         pass
 
     @abc.abstractmethod
-    def getData(self):
+    def getValue(self):
         pass
 
     @abc.abstractmethod

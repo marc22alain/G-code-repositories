@@ -27,7 +27,7 @@ class EntryQuery(Query):
         if self.default is not None:
             self.var.set(self.default)
 
-    def getData(self):
+    def getValue(self):
         return self.var.get()
 
     def getName(self):

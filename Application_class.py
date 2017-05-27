@@ -12,9 +12,6 @@ IN_AXIS = os.environ.has_key("AXIS_PROGRESS_BAR")
 # Determine the window size
 # TODO: generalize to obtain the total view size
 #       - is there an event triggered if the TK window is resized
-canvas_options = {"width":500, "height":500, "bg":"black"}
-# Note that scale is currently 1:1
-grid_options = {"grid_spacing": 50, "canW": canvas_options["width"], "canH": canvas_options["height"], "margin": 0}
 
 
 class Application(Frame):
@@ -24,9 +21,10 @@ class Application(Frame):
         self.grid()
         self.createSubframes()
         self.createMoreWidgets()
+        self.master.title(self.machined_geometry_engine.name)
+        # Possible to enable window re-sizing with this
         self.top=self.winfo_toplevel()
         self.top.bind("<Configure>", self.configure)
-        self.master.title(self.machined_geometry_engine.name)
 
     def createSubframes(self):
         self.geo_frame = Frame(self)
@@ -37,8 +35,7 @@ class Application(Frame):
         self.entry_frame.grid(row=0, column=1)
 
     def createMoreWidgets(self):
-        self.queries = []
-        self.queries += self.machined_geometry_engine.getDataQueries()
+        self.queries = self.machined_geometry_engine.getDataQueries()
 
         row_num = 1
         for query in self.queries:
@@ -73,13 +70,7 @@ class Application(Frame):
 
 
     def refreshView(self):
-        data = self.extractRowData()
-        # example:
-        # {'Bottom Radius': 30.0, 'Stock Width - Y': 100.0, 'Maximum cut per pass': 3.0,
-        #  'Stock Height - Z': 50.0, 'Cutter diameter': 3.175, 'Stock Length - X': 200.0,
-        #  'Safe Z travel height': 100.0, 'Feed rate': 1000.0}
-        print data
-        geometry = self.machined_geometry_engine.getGeometry(data)
+        geometry = self.machined_geometry_engine.getGeometry()
         # example:
         # {'arc': [(20.0, 20.0, 80.0, 80.0, 180, 180)],
         #  'extents': {'width': 100.0, 'center': (50.0, 25.0), 'height': 50.0},
@@ -89,18 +80,15 @@ class Application(Frame):
 
 
     def showToolPasses(self):
-        data = self.extractRowData()
-        tool_passes = self.machined_geometry_engine.getToolPasses(data)
-        geometry = self.machined_geometry_engine.getGeometry(data)
+        tool_passes = self.machined_geometry_engine.getToolPasses()
+        geometry = self.machined_geometry_engine.getGeometry()
         self.view_space.drawGeometry(tool_passes, geometry)
 
     def generateGcode(self):
         """
-        Delegates the generates a G-code file, and submits it to LinuxCNC if it is open, otherwise saves
-        as a file with the given (or default) name.
+        Delegates the generation of a G-code file.
         """
-        data = self.extractRowData()
-        return self.machined_geometry_engine.generateGcode(data)
+        return self.machined_geometry_engine.generateGcode()
 
     def writeToAXIS(self):
         self.g_code = self.generateGcode()
@@ -117,13 +105,6 @@ class Application(Frame):
         with open(file_name, 'w') as myFile:
             myFile.write(self.g_code)
         # TODO: consider returning it for testing.
-
-    def extractRowData(self):
-        data = {}
-        for query in self.queries:
-            data[query.getName()] = query.getData()
-        return data
-
 
     def configure(self, event):
         # print "Configure: %d, %d" % (event.width, event.height)

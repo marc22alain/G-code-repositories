@@ -39,7 +39,3 @@ class MachinedGeometry:
     @abc.abstractmethod
     def assertValid(self, data):
         pass
-
-    @abc.abstractmethod
-    def _makeEntryQueries():
-        pass

@@ -22,7 +22,7 @@ class SpinboxQuery(Query):
         self.input = Spinbox(master, values=self.values, textvariable=self.var, width=13)
         self.input.grid(row=row_num, column=1)
 
-    def getData(self):
+    def getValue(self):
         return self.var.get()
 
     def getName(self):
