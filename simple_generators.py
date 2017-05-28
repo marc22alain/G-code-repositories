@@ -248,7 +248,7 @@ def rectArea(area, bit_diameter):
     return file_text
 
 
-def rectAreaByOutline(area, bit_diameter):
+def rectAreaByOutline(area, bit_diameter, debug=False):
     """ Required arguments: area (as (x=length, y=width), bit_diameter.
     Assumes that the bit is already in the origin corner at required depth of cut.
     This version just cuts progressively smaller rectangles.
@@ -272,15 +272,15 @@ def rectAreaByOutline(area, bit_diameter):
     current_x = 0
     current_y = 0
 
-    # Debug:
-    file_text += "; length: " + str(length) + "\n"
-    file_text += "; width: " + str(width) + "\n"
-    file_text += "; bit_diameter: " + str(bit_diameter) + "\n"
-    file_text += "; min_passes: " + str(min_passes) + "\n"
-    file_text += "; x_overlap: " + str(x_overlap) + "\n"
-    file_text += "; y_overlap: " + str(y_overlap) + "\n"
-    file_text += "; x_step: " + str(x_step) + "\n"
-    file_text += "; y_step: " + str(y_step) + "\n"
+    if debug:
+        file_text += "; length: " + str(length) + "\n"
+        file_text += "; width: " + str(width) + "\n"
+        file_text += "; bit_diameter: " + str(bit_diameter) + "\n"
+        file_text += "; min_passes: " + str(min_passes) + "\n"
+        file_text += "; x_overlap: " + str(x_overlap) + "\n"
+        file_text += "; y_overlap: " + str(y_overlap) + "\n"
+        file_text += "; x_step: " + str(x_step) + "\n"
+        file_text += "; y_step: " + str(y_step) + "\n"
 
     file_text += _rectOutline(length, width, bit_diameter)
     min_passes -= 2
