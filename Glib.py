@@ -4,6 +4,9 @@ The purpose of this library is simple: provide G-code functions.
 """
 
 def sane(number):
+    '''
+    Also prevents engineering notation, which LinuxCNC doesn't recognize.
+    '''
     return str(round(number, 5))
 
 
@@ -128,7 +131,7 @@ def end_program():
     Returns a string to end the program with M2.
     '''
     return 'M2 \n'
-    
+
 
 def set_dwell(time):
     '''
@@ -136,9 +139,3 @@ def set_dwell(time):
     Sets the dwell time. G4.
     '''
     return 'G4 P' + sane(time) + ' \n'
-
-def endProgram():
-    '''
-    Ends the program with an M2
-    '''
-    return 'M2 \n'
