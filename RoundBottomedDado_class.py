@@ -149,7 +149,7 @@ class RoundBottomedDado(MachinedGeometry):
             self.g_code += G.G.set_ABS_mode()
 
             width = (bit_center_from_middle * 2) + bit_diameter
-            self.g_code += G.rectArea((length, width), bit_diameter)
+            self.g_code += G.rectAreaByOutline((length, width), bit_diameter)
 
             # Wastes time, but moves the bit back to dado centerline.
             self.g_code += G.G.set_INCR_mode()
