@@ -262,8 +262,8 @@ def rectAreaByOutline(area, bit_diameter):
     min_passes = min(math.ceil(length / bit_diameter), math.ceil(width / bit_diameter))
     min_passes += min_passes % 2
 
-    x_overlap = max(min_overlap, ((min_passes * bit_diameter) - length / (min_passes - 1)))
-    y_overlap = max(min_overlap, ((min_passes * bit_diameter) - width / (min_passes - 1)))
+    x_overlap = max(min_overlap, (((min_passes * bit_diameter) - length) / (min_passes - 1)))
+    y_overlap = max(min_overlap, (((min_passes * bit_diameter) - width) / (min_passes - 1)))
 
     x_step = bit_diameter - x_overlap
     y_step = bit_diameter - y_overlap
@@ -271,6 +271,16 @@ def rectAreaByOutline(area, bit_diameter):
     file_text = G.set_INCR_mode()
     current_x = 0
     current_y = 0
+
+    # Debug:
+    file_text += "; length: " + str(length) + "\n"
+    file_text += "; width: " + str(width) + "\n"
+    file_text += "; bit_diameter: " + str(bit_diameter) + "\n"
+    file_text += "; min_passes: " + str(min_passes) + "\n"
+    file_text += "; x_overlap: " + str(x_overlap) + "\n"
+    file_text += "; y_overlap: " + str(y_overlap) + "\n"
+    file_text += "; x_step: " + str(x_step) + "\n"
+    file_text += "; y_step: " + str(y_step) + "\n"
 
     file_text += _rectOutline(length, width, bit_diameter)
     min_passes -= 2
