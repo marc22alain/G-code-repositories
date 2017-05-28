@@ -35,7 +35,3 @@ class MachinedGeometry:
     @abc.abstractmethod
     def generateGcode(self, data):
         pass
-
-    @abc.abstractmethod
-    def assertValid(self, data):
-        pass
