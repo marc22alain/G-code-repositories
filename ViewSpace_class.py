@@ -8,10 +8,6 @@ View init options look something like this:
 from Tkinter import *
 
 
-# self.canvas_options = {"width":500, "height":500, "bg":"black"}
-# Note that scale is currently 1:1
-
-
 class ViewSpace(Frame):
     """docstring for ViewSpace"""
     canvas_options = {"width":500, "height":500, "bg":"black"}
@@ -32,7 +28,6 @@ class ViewSpace(Frame):
 
 
     def drawCanvasGrid(self):
-        # self.canvas.create_line(0, 100, 200, 0, fill="red", dash=(4, 4))
         margin = self.grid_options["margin"]
         width = self.grid_options["canW"]
         height = self.grid_options["canH"]
@@ -46,8 +41,7 @@ class ViewSpace(Frame):
         self.canvas.create_line(self.x_conv(0), self.y_conv(-25), self.x_conv(0), self.y_conv(425), fill="green", arrow=LAST, dash=(16, 4, 4, 4))
         # TODO: generalize the axis lines per quadrant.
         self.canvas.create_text(self.x_conv(440), self.y_conv(0), text="X", fill="green")
-        g = self.canvas.create_text(self.x_conv(0), self.y_conv(435), text="Y", fill="green")
-        print g
+        self.canvas.create_text(self.x_conv(0), self.y_conv(435), text="Y", fill="green")
 
 
     def convertOptions(self, options):
@@ -94,12 +88,6 @@ class ViewSpace(Frame):
     def drawGeometry(self, *geometries):
         """
         Generic function to draw any kind of geometry.
-        Expects each geometry argument to a dict with all keys present:
-        { "rectangle":[], "circle": [], "arc": []}
-        The entities are tuples within each list.
-        Further, each tuple's last element must be a dict with all keys present:
-        {"tag":"","outline":"","fill":""}, note that 'None' is an acceptable value for some.
-        TODO: make tolerant of missing keys.
         """
         for geometry in geometries:
             self.convertOptions(geometry)
@@ -107,4 +95,3 @@ class ViewSpace(Frame):
         for geometry in geometries:
             for entity in geometry["entities"]:
                 entity.draw(self.canvas, self.x_conv, self.y_conv)
-

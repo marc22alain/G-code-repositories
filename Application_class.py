@@ -75,7 +75,6 @@ class Application(Frame):
         # {'arc': [(20.0, 20.0, 80.0, 80.0, 180, 180)],
         #  'extents': {'width': 100.0, 'center': (50.0, 25.0), 'height': 50.0},
         #  'rectangle': [(0, 0, 100.0, 50.0)]}
-        print geometry
         self.view_space.drawGeometry(geometry)
 
 
@@ -93,6 +92,8 @@ class Application(Frame):
     def writeToAXIS(self):
         self.g_code = self.generateGcode()
         sys.stdout.write(self.g_code)
+        # TODO: debug to see if this is the only way to get the output to AXIS
+        self.quit()
 
     def writeToFile(self):
         self.g_code = self.generateGcode()
