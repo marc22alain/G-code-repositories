@@ -77,16 +77,18 @@ class RoundBottomedDado(MachinedGeometry):
         bit_radius = self.machine_params["Cutter diameter"].getValue() / 2.0
         bit_center_Y = stock_h - max_cut_per_pass + bit_radius
 
+        options = {"tag":"geometry","outline":"white","fill":"white"}
         while (bit_center_Y > rad_center["y"] - radius + bit_radius):
             if bit_center_Y > rad_center["y"]:
                 bit_center_from_middle = radius - bit_radius
             else:
                 bit_center_from_middle = math.sqrt( ((radius - bit_radius)**2) - ((rad_center["y"] - bit_center_Y)**2) )
-                options = {"tag":"geometry","outline":"white","fill":"white"}
 
-                tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w - bit_center_from_middle, bit_center_Y, bit_radius), options))
-                tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w + bit_center_from_middle, bit_center_Y, bit_radius), options))
+            tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w - bit_center_from_middle, bit_center_Y, bit_radius), options))
+            tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w + bit_center_from_middle, bit_center_Y, bit_radius), options))
             bit_center_Y -= max_cut_per_pass
+
+        tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w, rad_center["y"] - radius + bit_radius, bit_radius), options))
 
         return tool_passes
 
@@ -107,6 +109,15 @@ class RoundBottomedDado(MachinedGeometry):
         # Is it NOT OK if the bottom diameter exceeds the stock width ?
 
     def generateGcode(self):
+        """
+        TODO:
+            - last long cut is goofy length and ends in an odd spot too
+            - going back and forth to center to start a new level is goofy
+            - code duplication in RoundBottomedDado:
+                - finding the bit location is in two places
+            - naively applying the same depth of cut through the whole RoundBottomedDado
+                - the last cuts should be more shallow to get more detail of the radius profile at the bottom
+        """
         self.assertValid()
         feed_rate = self.machine_params["Feed rate"].getValue()
         safe_Z = self.machine_params["Safe Z travel height"].getValue()
