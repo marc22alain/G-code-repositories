@@ -15,9 +15,9 @@ IN_AXIS = os.environ.has_key("AXIS_PROGRESS_BAR")
 
 
 class Application(Frame):
-    def __init__(self, master, machined_geometry_class):
+    def __init__(self, master, machined_geometry_engine):
         Frame.__init__(self, master)
-        self.machined_geometry_engine = machined_geometry_class()
+        self.machined_geometry_engine = machined_geometry_engine
         self.grid()
         self.createSubframes()
         self.createMoreWidgets()
@@ -114,7 +114,7 @@ class Application(Frame):
 
 
 
-def runApp(master, machined_geometry_class):
-    app = Application(master, machined_geometry_class)
+def runApp(master, machined_geometry_engine):
+    app = Application(master, machined_geometry_engine)
     # app.master.title("Blank App 0.9")
     app.mainloop()

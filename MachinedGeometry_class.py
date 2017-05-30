@@ -5,6 +5,10 @@ class MachinedGeometry:
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
+    def makeQueries(self, data_types, query_types):
+        pass
+
+    @abc.abstractmethod
     def getViewSpaceInit(self):
         pass
 

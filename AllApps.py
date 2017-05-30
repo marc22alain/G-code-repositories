@@ -11,6 +11,7 @@ from Tkinter import *
 
 from Application_class import runApp
 from RoundBottomedDado_class import RoundBottomedDado
+from TkUiFactory_class import TkUIFactory
 
 class AllApps(Frame):
     def __init__(self):
@@ -18,6 +19,7 @@ class AllApps(Frame):
         self.grid()
         # self.top=self.winfo_toplevel()
         self.createWidgets()
+        self.ui_factory = TkUIFactory()
 
     def createWidgets(self):
         row_num = 0
@@ -30,7 +32,9 @@ class AllApps(Frame):
 
 
     def startRoundBottomedDado(self):
-        runApp(Toplevel(self), RoundBottomedDado)
+        RBD = self.ui_factory.makeMachinedGeometryEngine(RoundBottomedDado)
+        runApp(Toplevel(self), RBD)
+
 
 
 allApp = AllApps()

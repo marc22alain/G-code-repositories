@@ -5,13 +5,10 @@ The default origin of the Y-Z machine plane coincides with bottom left-hand corn
 The default view puts the origin at the lower left hand corner of the window.
 """
 from MachinedGeometry_class import MachinedGeometry
-from Tkinter import *
-from SpinboxQuery_class import SpinboxQuery
-from EntryQuery_class import EntryQuery
 from Rectangle_class import Rectangle
 from Circle_class import Circle
 from Arc_class import Arc
-from default_query_sets import machine_params
+from default_query_sets import makeSetupQueries, makeSquareStockQueries
 import simple_generators as G
 import math
 
@@ -24,13 +21,21 @@ class RoundBottomedDado(MachinedGeometry):
     implements_toolpass_view = True
 
     def __init__(self):
-        self.stock_length_param = EntryQuery({"name":"Stock Length - X", "type":DoubleVar})
-        self.stock_width_param = EntryQuery({"name":"Stock Width - Y", "type":DoubleVar})
-        self.stock_height_param = EntryQuery({"name":"Stock Height - Z", "type":DoubleVar})
-        self.bottom_radius_param = EntryQuery({"name":"Bottom Radius", "type":DoubleVar})
+        pass
+
+    def makeQueries(self, data_types, query_types):
+        EntryQuery = query_types["entry"]
+        double_type = data_types["double"]
+        self.bottom_radius_param = EntryQuery({"name":"Bottom Radius", "type":double_type})
+
+        self.machine_params = makeSetupQueries(data_types, query_types)
+        stock_params = makeSquareStockQueries(data_types, query_types)
+        self.stock_length_param = stock_params["Stock Length - X"]
+        self.stock_width_param = stock_params["Stock Width - Y"]
+        self.stock_height_param = stock_params["Stock Height - Z"]
         self.params = [self.stock_length_param, self.stock_width_param, self.stock_height_param, self.bottom_radius_param]
-        self.machine_params = machine_params
         self.entry_queries = self.machine_params.values() + self.params
+        pass
 
     def getViewSpaceInit(self):
         # Quadrants:
