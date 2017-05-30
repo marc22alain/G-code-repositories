@@ -73,20 +73,17 @@ class RoundBottomedDado(MachinedGeometry):
         radius = self.bottom_radius_param.getValue()
         mid_stock_w = stock_w / 2.0
         rad_center = { "x": mid_stock_w, "y": stock_h }
-        max_cut_per_pass = self.machine_params["Maximum cut per pass"].getValue()
         bit_radius = self.machine_params["Cutter diameter"].getValue() / 2.0
-        bit_center_Y = stock_h - max_cut_per_pass + bit_radius
+        # bit_center_Y = stock_h - max_cut_per_pass + bit_radius
 
         options = {"tag":"geometry","outline":"white","fill":"white"}
-        while (bit_center_Y > rad_center["y"] - radius + bit_radius):
-            if bit_center_Y > rad_center["y"]:
-                bit_center_from_middle = radius - bit_radius
-            else:
-                bit_center_from_middle = math.sqrt( ((radius - bit_radius)**2) - ((rad_center["y"] - bit_center_Y)**2) )
 
+        # Cool! Making a closure for the callback!
+        def makeMirroredPasses(bit_center_from_middle, bit_center_Y):
             tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w - bit_center_from_middle, bit_center_Y, bit_radius), options))
             tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w + bit_center_from_middle, bit_center_Y, bit_radius), options))
-            bit_center_Y -= max_cut_per_pass
+
+        self.passDistributionAlgorithm(makeMirroredPasses)
 
         tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w, rad_center["y"] - radius + bit_radius, bit_radius), options))
 
@@ -113,10 +110,6 @@ class RoundBottomedDado(MachinedGeometry):
         TODO:
             - last long cut is goofy length and ends in an odd spot too
             - going back and forth to center to start a new level is goofy
-            - code duplication in RoundBottomedDado:
-                - finding the bit location is in two places
-            - naively applying the same depth of cut through the whole RoundBottomedDado
-                - the last cuts should be more shallow to get more detail of the radius profile at the bottom
         """
         self.assertValid()
         feed_rate = self.machine_params["Feed rate"].getValue()
@@ -138,22 +131,13 @@ class RoundBottomedDado(MachinedGeometry):
         #   - y-coord location of bit is at centerline of the dado
         #   - x-coord location of bit is adjacent to the stock
         #   - z-coord location is at or around Z-safe
-        self.g_code += G.G.G0_Z(stock_thickness)
 
         # Putting the tip of the bit on the top surface of the stock.
-        bit_center_Y = stock_thickness + bit_radius
+        self.g_code += G.G.G0_Z(stock_thickness)
+
         length = stock_length + (2 * bit_diameter)
-        # The guard will always leave the center cut left to make.
-        while (bit_center_Y - bit_radius - max_cut_per_pass > stock_thickness - bottom_radius ):
-            bit_center_Y -= max_cut_per_pass
-            if bit_center_Y > stock_thickness:
-                bit_center_from_middle = bottom_radius - bit_radius
-            else:
-                # Applying Pythagoras:
-                #    - (bottom_radius - bit_radius) is the hypotenuse
-                #    - (stock_thickness - bit_center_Y) is the
-                bit_center_from_middle = math.sqrt( ((bottom_radius - bit_radius)**2) - ((stock_thickness - bit_center_Y)**2) )
-            # Move the bit to start of x-coord, then z-coord
+
+        def makeRectAreaCut(bit_center_from_middle, bit_center_Y):
             self.g_code += G.G.set_INCR_mode()
             self.g_code += G.G.G0_Y(- bit_center_from_middle)
             self.g_code += G.G.G1_Z(- max_cut_per_pass)
@@ -167,6 +151,8 @@ class RoundBottomedDado(MachinedGeometry):
             self.g_code += G.G.G0_Y(bit_center_from_middle)
             self.g_code += G.G.set_ABS_mode()
 
+        self.passDistributionAlgorithm(makeRectAreaCut)
+
         self.g_code += G.G.G1_Z(stock_thickness - bottom_radius)
         self.g_code += G.G.set_INCR_mode()
         self.g_code += G.G.G1_X(length)
@@ -175,3 +161,29 @@ class RoundBottomedDado(MachinedGeometry):
         self.g_code += G.G.G0_Z(safe_Z)
         self.g_code += G.endProgram()
         return self.g_code
+
+    def passDistributionAlgorithm(self, callback):
+        """
+        TODO:
+            - naively applying the same depth of cut through the whole RoundBottomedDado
+                - the last cuts should be more shallow to get more detail of the radius profile at the bottom
+        """
+        max_cut_per_pass = self.machine_params["Maximum cut per pass"].getValue()
+        stock_thickness = self.stock_height_param.getValue()
+        bit_diameter = self.machine_params["Cutter diameter"].getValue()
+        bottom_radius = self.bottom_radius_param.getValue()
+
+        bit_radius = bit_diameter / 2.0
+        bit_center_Y = stock_thickness + bit_radius
+
+        while (bit_center_Y - bit_radius - max_cut_per_pass > stock_thickness - bottom_radius ):
+            bit_center_Y -= max_cut_per_pass
+            if bit_center_Y > stock_thickness:
+                bit_center_from_middle = bottom_radius - bit_radius
+            else:
+                # Applying Pythagoras:
+                #    - (bottom_radius - bit_radius) is the hypotenuse
+                #    - (stock_thickness - bit_center_Y) is the
+                bit_center_from_middle = math.sqrt( ((bottom_radius - bit_radius)**2) - ((stock_thickness - bit_center_Y)**2) )
+
+            callback(bit_center_from_middle, bit_center_Y)
