@@ -117,13 +117,9 @@ class RoundBottomedDado(MachinedGeometry):
         max_cut_per_pass = self.machine_params["Maximum cut per pass"].getValue()
         bit_diameter = self.machine_params["Cutter diameter"].getValue()
         stock_length = self.stock_length_param.getValue()
-        stock_width = self.stock_width_param.getValue()
         stock_thickness = self.stock_height_param.getValue()
         bottom_radius = self.bottom_radius_param.getValue()
-
         bit_radius = bit_diameter / 2.0
-        mid_stock_w = stock_width / 2.0
-        rad_center = { "x": mid_stock_w, "y": stock_thickness }
 
         self.g_code = G.startProgram(feed_rate)
 
@@ -140,8 +136,8 @@ class RoundBottomedDado(MachinedGeometry):
         def makeRectAreaCut(bit_center_from_middle, bit_center_Y):
             self.g_code += G.G.set_INCR_mode()
             self.g_code += G.G.G0_Y(- bit_center_from_middle)
-            self.g_code += G.G.G1_Z(- max_cut_per_pass)
             self.g_code += G.G.set_ABS_mode()
+            self.g_code += G.G.G1_Z(bit_center_Y - bit_radius)
 
             width = (bit_center_from_middle * 2) + bit_diameter
             self.g_code += G.rectAreaByOutline((length, width), bit_diameter)
@@ -162,11 +158,43 @@ class RoundBottomedDado(MachinedGeometry):
         self.g_code += G.endProgram()
         return self.g_code
 
+
     def passDistributionAlgorithm(self, callback):
         """
-        TODO:
-            - naively applying the same depth of cut through the whole RoundBottomedDado
-                - the last cuts should be more shallow to get more detail of the radius profile at the bottom
+        Applies the same step size, in rotating fashion around the profile of the bottom radius.
+        The last cuts are quite shallow.
+        """
+        max_cut_per_pass = self.machine_params["Maximum cut per pass"].getValue()
+        stock_thickness = self.stock_height_param.getValue()
+        bit_diameter = self.machine_params["Cutter diameter"].getValue()
+        bottom_radius = self.bottom_radius_param.getValue()
+
+        bit_radius = bit_diameter / 2.0
+        bit_Y_ref = stock_thickness + bit_radius
+        bit_center_from_middle = bottom_radius - bit_radius
+
+        rad = (max_cut_per_pass / bottom_radius)
+        num_steps = int(math.floor(math.pi/2 / rad))
+        angle = math.asin(rad)
+
+        for i in xrange(1, num_steps + 1):
+            bit_center_Y =  bit_Y_ref - (math.sin(i * angle) * bottom_radius)
+            if bit_center_Y > stock_thickness:
+                bit_center_from_middle = bottom_radius - bit_radius
+            elif i * angle >= math.pi/2:
+                break
+            else:
+                # Applying Pythagoras:
+                #    - (bottom_radius - bit_radius) is the hypotenuse
+                #    - (stock_thickness - bit_center_Y) is the
+                bit_center_from_middle = math.sqrt( ((bottom_radius - bit_radius)**2) - ((stock_thickness - bit_center_Y)**2) )
+
+            callback(bit_center_from_middle, bit_center_Y)
+
+
+    def passDistributionAlgorithmOrig(self, callback):
+        """
+        Naively applyies the same depth of cut through the whole RoundBottomedDado.
         """
         max_cut_per_pass = self.machine_params["Maximum cut per pass"].getValue()
         stock_thickness = self.stock_height_param.getValue()
@@ -175,9 +203,12 @@ class RoundBottomedDado(MachinedGeometry):
 
         bit_radius = bit_diameter / 2.0
         bit_center_Y = stock_thickness + bit_radius
+        bit_center_from_middle = bottom_radius - bit_radius
 
-        while (bit_center_Y - bit_radius - max_cut_per_pass > stock_thickness - bottom_radius ):
+        while (bit_center_Y - bit_radius - max_cut_per_pass > stock_thickness - bottom_radius):
+            # Number to modulate is max_cut_per_pass
             bit_center_Y -= max_cut_per_pass
+            # bit_center_Y -= max_cut_per_pass * (min(1, (0.00001 + bit_center_from_middle) / (bottom_radius - bit_radius)))
             if bit_center_Y > stock_thickness:
                 bit_center_from_middle = bottom_radius - bit_radius
             else:
