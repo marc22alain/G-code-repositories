@@ -2,9 +2,9 @@
 
 """
 How to add additional generator apps to the Mother Of All Apps:
-- import the new generator
-- write a new method to call Application(<new generator>)
-- add a button that calls the new method
+- import the new generator's class name
+- add the class name to self.apps
+- done()
 """
 
 from Tkinter import *
@@ -18,27 +18,25 @@ class AllApps(Frame):
     def __init__(self):
         Frame.__init__(self)
         self.grid()
-        # self.top=self.winfo_toplevel()
-        self.createWidgets()
         self.ui_factory = TkUIFactory()
+        self.apps = [RoundBottomedDado, DoughnutCutter]
+        self.addAppButtons()
 
-    def createWidgets(self):
+
+    def addAppButtons(self):
         row_num = 0
-        self.app1 = Button(self,text="Round Bottomed Dado",command=self.startRoundBottomedDado, width=30)
-        self.app1.grid(row=row_num, column=0, pady=15)
+        for app_class in self.apps:
+            start_app = self.makeAppInit(app_class)
+            appLink = Button(self,text=app_class.name,command=start_app, width=30)
+            appLink.grid(row=row_num, column=0, pady=15)
+            row_num += 1
 
-        row_num += 1
-        self.app2 = Button(self,text="Doughnut Cutter",command=self.startDoughnutCutter, width=30)
-        self.app2.grid(row=row_num, column=0, pady=5)
 
-
-    def startRoundBottomedDado(self):
-        RBD = self.ui_factory.makeMachinedGeometryEngine(RoundBottomedDado)
-        runApp(Toplevel(self), RBD)
-
-    def startDoughnutCutter(self):
-        DC = self.ui_factory.makeMachinedGeometryEngine(DoughnutCutter)
-        runApp(Toplevel(self), DC)
+    def makeAppInit(self, app_class):
+        def startApp():
+            app = self.ui_factory.makeMachinedGeometryEngine(app_class)
+            runApp(Toplevel(self), app)
+        return startApp
 
 
 allApp = AllApps()
