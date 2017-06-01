@@ -11,6 +11,7 @@ from Tkinter import *
 
 from Application_class import runApp
 from RoundBottomedDado_class import RoundBottomedDado
+from DoughnutCutter_class import DoughnutCutter
 from TkUiFactory_class import TkUIFactory
 
 class AllApps(Frame):
@@ -26,15 +27,18 @@ class AllApps(Frame):
         self.app1 = Button(self,text="Round Bottomed Dado",command=self.startRoundBottomedDado, width=30)
         self.app1.grid(row=row_num, column=0, pady=15)
 
-        # row_num += 1
-        # self.app2 = Button(self.entry_frame,text="Refresh_view",command=self.refreshView, width=30)
-        # self.app2.grid(row=row_num, column=0, columnspan=2, pady=5)
+        row_num += 1
+        self.app2 = Button(self,text="Doughnut Cutter",command=self.startDoughnutCutter, width=30)
+        self.app2.grid(row=row_num, column=0, pady=5)
 
 
     def startRoundBottomedDado(self):
         RBD = self.ui_factory.makeMachinedGeometryEngine(RoundBottomedDado)
         runApp(Toplevel(self), RBD)
 
+    def startDoughnutCutter(self):
+        DC = self.ui_factory.makeMachinedGeometryEngine(DoughnutCutter)
+        runApp(Toplevel(self), DC)
 
 
 allApp = AllApps()
