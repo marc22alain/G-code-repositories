@@ -12,7 +12,13 @@ from default_query_sets import makeSetupQueries, makeSquareStockQueries
 import simple_generators as G
 import math
 
-
+# TODO: .resolve deficiency of ambiguity of pocket of cut;
+#           .edge of pocket is at x=0, which puts a bit radius profile within
+#            the cut pocket if the stock is not displaced by at least x=bit_radius
+#           .enhance by providing:
+#               .XY-plane view of stock and pocket of cut
+#               .additional input parameters for stock placement w/r/t machine
+#           .resolve length dimension compensation (currently at length += 2 * bit_diameter)
 
 class RoundBottomedDado(MachinedGeometry):
     # class variables:
@@ -79,7 +85,6 @@ class RoundBottomedDado(MachinedGeometry):
         mid_stock_w = stock_w / 2.0
         rad_center = { "x": mid_stock_w, "y": stock_h }
         bit_radius = self.machine_params["Cutter diameter"].getValue() / 2.0
-        # bit_center_Y = stock_h - max_cut_per_pass + bit_radius
 
         options = {"tag":"geometry","outline":"white","fill":"white"}
 
@@ -111,11 +116,6 @@ class RoundBottomedDado(MachinedGeometry):
         # Is it NOT OK if the bottom diameter exceeds the stock width ?
 
     def generateGcode(self):
-        """
-        TODO:
-            - last long cut is goofy length and ends in an odd spot too
-            - going back and forth to center to start a new level is goofy
-        """
         self.assertValid()
         feed_rate = self.machine_params["Feed rate"].getValue()
         safe_Z = self.machine_params["Safe Z travel height"].getValue()
@@ -123,40 +123,34 @@ class RoundBottomedDado(MachinedGeometry):
         bit_diameter = self.machine_params["Cutter diameter"].getValue()
         stock_length = self.stock_length_param.getValue()
         stock_thickness = self.stock_height_param.getValue()
+        mid_width = self.stock_width_param.getValue() / 2.0
         bottom_radius = self.bottom_radius_param.getValue()
         bit_radius = bit_diameter / 2.0
 
+        # STOCK POSITIONING ASSUMPTIONS:
+        #   - corner of stock is at (bit_diameter,0)
         self.g_code = G.startProgram(feed_rate)
-
-        # POSITIONING ASSUMPTIONS:
-        #   - y-coord location of bit is at centerline of the dado
-        #   - x-coord location of bit is adjacent to the stock
-        #   - z-coord location is at or around Z-safe
-
         # Putting the tip of the bit on the top surface of the stock.
+        self.g_code += G.G.G0_Z(safe_Z)
+        self.g_code += G.G.G0_XY((0, mid_width))
         self.g_code += G.G.G0_Z(stock_thickness)
 
         length = stock_length + (2 * bit_diameter)
 
+        # Cool! Making another closure for the callback!
         def makeRectAreaCut(bit_center_from_middle, bit_center_Y):
-            self.g_code += G.G.set_INCR_mode()
-            self.g_code += G.G.G0_Y(- bit_center_from_middle)
             self.g_code += G.G.set_ABS_mode()
+            self.g_code += G.G.G0_Y(mid_width - bit_center_from_middle)
             self.g_code += G.G.G1_Z(bit_center_Y - bit_radius)
-
             width = (bit_center_from_middle * 2) + bit_diameter
             self.g_code += G.rectAreaByOutline((length, width), bit_diameter)
 
-            # Wastes time, but moves the bit back to dado centerline.
-            self.g_code += G.G.set_INCR_mode()
-            self.g_code += G.G.G0_Y(bit_center_from_middle)
-            self.g_code += G.G.set_ABS_mode()
-
         self.passDistributionAlgorithm(makeRectAreaCut)
 
+        self.g_code += G.G.G0_Y(mid_width)
         self.g_code += G.G.G1_Z(stock_thickness - bottom_radius)
         self.g_code += G.G.set_INCR_mode()
-        self.g_code += G.G.G1_X(length)
+        self.g_code += G.G.G1_X(length - bit_diameter)
         self.g_code += G.G.set_ABS_mode()
 
         self.g_code += G.G.G0_Z(safe_Z)
@@ -199,7 +193,7 @@ class RoundBottomedDado(MachinedGeometry):
 
     def passDistributionAlgorithmOrig(self, callback):
         """
-        Naively applyies the same depth of cut through the whole RoundBottomedDado.
+        Naively applies the same step in depth of cut through the whole RoundBottomedDado.
         """
         max_cut_per_pass = self.machine_params["Maximum cut per pass"].getValue()
         stock_thickness = self.stock_height_param.getValue()
