@@ -61,13 +61,60 @@ class DoughnutCutter(MachinedGeometry):
         entities.append(Circle().setAllByCenterRadius((0,0, doughnut_ID / 2.0), options))
         entities.append(Circle().setAllByCenterRadius((0,0, (doughnut_ID / 2.0) - bit_diameter), options))
 
-        # TODO: Define the tabs.
+        # Because implementations will change.
+        entities += self._makeTabs(options)
 
         stock_est = doughnut_OD + (2 * bit_diameter)
 
         stock_h = self.stock_height_param.getValue()
         return {"entities":entities,
                 "extents": {"width": stock_est, "height": stock_est, "center": (0, 0)}}
+
+
+    def _makeTabs(self, options):
+        # TODO: Define the tabs @180, 60, and -60 degrees
+        # BUG ALERT: while this mimics bore_tabbed_ID(), the algorithms are not shared
+        entities = []
+        doughnut_OD = self.doughnut_OD_param.getValue()
+        doughnut_ID = self.doughnut_ID_param.getValue()
+        tab_width = self.tab_width_param.getValue()
+        bit_diameter = self.machine_params["Cutter diameter"].getValue()
+        off_set_OD = (doughnut_OD  + bit_diameter) / 2.0
+        off_set_ID = (doughnut_ID  - bit_diameter) / 2.0
+        gap_radians_OD = (bit_diameter + tab_width) / 2 / off_set_OD
+        gap_radians_ID = (bit_diameter + tab_width) / 2 / off_set_ID
+
+        # At pi radians
+        entities += self._mirroredArcs(math.pi, gap_radians_OD, bit_diameter, off_set_OD, options)
+        entities += self._mirroredArcs(math.pi, gap_radians_ID, bit_diameter, off_set_ID, options)
+
+        # At 1/3 pi radians
+        entities += self._mirroredArcs((math.pi / 3.0), gap_radians_OD, bit_diameter, off_set_OD, options)
+        entities += self._mirroredArcs((math.pi / 3.0), gap_radians_ID, bit_diameter, off_set_ID, options)
+
+        # At - 1/3 pi radians
+        entities += self._mirroredArcs(- (math.pi / 3.0), gap_radians_OD, bit_diameter, off_set_OD, options)
+        entities += self._mirroredArcs(- (math.pi / 3.0), gap_radians_ID, bit_diameter, off_set_ID, options)
+
+        return entities
+
+    def _mirroredArcs(self, arc_radians, gap_radians, bit_diameter, off_set, options):
+        arcs = []
+        bit_radius = bit_diameter / 2.0
+        arcs.append(Arc().setAllByCenterRadius((\
+            math.cos(arc_radians + gap_radians) * off_set, \
+            math.sin(arc_radians + gap_radians) * off_set, \
+            bit_radius, \
+            math.degrees(arc_radians + gap_radians + math.pi), \
+            180), options))
+        arcs.append(Arc().setAllByCenterRadius((\
+            math.cos(arc_radians - gap_radians) * off_set, \
+            math.sin(arc_radians - gap_radians) * off_set, \
+            bit_radius, \
+            math.degrees(arc_radians - gap_radians), \
+            180), options))
+
+        return arcs
 
     def assertValid(self):
         pass
@@ -114,5 +161,3 @@ class DoughnutCutter(MachinedGeometry):
 
     def getToolPasses(self):
         pass
-
-d = DoughnutCutter()
