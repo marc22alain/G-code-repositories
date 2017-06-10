@@ -6,6 +6,7 @@ View init options look something like this:
 """
 
 from Tkinter import *
+from Line_class import Line
 
 
 class ViewSpace(Frame):
@@ -21,6 +22,7 @@ class ViewSpace(Frame):
         self.view_quadrant = 1
         self.x_conv = lambda x: (x * self.view_scale) + 50
         self.y_conv = lambda x: 450 - (x * self.view_scale)
+        self.convertOptions(init_options)
         self._mapSystems()
         self.canvas = Canvas(self, self.canvas_options)
         self.canvas.grid(row=0, column=0)
@@ -37,11 +39,23 @@ class ViewSpace(Frame):
         for j in xrange(1, height / grid_spacing):
             self.canvas.create_line(margin, (j * grid_spacing) + margin, width + margin,  (j * grid_spacing) + margin, fill="#333")
 
-        self.canvas.create_line(self.x_conv(- 25), self.y_conv(0), self.x_conv(425), self.y_conv(0), fill="green", arrow=LAST, dash=(16, 4, 4, 4))
-        self.canvas.create_line(self.x_conv(0), self.y_conv(-25), self.x_conv(0), self.y_conv(425), fill="green", arrow=LAST, dash=(16, 4, 4, 4))
-        # TODO: generalize the axis lines per quadrant.
-        self.canvas.create_text(self.x_conv(440), self.y_conv(0), text="X", fill="green")
-        self.canvas.create_text(self.x_conv(0), self.y_conv(435), text="Y", fill="green")
+        options = {"fill":"green","arrow":LAST,"dash":(16, 4, 4, 4)}
+
+        x1 = self.view_center[0] - (self.view_width / 2.0)
+        Line().setParams((self.view_center[0] - (self.view_width / 2.0)) - (self.view_width / 16.0), \
+                        0, \
+                        (self.view_center[0] + (self.view_width / 2.0)) + (self.view_width / 16.0), \
+                        0 \
+                        ).setOptions(options).draw(self.canvas, self.x_conv, self.y_conv)
+        Line().setParams(0, \
+                        (self.view_center[1] - (self.view_height / 2.0)) - (self.view_height / 16.0), \
+                        0, \
+                        (self.view_center[0] + (self.view_height / 2.0)) + (self.view_height / 16.0), \
+                        ).setOptions(options).draw(self.canvas, self.x_conv, self.y_conv)
+
+
+        self.canvas.create_text(self.x_conv((self.view_center[0] + (self.view_width / 2.0)) + (self.view_width / 12.0)), self.y_conv(0), text="X", fill="green")
+        self.canvas.create_text(self.x_conv(0), self.y_conv((self.view_center[0] + (self.view_height / 2.0)) + (self.view_height / 12.0)), text="Y", fill="green")
 
 
     def convertOptions(self, options):
@@ -56,10 +70,11 @@ class ViewSpace(Frame):
             # Also must relocate the axis lines
             self.view_quadrant = options["quadrant"]
         except:
-            pass
+            self.view_quadrant = 0
         try:
             self.view_width = options["extents"]["width"]
             self.view_height = options["extents"]["height"]
+            self.view_center = options["extents"]["center"]
             self.view_scale = min((self.canvas_options["width"] - 100) / self.view_width, (self.canvas_options["height"] - 100) / self.view_height)
         except:
             self.view_scale = 1
@@ -79,10 +94,16 @@ class ViewSpace(Frame):
             # flip the horizontal axis
             self.x_conv = lambda x: 450 + (x * self.view_scale)
             self.y_conv = lambda x: 50 - (x * self.view_scale)
-        else:
+        elif self.view_quadrant == 4:
             # no flipping required
             self.x_conv = lambda x: 50 + (x * self.view_scale)
             self.y_conv = lambda x: 50 - (x * self.view_scale)
+        else:
+            # make lambdas with defined center point
+            x_offset = self.view_center[0] - (self.view_width / 2.0)
+            y_offset = self.view_center[1] - (self.view_height / 2.0)
+            self.x_conv = lambda x: 50 + ((x - x_offset) * self.view_scale)
+            self.y_conv = lambda y: 450 - ((y - y_offset) * self.view_scale)
 
 
     def drawGeometry(self, *geometries):

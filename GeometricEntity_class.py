@@ -37,4 +37,10 @@ class GeometricEntity:
             canvas.itemconfig(self.id, outline=self.options["outline"])
         if "tag" in keys:
             canvas.itemconfig(self.id, tag=self.options["tag"])
+        if "arrow" in keys:
+            canvas.itemconfig(self.id, arrow=self.options["arrow"])
+        if "dash" in keys:
+            canvas.itemconfig(self.id, dash=self.options["dash"])
+        # if "style" in keys:
+        #     canvas.itemconfig(self.id, tag=self.options["style"])
         return self

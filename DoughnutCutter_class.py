@@ -45,7 +45,9 @@ class DoughnutCutter(MachinedGeometry):
     def getViewSpaceInit(self):
         # TODO: use this to set the origin in the middle of the view.
         #       .must elaborate ViewSpace_class to handle moving the origin and the axis lines
-        pass
+        view_init = { "view_plane": "XY", \
+                      "extents": {"width": 50, "height": 50, "center": (0, 0)} }
+        return view_init
 
     def getGeometry(self):
         self.assertValid()

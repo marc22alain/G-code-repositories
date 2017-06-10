@@ -41,7 +41,6 @@ class RoundBottomedDado(MachinedGeometry):
         self.stock_height_param = stock_params["Stock Height - Z"]
         self.params = [self.stock_length_param, self.stock_width_param, self.stock_height_param, self.bottom_radius_param]
         self.entry_queries = self.machine_params.values() + self.params
-        pass
 
     def getViewSpaceInit(self):
         # Quadrants:
@@ -53,7 +52,6 @@ class RoundBottomedDado(MachinedGeometry):
         #   example: 'YZ' means Y is horizontal axis and Z is vertical axis
         # Note that the 'center' point of 'extents' also states the quadrant.
         view_init = { "view_plane": "YZ", \
-                      "quadrant":1, \
                       "extents": {"width": 50, "height": 50, "center": (25, 25)} }
         return view_init
 
