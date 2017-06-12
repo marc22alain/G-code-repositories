@@ -22,14 +22,14 @@ class ViewSpace(Frame):
         self.view_quadrant = 1
         self.x_conv = lambda x: (x * self.view_scale) + 50
         self.y_conv = lambda x: 450 - (x * self.view_scale)
-        self.convertOptions(init_options)
+        self._convertOptions(init_options)
         self._mapSystems()
         self.canvas = Canvas(self, self.canvas_options)
         self.canvas.grid(row=0, column=0)
-        self.drawCanvasGrid()
+        self._drawCanvasGrid()
 
 
-    def drawCanvasGrid(self):
+    def _drawCanvasGrid(self):
         margin = self.grid_options["margin"]
         width = self.grid_options["canW"]
         height = self.grid_options["canH"]
@@ -53,18 +53,18 @@ class ViewSpace(Frame):
                         (self.view_center[0] + (self.view_height / 2.0)) + (self.view_height / 16.0), \
                         ).setOptions(options).draw(self.canvas, self.x_conv, self.y_conv)
 
-
         self.canvas.create_text(self.x_conv((self.view_center[0] + (self.view_width / 2.0)) + (self.view_width / 12.0)), self.y_conv(0), text=self.view_plane[0], fill="green")
         self.canvas.create_text(self.x_conv(0), self.y_conv((self.view_center[0] + (self.view_height / 2.0)) + (self.view_height / 12.0)), text=self.view_plane[1], fill="green")
 
+        self._drawGridNumbers()
 
-    def convertOptions(self, options):
+    def _convertOptions(self, options):
         try:
             self.view_plane = (options["view_plane"][0], options["view_plane"][1])
             # TODO: determine what happens when a view plane gets selected ...
             #   - show right letters for the plane
         except:
-            self.view_plane = ("U","V")
+            self.view_plane = ("H","V")
         try:
             # Defines the mapping between coordinate systems, if flipping is required
             # Also must relocate the axis lines
@@ -100,10 +100,23 @@ class ViewSpace(Frame):
             self.y_conv = lambda x: 50 - (x * self.view_scale)
         else:
             # make lambdas with defined center point
-            x_offset = self.view_center[0] - (self.view_width / 2.0)
-            y_offset = self.view_center[1] - (self.view_height / 2.0)
-            self.x_conv = lambda x: 50 + ((x - x_offset) * self.view_scale)
-            self.y_conv = lambda y: 450 - ((y - y_offset) * self.view_scale)
+            self.x_offset = self.view_center[0] - (self.view_width / 2.0)
+            self.y_offset = self.view_center[1] - (self.view_height / 2.0)
+            self.x_conv = lambda x: 50 + ((x - self.x_offset) * self.view_scale)
+            self.y_conv = lambda y: 450 - ((y - self.y_offset) * self.view_scale)
+
+
+    def _drawGridNumbers(self):
+        # draw the H-axis coordinates
+        increment = 50 / self.view_scale
+        x_shift = self.x_offset / increment
+        y_shift = self.y_offset / increment
+        for i in xrange(9):
+            # assumes that the view area is square
+            x_num = (i + x_shift) * increment
+            y_num = (i + y_shift) * increment
+            self.canvas.create_text(self.x_conv(x_num), self.y_conv(- increment / 3), text=str(int(round(x_num))), fill="magenta", tag="grid_num")
+            self.canvas.create_text(self.x_conv(- increment / 3), self.y_conv(y_num), text=str(int(round(y_num))), fill="magenta", tag="grid_num")
 
 
     def drawGeometry(self, *geometries):
@@ -111,8 +124,10 @@ class ViewSpace(Frame):
         Generic function to draw any kind of geometry.
         """
         for geometry in geometries:
-            self.convertOptions(geometry)
+            self._convertOptions(geometry)
         self.canvas.delete("geometry")
+        self.canvas.delete("grid_num")
         for geometry in geometries:
             for entity in geometry["entities"]:
                 entity.draw(self.canvas, self.x_conv, self.y_conv)
+        self._drawGridNumbers()
