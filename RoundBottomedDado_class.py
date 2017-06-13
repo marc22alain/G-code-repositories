@@ -91,7 +91,7 @@ class RoundBottomedDado(MachinedGeometry):
             tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w - bit_center_from_middle, bit_center_Y, bit_radius), options))
             tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w + bit_center_from_middle, bit_center_Y, bit_radius), options))
 
-        self.passDistributionAlgorithm(makeMirroredPasses)
+        self._passDistributionAlgorithm(makeMirroredPasses)
 
         tool_passes["entities"].append(Circle().setAllByCenterRadius((mid_stock_w, rad_center["y"] - radius + bit_radius, bit_radius), options))
 
@@ -143,7 +143,7 @@ class RoundBottomedDado(MachinedGeometry):
             width = (bit_center_from_middle * 2) + bit_diameter
             self.g_code += G.rectAreaByOutline((length, width), bit_diameter)
 
-        self.passDistributionAlgorithm(makeRectAreaCut)
+        self._passDistributionAlgorithm(makeRectAreaCut)
 
         self.g_code += G.G.G0_Y(mid_width)
         self.g_code += G.G.G1_Z(stock_thickness - bottom_radius)
@@ -156,7 +156,7 @@ class RoundBottomedDado(MachinedGeometry):
         return self.g_code
 
 
-    def passDistributionAlgorithm(self, callback):
+    def _passDistributionAlgorithm(self, callback):
         """
         Applies the same step size, in rotating fashion around the profile of the bottom radius.
         The last cuts are quite shallow.
@@ -189,7 +189,7 @@ class RoundBottomedDado(MachinedGeometry):
             callback(bit_center_from_middle, bit_center_Y)
 
 
-    def passDistributionAlgorithmOrig(self, callback):
+    def _passDistributionAlgorithmOrig(self, callback):
         """
         Naively applies the same step in depth of cut through the whole RoundBottomedDado.
         """
