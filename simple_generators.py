@@ -81,15 +81,17 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
 
     assert path_length > 6.0 * (tab_width + cutter_diameter), "tabs and/or bit are too large for the circle to cut"
 
+    # gap_radians is the gap (in radians) between the start and stop of each pair of cuts
     gap_radians = (cutter_diameter + tab_width) / off_set
     # file_text = "% cutting bore_tabbed_ID \n"
     file_text = G.set_ABS_mode()
     file_text += G.G0_Z(Z_safe)
 
     # XY-plane move to starting point, creating the first tab
+    # at approximately 180 degrees
     file_text += G.set_INCR_mode()
-    x = -math.cos(gap_radians) * off_set;
-    y = math.sin(gap_radians) * off_set;
+    x = -math.cos(gap_radians) * off_set
+    y = math.sin(gap_radians) * off_set
     file_text += G.G0_XY( (x, y) )
     file_text += G.set_ABS_mode()
 
@@ -102,6 +104,7 @@ def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
     file_text += G.G2XY_to_INCR_FULL( (x, y), (i, j) )
 
     # 2 G2 create the second tab
+    # at approximately 60 degrees
     file_text += G.G0_Z(tab_thickness)
     x = (math.cos((math.pi / 3.0) - gap_radians) - math.cos(math.pi / 3.0)) * off_set
     y = (math.sin((math.pi / 3.0) - gap_radians) - math.sin(math.pi / 3.0)) * off_set
@@ -308,6 +311,24 @@ def _rectOutline(length, width, bit_diameter):
     file_text += G.G1_Y(-(width - bit_diameter))
     return file_text
 
+def rectangularPocket(area, target_depth, stock_thickness, safe_Z, cut_per_pass, bit_diameter, debug=False):
+    file_text = G.set_ABS_mode()
+    # if debug == True:
+    file_text += "; target_depth: " + str(target_depth) + "\n"
+    file_text += "; stock_thickness: " + str(stock_thickness) + "\n"
+    file_text += "; cut_per_pass: " + str(cut_per_pass) + "\n"
+    file_text += "; bit_diameter: " + str(bit_diameter) + "\n"
+    file_text += G.G0_Z(stock_thickness)
+    while stock_thickness > target_depth:
+        stock_thickness -= cut_per_pass
+        if stock_thickness < target_depth:
+            stock_thickness = target_depth
+        # Z-axis move by ABSOLUTE coords
+        file_text += G.set_ABS_mode()
+        file_text += G.G1_Z(stock_thickness)
+        file_text += rectAreaByOutline(area, bit_diameter)
+    file_text += G.G0_Z(safe_Z)
+    return file_text
 
 def startProgram(feed_rate):
     return G.F_rate(feed_rate)

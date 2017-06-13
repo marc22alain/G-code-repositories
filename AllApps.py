@@ -12,6 +12,7 @@ from Tkinter import *
 from Application_class import runApp
 from RoundBottomedDado_class import RoundBottomedDado
 from DoughnutCutter_class import DoughnutCutter
+from RectangularPocket_class import RectangularPocket
 from TkUiFactory_class import TkUIFactory
 
 class AllApps(Frame):
@@ -19,7 +20,7 @@ class AllApps(Frame):
         Frame.__init__(self)
         self.grid()
         self.ui_factory = TkUIFactory()
-        self.apps = [RoundBottomedDado, DoughnutCutter]
+        self.apps = [RoundBottomedDado, DoughnutCutter, RectangularPocket]
         self.addAppButtons()
 
 
