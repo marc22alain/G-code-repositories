@@ -103,9 +103,6 @@ class RectangularPocket(MachinedGeometry):
         # STOCK POSITIONING ASSUMPTIONS:
         #   - bit is at the lower-left hand corner of pocket
         #   - no assumptions made about the actual machine position
-        print pocket_l
-        print pocket_w
-        print stock_thickness
         self.g_code = G.startProgram(feed_rate)
         self.g_code += G.rectangularPocket((pocket_l, pocket_w), target_d, stock_thickness, safe_Z, max_cut_per_pass, bit_diameter, True)
         self.g_code += G.endProgram()
