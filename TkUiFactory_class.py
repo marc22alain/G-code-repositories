@@ -1,3 +1,10 @@
+"""
+Associates, to the apps, the standard types provided by TKinter.
+
+Theoretically, this class can be substituted for another that provides the
+standard types from a different UI library, such as QT.
+"""
+
 from Tkinter import *
 
 from SpinboxQuery_class import SpinboxQuery
