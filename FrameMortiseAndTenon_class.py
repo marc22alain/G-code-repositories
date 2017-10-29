@@ -17,6 +17,7 @@ Interface must provide the following inputs:
 
 from MachinedGeometry_class import MachinedGeometry
 from default_query_sets import makeSetupQueries
+from Rectangle_class import Rectangle
 
 
 class FrameMortiseAndTenon(MachinedGeometry):
@@ -39,12 +40,14 @@ class FrameMortiseAndTenon(MachinedGeometry):
         self.mortise_offest_from_face_param = EntryQuery({"name":"Mortise Offset From Face", "type":double_type})
         self.mortise_offest_from_end_param = EntryQuery({"name":"Mortise Offset From End", "type":double_type})
 
-        self.frame_face_width = EntryQuery({"name":"Frame Face Width", "type":double_type})
-        self.frame_edge_width = EntryQuery({"name":"Frame Edge Width", "type":double_type})
+        self.stile_face_width_param = EntryQuery({"name":"Stile Face Width", "type":double_type})
+        self.stile_edge_width_param = EntryQuery({"name":"Stile Edge Width", "type":double_type})
+        # Input will not be required; the generator will use self.stile_face_width_param if self.rail_face_width_param is not defined.
+        self.rail_face_width_param = EntryQuery({"name":"Rail Face Width", "type":double_type})
 
         self.params = [self.mortise_width_param, self.mortise_length_param, \
                         self.mortise_depth_param, self.mortise_offest_from_face_param, self.mortise_offest_from_end_param, \
-                        self.frame_face_width, self.frame_edge_width]
+                        self.stile_face_width_param, self.stile_edge_width_param, self.rail_face_width_param]
 
         self.machine_params = makeSetupQueries(data_types, query_types)
         self.entry_queries = self.machine_params.values() + self.params
@@ -76,8 +79,36 @@ class FrameMortiseAndTenon(MachinedGeometry):
         """
         pass
 
-    def getGeometry(self, data):
-        pass
+    def getGeometry(self):
+        return self._getFaceView()
 
     def generateGcode(self, data):
         pass
+
+    def _getFaceView(self):
+        # mortise_width = self.mortise_width_param.getValue()
+        mortise_length = self.mortise_length_param.getValue()
+        mortise_depth = self.mortise_depth_param.getValue()
+        # mortise_offest_from_face = self.mortise_offest_from_face_param.getValue()
+        mortise_offest_from_end = self.mortise_offest_from_end_param.getValue()
+        stile_face_width = self.stile_face_width_param.getValue()
+        # stile_edge_width = self.stile_edge_width_param.getValue()
+        rail_face_width = self.rail_face_width_param.getValue()
+
+        if rail_face_width == 0:
+            rail_face_width = stile_face_width
+
+        stile_options = {"tag":"geometry","outline":"yellow","fill":None}
+        rail_options = {"tag":"geometry","outline":"orange","fill":None}
+        mortise_options = {"tag":"geometry","outline":"magenta","fill":None, "dash":10, "width":2}
+
+        entities = []
+        entities.append(Rectangle().setAll(( - rail_face_width, stile_face_width, rail_face_width, 0), stile_options))
+        entities.append(Rectangle().setAll(( - rail_face_width, 0, 0, - stile_face_width), rail_options))
+        entities.append(Rectangle().setAll(( - rail_face_width + mortise_offest_from_end, \
+                                            mortise_depth, \
+                                            - rail_face_width + mortise_offest_from_end + mortise_length, \
+                                            0), mortise_options))
+
+        return { "entities": entities,
+                "extents": {"width": 2 * rail_face_width, "height": 2 * stile_face_width, "center": (0, 0)}}
