@@ -302,7 +302,9 @@ def rectAreaByOutline(area, bit_diameter, debug=False):
 
 def _rectOutline(length, width, bit_diameter):
     """ Assumes it's in INCREMENTAL MODE.
-    Since length and width arguments are not related to any position."""
+    Since length and width arguments are not related to any position.
+    The length and width define the outer boundaries of the cut.
+    """
     # TODO: consider whether to climb-cut or not.
     # Cut the whole outline of the area, returning to the origin.
     file_text = G.G1_X(length - bit_diameter)
@@ -312,12 +314,18 @@ def _rectOutline(length, width, bit_diameter):
     return file_text
 
 def rectangularPocket(area, target_depth, stock_thickness, safe_Z, cut_per_pass, bit_diameter, debug=False):
+    """
+    area argument requires tuple (length, width).
+    target_depth is an absolute Z coordinate.
+    Assumes that the bit is already in the origin corner.
+    Origin is (minCornerX + bit_radius, minCornerY + bit_radius)
+    """
     file_text = G.set_ABS_mode()
-    # if debug == True:
-    file_text += "; target_depth: " + str(target_depth) + "\n"
-    file_text += "; stock_thickness: " + str(stock_thickness) + "\n"
-    file_text += "; cut_per_pass: " + str(cut_per_pass) + "\n"
-    file_text += "; bit_diameter: " + str(bit_diameter) + "\n"
+    if debug:
+        file_text += "; target_depth: " + str(target_depth) + "\n"
+        file_text += "; stock_thickness: " + str(stock_thickness) + "\n"
+        file_text += "; cut_per_pass: " + str(cut_per_pass) + "\n"
+        file_text += "; bit_diameter: " + str(bit_diameter) + "\n"
     file_text += G.G0_Z(stock_thickness)
     while stock_thickness > target_depth:
         stock_thickness -= cut_per_pass
@@ -327,6 +335,110 @@ def rectangularPocket(area, target_depth, stock_thickness, safe_Z, cut_per_pass,
         file_text += G.set_ABS_mode()
         file_text += G.G1_Z(stock_thickness)
         file_text += rectAreaByOutline(area, bit_diameter)
+    file_text += G.G0_Z(safe_Z)
+    return file_text
+
+def roundedRectangle(length, width, corner_radius, bit_diameter, path_ref='outside'):
+    """ Assumes it's in INCREMENTAL MODE.
+    Since length and width arguments are not related to any position.
+    With path_ref='outside', the length and width define the outer boundary of the cut.
+    With path_ref='center', the length and width define the cut path (centerline of cut) boundary.
+    With path_ref='inside', the length and width define the inner boundary of the cut.
+    Assumes that the bit is already in a starting position, at least X of least Y edge;
+    path_ref is not a consideration.
+    """
+    bit_radius = bit_diameter / 2.0
+    corner_diameter = 2 * corner_radius
+    if corner_radius <= 0:
+        raise ValueError('corner_radius %d must be greater than 0.' % corner_radius)
+    if path_ref is 'outside':
+        # TODO: check that corner_radius > bit_radius
+        if corner_radius <= bit_radius:
+            raise ValueError('corner_radius %d must be greater than bit radius %d.' % (corner_radius, bit_radius))
+        center_offset = corner_radius - bit_radius
+        file_text = G.G1_X(length - corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((center_offset, center_offset), (0, center_offset))
+        file_text += G.G1_Y(width - corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((- center_offset, center_offset), (- center_offset, 0))
+        file_text += G.G1_X(- length + corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((- center_offset, - center_offset), (0, - center_offset))
+        file_text += G.G1_Y(- width + corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((center_offset, - center_offset), (center_offset, 0))
+    elif path_ref is 'center':
+        file_text = G.G1_X(length - corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((corner_radius, corner_radius), (0, corner_radius))
+        file_text += G.G1_Y(width - corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((- corner_radius, corner_radius), (- corner_radius, 0))
+        file_text += G.G1_X(- length + corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((- corner_radius, - corner_radius), (0, - corner_radius))
+        file_text += G.G1_Y(- width + corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((corner_radius, - corner_radius), (corner_radius, 0))
+    elif path_ref is 'inside':
+        center_offset = corner_radius + bit_radius
+        file_text = G.G1_X(length - corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((center_offset, center_offset), (0, center_offset))
+        file_text += G.G1_Y(width - corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((- center_offset, center_offset), (- center_offset, 0))
+        file_text += G.G1_X(- length + corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((- center_offset, - center_offset), (0, - center_offset))
+        file_text += G.G1_Y(- width + corner_diameter)
+        file_text += G.G3XY_to_INCR_FULL((center_offset, - center_offset), (center_offset, 0))
+    else:
+        raise ValueError('Invalid path reference specified: %s.' % path_ref)
+    return file_text
+
+def tenon(rail, stile, offsets, tenon, mortise_bit_diameter, bit_diameter, safe_Z, cut_per_pass):
+    """
+    Assumed bit location (center) is at refs origin, at safe_Z, and machine is assumed in ABS mode.
+    It is usual that mortise_bit_diameter == bit_diameter.
+    Requires:
+        rail = (rail_face_width, rail_thickness)
+        stile = (stile_face_width, stile_thickness)
+        offsets = (offset_from_face, offset_from_end)
+        tenon = (length, width, depth)
+    """
+    # Unpacking the tuples
+    rail_face_width, rail_thickness = rail
+    stile_face_width, stile_thickness = stile
+    offset_from_face, offset_from_end = offsets
+    length, width, depth = tenon
+
+    bit_radius = bit_diameter / 2.0
+    corner_radius = mortise_bit_diameter / 2.0
+
+    file_text = ''
+
+    # if debug:
+    #     file_text += "; target_depth: " + str(target_depth) + "\n"
+    #     file_text += "; stock_thickness: " + str(stock_thickness) + "\n"
+    #     file_text += "; cut_per_pass: " + str(cut_per_pass) + "\n"
+    #     file_text += "; bit_diameter: " + str(bit_diameter) + "\n"
+
+    if (offset_from_face <= bit_diameter) and (offset_from_end <= bit_diameter) and \
+        (rail_face_width - offset_from_end - length <= bit_diameter) and \
+        (rail_thickness - offset_from_face - width <= bit_diameter):
+        file_text += G.set_ABS_mode()
+        file_text += G.G0_Z(safe_Z)
+        file_text += G.set_INCR_mode()
+        file_text += G.G0_X(offset_from_end + corner_radius)
+        file_text += G.set_ABS_mode()
+        file_text += G.G0_Z(stile_face_width)
+        # Making target_depth a reference from machine's Z = 0.
+        target_depth = stile_face_width - depth
+        while stile_face_width > target_depth:
+            stile_face_width -= cut_per_pass
+            if stile_face_width < target_depth:
+                stile_face_width = target_depth
+            # Z-axis move by ABSOLUTE coords
+            file_text += G.set_ABS_mode()
+            file_text += G.G1_Z(stile_face_width)
+
+            file_text += G.set_INCR_mode()
+            file_text += roundedRectangle(length, width, mortise_bit_diameter, bit_diameter, 'inside')
+    else:
+        file_text = 'Not implemented yet'
+
+    file_text += G.set_ABS_mode()
     file_text += G.G0_Z(safe_Z)
     return file_text
 

@@ -15,3 +15,19 @@ default_tab_width = 6.35
 
 # the marcotypes machine's spacings between rows of locating holes
 spoil_board_spacings = (0, 270 ,800, 1070)
+
+mortisingBits = {
+    '6.35': {
+        'diameter': 6.35,
+        'length': 40
+    }
+}
+
+mortisingJig = {
+    'locationHoleYcoord': 0,
+    'jigCenterlineOffset': 0,
+    'jigWidth': 100,
+    'stileEndReference': 1000,
+    'railEndReference': 1000,
+    'railFaceReferenceOffset': 0, # offset from jig width
+}

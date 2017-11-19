@@ -44,5 +44,5 @@ class MachinedGeometry:
         pass
 
     @abc.abstractmethod
-    def generateGcode(self, data):
+    def generateGcode(self):
         pass
