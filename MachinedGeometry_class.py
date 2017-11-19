@@ -33,9 +33,16 @@ class MachinedGeometry:
         pass
 
     @abc.abstractmethod
-    def getGeometry(self, data):
+    def getGeometry(self):
+        """
+        Returns a dict:
+        {
+            "entities": [],
+            "extents": {"width": float, "height": float, "center": (float, float)}
+        }
+        """
         pass
 
     @abc.abstractmethod
-    def generateGcode(self, data):
+    def generateGcode(self):
         pass

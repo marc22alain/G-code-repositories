@@ -78,6 +78,7 @@ def G1_Z(height):
 def G2XY_to_ABS(point, center):
     '''
     Takes two tuples, returns a string.
+    point represents the ending point.
     Runs in ABSOLUTE IJ mode G2 == CW.
     '''
     return 'G90.1 G17 G2 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' I' + \
@@ -103,6 +104,15 @@ def G3XY_to(point, center):
     return 'G90.1 G17 G3 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' I' + \
            sane(center[0]) + ' J' + sane(center[1]) + ' \n'
 
+def G3XY_to_INCR_FULL(point, center_offset):
+    '''
+    Takes two tuples, returns a string.
+    Assumes INCREMENTAL IJ mode G2 == CW.
+    ***Consider taking out the P1 and making the method more general;
+        P1 seems to be optional (p.114 of LinuxCNC User Guide).
+    '''
+    return 'G91 G17 G3 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' I' + \
+           sane(center_offset[0]) + ' J' + sane(center_offset[1]) + ' P1 \n'
 
 def F_rate(rate):
     '''
@@ -139,3 +149,10 @@ def set_dwell(time):
     Sets the dwell time. G4.
     '''
     return 'G4 P' + sane(time) + ' \n'
+
+def pause():
+    '''
+    Returns a string to pause the machine; the machine will resume operation at
+    the next line when the cycle start button is pressed.
+    '''
+    return 'M0 \n'

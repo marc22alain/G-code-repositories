@@ -189,3 +189,36 @@ def rect_area_suite():
     suite.addTest(Test_rectangular_area("test_odd_multi_pass"))
     suite.addTest(Test_rectangular_area("test_even_multi_pass"))
     return suite
+
+
+class Test_rounded_rectangle(unittest.TestCase):
+    """
+    Tests roundedRectangle(length, width, corner_radius, bit_diameter, path_ref='outside')
+    """
+
+    def test_invalid_corner_radius(self):
+        """ Checks assertions for valid corner_radius. """
+        def no_radius():
+            return sg.roundedRectangle(50, 50, 0, 5, 'center')
+        self.assertRaises(ValueError, no_radius)
+        def small_radius():
+            return sg.roundedRectangle(50, 50, 2, 5, 'outside')
+        self.assertRaises(ValueError, small_radius)
+
+    def test_equivalent_args(self):
+        """ Checks that path_ref-equivalent function calls produce the same G-code. """
+        def center_ref():
+            return sg.roundedRectangle(46, 46, 10, 4, 'center')
+        def outside_ref():
+            return sg.roundedRectangle(50, 50, 12, 4, 'outside')
+        def inside_ref():
+            return sg.roundedRectangle(42, 42, 8, 4, 'inside')
+        self.assertEqual(center_ref(), outside_ref())
+        self.assertEqual(inside_ref(), outside_ref())
+
+
+def rounded_rect_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(Test_rounded_rectangle("test_invalid_corner_radius"))
+    suite.addTest(Test_rounded_rectangle("test_equivalent_args"))
+    return suite

@@ -13,6 +13,7 @@ from Application_class import runApp
 from RoundBottomedDado_class import RoundBottomedDado
 from DoughnutCutter_class import DoughnutCutter
 from RectangularPocket_class import RectangularPocket
+from FrameMortiseAndTenon_class import FrameMortiseAndTenon
 from TkUiFactory_class import TkUIFactory
 
 class AllApps(Frame):
@@ -20,11 +21,14 @@ class AllApps(Frame):
         Frame.__init__(self)
         self.grid()
         self.ui_factory = TkUIFactory()
-        self.apps = [RoundBottomedDado, DoughnutCutter, RectangularPocket]
+        self.apps = [RoundBottomedDado, DoughnutCutter, RectangularPocket, FrameMortiseAndTenon]
         self.addAppButtons()
 
 
     def addAppButtons(self):
+        """
+        Creates a button for every app; clicking on a button instantiates that app.
+        """
         row_num = 0
         for app_class in self.apps:
             start_app = self.makeAppInit(app_class)
@@ -34,6 +38,9 @@ class AllApps(Frame):
 
 
     def makeAppInit(self, app_class):
+        """
+        Produces the closures that are triggered by clicking on an app button.
+        """
         def startApp():
             app = self.ui_factory.makeMachinedGeometryEngine(app_class)
             runApp(Toplevel(self), app)
