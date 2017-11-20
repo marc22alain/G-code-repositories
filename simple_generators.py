@@ -442,6 +442,9 @@ def tenon(rail, stile, offsets, tenon, mortise_bit_diameter, bit_diameter, safe_
     file_text += G.G0_Z(safe_Z)
     return file_text
 
+def mortise():
+    pass
+
 def startProgram(feed_rate):
     return G.F_rate(feed_rate)
 

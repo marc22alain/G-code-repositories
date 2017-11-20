@@ -31,3 +31,8 @@ mortisingJig = {
     'railEndReference': 1000,
     'railFaceReferenceOffset': 0, # offset from jig width
 }
+
+machineLocations = {
+    'test': (0,0),
+    270: (840, 270)
+}
