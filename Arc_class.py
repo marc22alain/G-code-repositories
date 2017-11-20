@@ -39,5 +39,6 @@ class Arc(GeometricEntity):
         self.y1 = self.center_y - self.radius
         self.x2 = self.center_x + self.radius
         self.y2 = self.center_y + self.radius
+        options["style"] = ARC
         self.options = options
         return self

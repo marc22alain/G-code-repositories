@@ -162,4 +162,7 @@ class DoughnutCutter(MachinedGeometry):
         return self.g_code
 
     def getToolPasses(self):
+        """
+        Since implements_toolpass_view = False.
+        """
         pass
