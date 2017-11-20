@@ -5,7 +5,7 @@ from math import *
 import os
 import simple_generators as G
 import MC_defaults as MC
-from Canvas_Geometry_classes import *
+# from Canvas_Geometry_classes import *
 
 
 # what's this for ?
