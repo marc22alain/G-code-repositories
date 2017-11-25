@@ -23,13 +23,18 @@ mortisingBits = {
     }
 }
 
+offsetXfromMachineLocation = 200
+jigWidth = 100
 mortisingJig = {
     'locationHoleYcoord': 0,
-    'jigCenterlineOffset': 0,
-    'jigWidth': 100,
-    'stileEndReference': 1000,
-    'railEndReference': 1000,
-    'railFaceReferenceOffset': 0, # offset from jig width
+    'jigCenterlineOffset': 0,   # the jig centerline is at offset = 0 from Y-machine-location
+    'jigWidth': jigWidth,
+    'stileEndReference': offsetXfromMachineLocation,
+    'railEndReference': offsetXfromMachineLocation + 100,
+    'stileFaceReference': jigWidth / 2.0, # offset from jig width
+    'railFaceReference': jigWidth + 20, # offset from jig width
+    'minimumSafeZ': 40,
+    'offsetXfromMachineLocation': offsetXfromMachineLocation
 }
 
 machineLocations = {

@@ -442,8 +442,30 @@ def tenon(rail, stile, offsets, tenon, mortise_bit_diameter, bit_diameter, safe_
     file_text += G.G0_Z(safe_Z)
     return file_text
 
+
 def mortise():
     pass
+
+
+def translateXYabs(abs_x, abs_y, safe_Z):
+    """
+    Moves the machine with G0 to absolute location (abs_x, abs_y, safe_Z).
+    """
+    file_text = G.set_ABS_mode()
+    file_text += G.G0_Z(safe_Z)
+    file_text += G.G0_XY((abs_x, abs_y))
+    return file_text
+
+
+def translateXYincr(incr_x, incr_y, safe_Z):
+    """
+    Moves the machine with G0 to incremental location (incr_x, incr_y, safe_Z).
+    """
+    file_text = G.set_INCR_mode()
+    file_text += G.G0_Z(safe_Z)
+    file_text += G.G0_XY((incr_x, incr_y))
+    return file_text
+
 
 def startProgram(feed_rate):
     return G.F_rate(feed_rate)
