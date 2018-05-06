@@ -17,33 +17,43 @@ class Dado(Feature):
         self.reversed = False
 
     def generateCode(self):
-        if not self.reversed:
-            return self._genPrimaryPath()
-        else:
-            return self._genReversedPath()
-
-    def _genPrimaryPath(self):
         # Assuming start at safe_Z and in (X,Y) position to start cutting.
         g_code = G.set_ABS_mode()
         g_code += G.G0_Z(self.stock_height)
-        # TODO: elaborate for max_cut_per_pass
-        g_code += G.G1_Z(self.stock_height - self.cut_depth)
-        g_code += G.set_INCR_mode()
-        g_code += G.G1_XY((self.x_delta, self.y_delta))
-        self.reversed = not self.reversed
+        g_code += self._depthOfCut()
+        # if not self.reversed:
+        #     g_code += self._genPrimaryPath()
+        # else:
+        #     g_code += self._genReversedPath()
         g_code += G.set_ABS_mode()
         g_code += G.G0_Z(self.safe_Z)
+        return g_code
+
+    def _genPrimaryPath(self):
+        g_code = G.set_INCR_mode()
+        g_code += G.G1_XY((self.x_delta, self.y_delta))
+        self.reversed = not self.reversed
         return g_code
 
     def _genReversedPath(self):
-        # Assuming start at safe_Z and in (X,Y) position to start cutting.
-        g_code = G.set_ABS_mode()
-        g_code += G.G0_Z(self.stock_height)
-        # TODO: elaborate for max_cut_per_pass
-        g_code += G.G1_Z(self.stock_height - self.cut_depth)
-        g_code += G.set_INCR_mode()
+        g_code = G.set_INCR_mode()
         g_code += G.G1_XY((- self.x_delta, - self.y_delta))
         self.reversed = not self.reversed
-        g_code += G.set_ABS_mode()
-        g_code += G.G0_Z(self.safe_Z)
         return g_code
+
+    def _depthOfCut(self):
+        g_code = ''
+        height = self.stock_height
+        end_height = self.stock_height - self.cut_depth
+        while height > end_height:
+            height -= self.max_cut_per_pass
+            if height < end_height:
+                height = end_height
+            g_code += G.set_ABS_mode()
+            g_code += G.G1_Z(height)
+            if not self.reversed:
+                g_code += self._genPrimaryPath()
+            else:
+                g_code += self._genReversedPath()
+        return g_code
+
