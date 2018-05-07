@@ -21,24 +21,8 @@ class Dado(Feature):
         g_code = G.set_ABS_mode()
         g_code += G.G0_Z(self.stock_height)
         g_code += self._depthOfCut()
-        # if not self.reversed:
-        #     g_code += self._genPrimaryPath()
-        # else:
-        #     g_code += self._genReversedPath()
         g_code += G.set_ABS_mode()
         g_code += G.G0_Z(self.safe_Z)
-        return g_code
-
-    def _genPrimaryPath(self):
-        g_code = G.set_INCR_mode()
-        g_code += G.G1_XY((self.x_delta, self.y_delta))
-        self.reversed = not self.reversed
-        return g_code
-
-    def _genReversedPath(self):
-        g_code = G.set_INCR_mode()
-        g_code += G.G1_XY((- self.x_delta, - self.y_delta))
-        self.reversed = not self.reversed
         return g_code
 
     def _depthOfCut(self):
@@ -51,9 +35,16 @@ class Dado(Feature):
                 height = end_height
             g_code += G.set_ABS_mode()
             g_code += G.G1_Z(height)
-            if not self.reversed:
-                g_code += self._genPrimaryPath()
-            else:
-                g_code += self._genReversedPath()
+            g_code += self._genPath()
         return g_code
 
+    def _genPath(self):
+        g_code = G.set_INCR_mode()
+        if not self.reversed:
+            # The primary path
+            g_code += G.G1_XY((self.x_delta, self.y_delta))
+        else:
+            # The reversed path
+            g_code += G.G1_XY((- self.x_delta, - self.y_delta))
+        self.reversed = not self.reversed
+        return g_code
