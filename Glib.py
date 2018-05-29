@@ -25,6 +25,12 @@ def G1_XY(point):
     '''
     return 'G1 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' \n'
 
+def G1_XYZ(point):
+    '''
+    Takes a tuple, returns a string;
+    almost same as above
+    '''
+    return 'G1 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' Z' + sane(point[2]) + ' \n'
 
 def G1_to_XZ(point):
     '''
