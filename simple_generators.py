@@ -14,10 +14,13 @@ import math
 
 def bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter):
-    '''use G2; from specified diameter and thickness;
+    """ Use G2; from specified diameter and thickness;
        cutter compensation in function.
        Note that this method mixes ABSOLUTE with INCREMENTAL modes:
-       all moves in XY are in INCR and all moves in Z are ABS.'''
+       all moves in XY are in INCR and all moves in Z are ABS.
+
+       Assumes that the bit is at the hole's center point,
+       and returns it to that position at Z_safe when done. """
 
     assert cutter_diameter <= circle_diameter, "bit is too large for desired hole"
     assert Z_safe > stock_thickness, "Z_safe is too short for stock thickness"
@@ -53,7 +56,6 @@ def bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
     # At end of cut, ensures that the program reaches the very bottom
     file_text += G.set_dwell(0.5)
     # Z-axis move
-    # TODO: move this to before the return to origin
     file_text += G.set_ABS_mode()
     file_text += G.G0_Z(Z_safe)
     # Then put the bit back to (0,0)
