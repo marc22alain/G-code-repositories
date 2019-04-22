@@ -14,6 +14,7 @@ from RoundBottomedDado_class import RoundBottomedDado
 from DoughnutCutter_class import DoughnutCutter
 from RectangularPocket_class import RectangularPocket
 from FrameMortiseAndTenon_class import FrameMortiseAndTenon
+from FeatureCreature_class import FeatureCreature
 from TkUiFactory_class import TkUIFactory
 
 class AllApps(Frame):
@@ -21,7 +22,7 @@ class AllApps(Frame):
         Frame.__init__(self)
         self.grid()
         self.ui_factory = TkUIFactory()
-        self.apps = [RoundBottomedDado, DoughnutCutter, RectangularPocket, FrameMortiseAndTenon]
+        self.apps = [RoundBottomedDado, DoughnutCutter, RectangularPocket, FrameMortiseAndTenon, FeatureCreature]
         self.addAppButtons()
 
 

@@ -6,6 +6,9 @@ class MachinedGeometry:
 
     @abc.abstractmethod
     def makeQueries(self, data_types, query_types):
+        """
+        Permits abstraction of the UI library.
+        """
         pass
 
     @abc.abstractmethod
