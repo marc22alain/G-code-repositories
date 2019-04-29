@@ -1,0 +1,6 @@
+from BitDiameterQuery_class import BitDiameterQuery
+from PathDiameterQuery_class import PathDiameterQuery
+from CutDepthQuery_class import CutDepthQuery
+from CutPerPassQuery_class import CutPerPassQuery
+from GeometricFeatureQuery_class import GeometricFeatureQuery
+from BogusQuery_class import BogusQuery
