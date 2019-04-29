@@ -6,9 +6,9 @@ from option_queries import *
 class LinearDistribution(GeometricFeature):
     name = 'Linear Distribution'
     user_selectable = True
-    option_queries = [
-        GeometricFeatureQuery,
-    ]
+    option_queries = {
+        GeometricFeatureQuery: None,
+    }
 
     child_feature_classes = []
 

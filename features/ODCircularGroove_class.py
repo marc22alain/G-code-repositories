@@ -6,11 +6,11 @@ from option_queries import *
 class ODCircularGroove(GeometricFeature):
     name = 'OD Circular Groove'
     user_selectable = True
-    option_queries = [
-        PathDiameterQuery,
-        BitDiameterQuery,
-        CutDepthQuery
-    ]
+    option_queries = {
+        PathDiameterQuery: None,
+        BitDiameterQuery: None,
+        CutDepthQuery: None
+    }
 
     # child_features = {
     #     # works OK when there is only one instance of
@@ -23,14 +23,14 @@ class ODCircularGroove(GeometricFeature):
     parent_feature_class = DepthStepper
 
     def getGCode(self):
-        diameter = self.option_query_instances[PathDiameterQuery].getValue()
-        bit_diameter = self.option_query_instances[BitDiameterQuery].getValue()
-        depth = self.option_query_instances[CutDepthQuery].getValue()
+        diameter = self.option_queries[PathDiameterQuery].getValue()
+        bit_diameter = self.option_queries[BitDiameterQuery].getValue()
+        depth = self.option_queries[CutDepthQuery].getValue()
         center_diameter = diameter - (bit_diameter / 2.0)
 
         child = self.children.values()[0]
-        child.option_query_instances[PathDiameterQuery].setValue(center_diameter)
+        child.option_queries[PathDiameterQuery].setValue(center_diameter)
         # this may be a relative cut per pass, or absolute cut depth,
         # quite up in the air !
-        child.option_query_instances[CutDepthQuery].setValue(depth)
+        child.option_queries[CutDepthQuery].setValue(depth)
         return child.getGCode()

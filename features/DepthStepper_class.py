@@ -15,10 +15,10 @@ class DepthStepper(GeometricFeature):
     # Consider if this might get over-written by the child feature's name
     # name = 'Depth Stepper'
     user_selectable = False
-    option_queries = [
-        CutPerPassQuery,
-        CutDepthQuery
-    ]
+    option_queries = {
+        CutPerPassQuery: None,
+        CutDepthQuery: None
+    }
 
 
     def __init__(self, machine, workpiece, feature_class):

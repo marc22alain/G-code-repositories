@@ -8,19 +8,18 @@ from option_queries import *
 class CircularGroove(GeometricFeature):
     name = 'Circular Groove'
     user_selectable = True
-    option_queries = [
-        PathDiameterQuery,
-        BitDiameterQuery,
-        CutDepthQuery,
-        BogusQuery
-    ]
+    option_queries = {
+        PathDiameterQuery: None,
+        BitDiameterQuery: None,
+        CutDepthQuery: None
+    }
 
     child_feature_classes = []
 
     parent_feature_class = DepthStepper
 
     def getGCode(self):
-        diameter = self.option_query_instances[PathDiameterQuery].getValue()
+        diameter = self.option_queries[PathDiameterQuery].getValue()
         # depth = self.option_query_instances[CutDepthQuery].getValue()
         # move to depth
         file_text = ''

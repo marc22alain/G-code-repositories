@@ -8,7 +8,6 @@ class GeometricFeature:
     def __init__(self, machine, work_piece):
         self.machine = machine
         self.work_piece = work_piece
-        self.option_query_set = set()
         self.makeChildren()
 
     @abc.abstractmethod
@@ -17,17 +16,21 @@ class GeometricFeature:
 
     def getOptionQueries(self):
         # https://treyhunner.com/2016/02/how-to-merge-dictionaries-in-python/
-        try:
-            # TODO: resolve for multiple children, for composed features
-            self.option_query_instances = self.children.values()[0].getOptionQueries().copy()
-        except IndexError:
-            self.option_query_instances = {}
-
-        self.option_query_instances.update(self._getOwnOptionQueries())
-        return self.option_query_instances
+        child_query_instances = self._getChildOptionQueries()
+        child_query_instances.update(self._getOwnOptionQueries())
+        self.option_queries.update(child_query_instances)
+        return self.option_queries
 
     def _getOwnOptionQueries(self):
         return { key: key() for key in self.option_queries}
+
+    def _getChildOptionQueries(self):
+        try:
+            # TODO: resolve for multiple children, for composed features
+            child_query_instances = self.children.values()[0].getOptionQueries().copy()
+        except IndexError:
+            child_query_instances = {}
+        return child_query_instances
 
     def setChildFeatures(self, feature_class):
         '''
