@@ -15,16 +15,18 @@ class DepthStepper(GeometricFeature):
     # Consider if this might get over-written by the child feature's name
     # name = 'Depth Stepper'
     user_selectable = False
-    option_queries = {
-        CutPerPassQuery: None,
-        CutDepthQuery: None
-    }
+    option_query_classes = [
+        CutPerPassQuery,
+        CutDepthQuery
+    ]
 
+    child_feature_classes = []
 
     def __init__(self, machine, workpiece, feature_class):
-        self.child_feature_classes = [feature_class]
-        self.name = feature_class.name
         GeometricFeature.__init__(self, machine, workpiece)
+        self.name = feature_class.name
+        self.child_features[feature_class] = None
+        self.makeChildren()
 
     def getGCode(self):
-        return self.children.values()[0].getGCode()
+        return self.child_features.values()[0].getGCode()

@@ -8,11 +8,10 @@ from option_queries import *
 class CircularGroove(GeometricFeature):
     name = 'Circular Groove'
     user_selectable = True
-    option_queries = {
-        PathDiameterQuery: None,
-        BitDiameterQuery: None,
-        CutDepthQuery: None
-    }
+    option_query_classes = [
+        PathDiameterQuery,
+        CutDepthQuery
+    ]
 
     child_feature_classes = []
 

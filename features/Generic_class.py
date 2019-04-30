@@ -4,7 +4,7 @@ from OptionQuery_class import OptionQuery
 class Generic(GeometricFeature):
     name = 'Generic'
     user_selectable = False
-    option_queries = {}
+    option_query_classes = []
 
     child_feature_classes = []
 

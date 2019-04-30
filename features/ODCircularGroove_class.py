@@ -6,11 +6,11 @@ from option_queries import *
 class ODCircularGroove(GeometricFeature):
     name = 'OD Circular Groove'
     user_selectable = True
-    option_queries = {
-        PathDiameterQuery: None,
-        BitDiameterQuery: None,
-        CutDepthQuery: None
-    }
+    option_query_classes = [
+        PathDiameterQuery,
+        BitDiameterQuery,
+        CutDepthQuery
+    ]
 
     # child_features = {
     #     # works OK when there is only one instance of
@@ -18,7 +18,9 @@ class ODCircularGroove(GeometricFeature):
     #     # alternatively
     #     CircularGroove: CircularGroove.option_queries
     # }
-    child_feature_classes = [CircularGroove]
+    child_feature_classes = [
+        CircularGroove
+    ]
 
     parent_feature_class = DepthStepper
 
@@ -28,7 +30,7 @@ class ODCircularGroove(GeometricFeature):
         depth = self.option_queries[CutDepthQuery].getValue()
         center_diameter = diameter - (bit_diameter / 2.0)
 
-        child = self.children.values()[0]
+        child = self.child_features.values()[0]
         child.option_queries[PathDiameterQuery].setValue(center_diameter)
         # this may be a relative cut per pass, or absolute cut depth,
         # quite up in the air !
