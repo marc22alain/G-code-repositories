@@ -13,4 +13,13 @@ class LinearDistribution(GeometricFeature):
     child_feature_classes = []
 
     def getGCode(self):
-        return ''
+        return self.child_features.values()[0].getInstructions(sequence)
+
+    def getInstructions(self):
+        pass
+
+    def moveToStart(self):
+        pass
+
+    def returnToHome(self):
+        pass
