@@ -6,15 +6,17 @@ from option_queries import GeometricFeatureQuery
 
 from OptionQueryDialog_class import OptionQueryDialog
 from FeatureList_class import FeatureList
+from ListItem_class import ListItem
+from utilities import Glib as G
 
 class Application(Frame):
     def __init__(self, master = None):
-        Frame.__init__(self, master)
-        self.grid()
-        self.createSubframes()
         self.machine = SimpleMachine()
         self.workpiece = SimpleWorkpiece()
         self.features = []
+        Frame.__init__(self, master)
+        self.grid()
+        self.createSubframes()
 
         # create or inject machine and workpiece
 
@@ -40,6 +42,11 @@ class Application(Frame):
         row_num += 1
         self.output_button = Button(self.entry_frame,text="test gen gcode",command=self.genCode, width=30)
         self.output_button.grid(row=row_num, column=0, columnspan=2, pady=5)
+
+        row_num += 1
+        self.insertMachine(row_num)
+        row_num += 1
+        self.insertWorkpiece(row_num)
 
     def createFeature(self):
         feature_class = self.current_feature_choice.getValue()
@@ -68,4 +75,18 @@ class Application(Frame):
         self.cancelFunction = None
 
     def genCode(self):
-        print self.features[0].getGCode()
+        # wrapping the features' gcode:
+        feed_rate = self.machine.getParams()['feed_rate']
+        self.g_code = G.F_rate(feed_rate)
+        self.g_code += self.features[0].getGCode()
+        self.g_code += G.set_ABS_mode() + G.end_program()
+
+        print self.g_code
+
+    def insertMachine(self, row_num):
+        item = ListItem(self, self.machine)
+        item.grid(row=row_num, column=0, columnspan=2, pady=5)
+
+    def insertWorkpiece(self, row_num):
+        item = ListItem(self, self.workpiece)
+        item.grid(row=row_num, column=0, columnspan=2, pady=5)

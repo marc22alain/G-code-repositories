@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from Tkinter import *
-from FeatureListItem_class import FeatureListItem
+from ListItem_class import ListItem
 
 class FeatureList(Frame):
     def __init__(self, master):
@@ -9,6 +9,6 @@ class FeatureList(Frame):
         self.featureItems = []
 
     def insertFeature(self, feature):
-        item = FeatureListItem(self, feature)
+        item = ListItem(self, feature)
         self.featureItems.append(item)
         item.grid(row=len(self.featureItems), column=0, columnspan=2, pady=5)
