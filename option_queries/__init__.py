@@ -3,4 +3,11 @@ from PathDiameterQuery_class import PathDiameterQuery
 from CutDepthQuery_class import CutDepthQuery
 from CutPerPassQuery_class import CutPerPassQuery
 from GeometricFeatureQuery_class import GeometricFeatureQuery
+from StockLengthQuery_class import StockLengthQuery
+from StockWidthQuery_class import StockWidthQuery
+from StockHeightQuery_class import StockHeightQuery
+from SafeZQuery_class import SafeZQuery
+from FeedRateQuery_class import FeedRateQuery
+from DeltaXQuery_class import DeltaXQuery
+from DeltaYQuery_class import DeltaYQuery
 from BogusQuery_class import BogusQuery

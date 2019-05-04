@@ -14,6 +14,8 @@ class EntryQuery(Query):
     def __init__(self):
         self.assertValidInit()
         self.var = self.options["type"]()
+        if "default" in self.options:
+            self.var.set(self.options["default"])
 
     def assertValidInit(self):
         assert type(self.options["name"]) == type("label"), "'label' argument must be a string"
@@ -25,8 +27,6 @@ class EntryQuery(Query):
         self.label.grid(row=row_num, column=0)
         self.input = Entry(master, textvariable=self.var, width=13)
         self.input.grid(row=row_num, column=1)
-        if hasattr(self.options, "default"):
-            self.var.set(self.options["default"])
 
     def getValue(self):
         return self.var.get()
