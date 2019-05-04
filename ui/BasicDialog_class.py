@@ -5,7 +5,9 @@ class BasicDialog(Toplevel):
     Magic from https://effbot.org/tkinterbook/tkinter-dialog-windows.htm
     '''
 
-    def __init__(self, parent, title = None):
+    def __init__(self, parent, title = None, ok_callback=None, cancel_callback=None):
+        self.ok_callback = ok_callback
+        self.cancel_callback = cancel_callback
 
         Toplevel.__init__(self, parent)
         self.transient(parent)
@@ -81,7 +83,7 @@ class BasicDialog(Toplevel):
         self.apply()
         # close and stuff
         try:
-            self.parent.okFunction()
+            self.ok_callback()
         except AttributeError as e:
             print 'no OK function defined - AttributeError'
             print e
@@ -92,7 +94,7 @@ class BasicDialog(Toplevel):
 
     def cancel(self, event=None):
         try:
-            self.parent.cancelFunction()
+            self.cancel_callback()
         except AttributeError as e:
             print 'no CANCEL function defined - AttributeError'
             print e

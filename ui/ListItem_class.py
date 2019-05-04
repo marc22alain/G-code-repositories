@@ -18,7 +18,7 @@ class ListItem(Frame):
         self.edit_button.grid(row=row_num, column=1)
 
     def openEditDialog(self):
-        OptionQueryDialog(self, self.item.getOptionQueries(), self.item.name )
+        OptionQueryDialog(self, self.item.getOptionQueries(), self.item.name, self.okFunction)
 
     def okFunction(self):
         queries = self.item.getOptionQueries().values()

@@ -3,10 +3,10 @@ from Tkinter import *
 from BasicDialog_class import BasicDialog
 
 class OptionQueryDialog(BasicDialog):
-    def __init__(self, parent, option_queries, feature_name):
+    def __init__(self, parent, option_queries, feature_name, ok_callback=None, cancel_callback=None):
         self.option_queries = option_queries
         self.feature_name = feature_name
-        BasicDialog.__init__(self, parent, 'Choose feature settings')
+        BasicDialog.__init__(self, parent, 'Choose feature settings', ok_callback, cancel_callback)
 
     def body(self, master):
         # step: iterate through queries to form the Label():Entry() pairs

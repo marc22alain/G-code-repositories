@@ -60,15 +60,7 @@ class Application(Frame):
         def cancelFunction():
             self.features.pop()
             print 'running CANCEL function'
-        # will run if user chooses to CANCEL
-        self.okFunction = addFunction
-        self.cancelFunction = cancelFunction
-        # now get the feature's OptionQueries and get some answers for it,
-        # or allow the user to cancel and delete the new feature
-        OptionQueryDialog(self, feature.getOptionQueries(), feature.name )
-        # take away this dangerous option !
-        self.okFunction = None
-        self.cancelFunction = None
+        OptionQueryDialog(self, feature.getOptionQueries(), feature.name, addFunction, cancelFunction)
 
     def genCode(self):
         # wrapping the features' gcode:
