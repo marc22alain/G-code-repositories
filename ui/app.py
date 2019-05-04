@@ -50,11 +50,7 @@ class Application(Frame):
 
     def createFeature(self):
         feature_class = self.current_feature_choice.getValue()
-        # so far, for DepthStepper
-        if hasattr(feature_class, 'parent_feature_class'):
-            feature = feature_class.parent_feature_class(self.machine, self.workpiece, feature_class)
-        else:
-            feature = feature_class(self.machine, self.workpiece)
+        feature = feature_class(self.machine, self.workpiece)
 
         print feature
         self.features.append(feature)

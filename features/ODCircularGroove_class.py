@@ -1,38 +1,59 @@
 from GeometricFeature_class import GeometricFeature
 from CircularGroove_class import CircularGroove
-from DepthStepper_class import DepthStepper
 from option_queries import *
+
 
 class ODCircularGroove(GeometricFeature):
     name = 'OD Circular Groove'
     user_selectable = True
+    can_manage_depth = True
     option_query_classes = [
-        PathDiameterQuery,
-        BitDiameterQuery,
-        CutDepthQuery
+        PathDiameterQuery
     ]
 
-    # child_features = {
-    #     # works OK when there is only one instance of
-    #     'CircularGroove': CircularGroove(1,2).getOptionQueries(),
-    #     # alternatively
-    #     CircularGroove: CircularGroove.option_queries
-    # }
     child_feature_classes = [
         CircularGroove
     ]
 
-    parent_feature_class = DepthStepper
-
     def getGCode(self):
+        self.setUpChild()
+        # manage height - optionally -
+        if self.self_managed_depth:
+            return self.getManagedDepthInstructions()
+        else:
+            return self.getInstructions(None)
+
+    # def getGCode(self):
+    #     self.setUpChild()
+    #     return self.child_features.values()[0].getGCode()
+
+    def getParams(self):
         diameter = self.option_queries[PathDiameterQuery].getValue()
-        bit_diameter = self.option_queries[BitDiameterQuery].getValue()
-        depth = self.option_queries[CutDepthQuery].getValue()
-        center_diameter = diameter - (bit_diameter / 2.0)
+        return (diameter, self.getBasicParams())
+
+    def getInstructions(self, sequence):
+        # redundant ?
+        self.setUpChild()
+        # optionally call getInstructions()
+        # would allow passing in 'sequence', and ignore its DepthStepper
+        return self.child_features.values()[0].getInstructions(sequence)
+
+    def moveToStart(self):
+        # redundant ?
+        self.setUpChild()
+        return self.child_features.values()[0].moveToStart()
+
+    def returnToHome(self):
+        # redundant ?
+        self.setUpChild()
+        return self.child_features.values()[0].returnToHome()
+
+    def setUpChild(self):
+        diameter, basic_params = self.getParams()
+        center_diameter = diameter - basic_params['bit_diameter']
 
         child = self.child_features.values()[0]
         child.option_queries[PathDiameterQuery].setValue(center_diameter)
-        # this may be a relative cut per pass, or absolute cut depth,
-        # quite up in the air !
-        child.option_queries[CutDepthQuery].setValue(depth)
-        return child.getGCode()
+        child.self_managed_depth = False
+
+

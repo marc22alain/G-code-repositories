@@ -1,6 +1,6 @@
 from GeometricFeature_class import GeometricFeature
 from option_queries import *
-from utilities import Glib
+from utilities import Glib as G
 
 class DepthStepper(GeometricFeature):
     '''
@@ -22,11 +22,56 @@ class DepthStepper(GeometricFeature):
 
     child_feature_classes = []
 
-    def __init__(self, machine, workpiece, feature_class):
-        GeometricFeature.__init__(self, machine, workpiece)
-        self.name = feature_class.name
-        self.child_features[feature_class] = None
-        self.makeChildren()
+    def getGCode(self, instruction_callback, to_start_callback, return_callback):
+        basic_params, cut_per_pass, cut_depth = self.getParams()
+        stock_height = basic_params['stock_height']
+        target_depth = stock_height - cut_depth
+        multipass = cut_depth > cut_per_pass
+        sequence = 'first'
+        # pre-amble
+        # Z-axis move to starting point from Z-safe
+        file_text = G.set_ABS_mode()
+        file_text += G.G0_Z(basic_params['safe_z'])
+        file_text += to_start_callback()
+        file_text += G.set_ABS_mode()
+        file_text += G.G0_Z(basic_params['stock_height'])
 
-    def getGCode(self):
-        return self.child_features.values()[0].getGCode()
+        if multipass:
+            while stock_height > target_depth:
+                stock_height -= cut_per_pass
+                if stock_height <= target_depth:
+                    stock_height = target_depth
+                    sequence = 'last'
+                # Z-axis move
+                file_text += G.set_ABS_mode()
+                file_text += G.G1_Z(stock_height)
+                file_text += ('# ' + sequence + '\n')
+                file_text += instruction_callback(sequence)
+                sequence = 'next'
+        else:
+            sequence = 'only'
+            file_text += G.G1_Z(target_depth)
+            file_text += instruction_callback(sequence)
+
+        # post-amble
+        file_text += G.set_ABS_mode()
+        file_text += G.G0_Z(basic_params['safe_z'])
+        file_text += return_callback()
+        file_text += G.set_ABS_mode()
+
+        return file_text
+
+    def getParams(self):
+        basic_params = self.getBasicParams()
+        cut_per_pass = self.option_queries[CutPerPassQuery].getValue()
+        cut_depth = self.option_queries[CutDepthQuery].getValue()
+        return (basic_params, cut_per_pass, cut_depth)
+
+    def moveToStart(self):
+        pass
+
+    def returnToHome(self):
+        pass
+
+    def getInstructions(self):
+        pass

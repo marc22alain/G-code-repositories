@@ -1,6 +1,4 @@
 from GeometricFeature_class import GeometricFeature
-from OptionQuery_class import OptionQuery
-from DepthStepper_class import DepthStepper
 from utilities import Glib as G
 from option_queries import *
 
@@ -8,30 +6,32 @@ from option_queries import *
 class CircularGroove(GeometricFeature):
     name = 'Circular Groove'
     user_selectable = True
+    can_manage_depth = True
     option_query_classes = [
-        PathDiameterQuery,
-        CutDepthQuery
+        PathDiameterQuery
     ]
 
     child_feature_classes = []
 
-    parent_feature_class = DepthStepper
+    def getGCode(self):
+        # manage height - optionally -
+        if self.self_managed_depth:
+            return self.getManagedDepthInstructions()
+        else:
+            return self.getInstructions(None)
 
-    def getGCode(self, ref_point='center'):
+    def getInstructions(self, sequence):
         diameter = self.option_queries[PathDiameterQuery].getValue()
-        cut_instruction = G.G2XY_to_INCR_FULL((0,0),(diameter / 2, 0))
-        if ref_point == 'center':
-            return self.wrapCenterRef(cut_instruction)
-        elif ref_point == 'start':
-            return cut_instruction
-        raise ValueError('"%s" is not a valid reference point for CircularGroove' % (ref_point))
-        # depth = self.option_query_instances[CutDepthQuery].getValue()
-        # move to depth
+        return G.G2XY_to_INCR_FULL((0,0),(diameter / 2, 0))
 
-    def wrapCenterRef(self, cut_instruction):
+    def moveToStart(self):
         diameter = self.option_queries[PathDiameterQuery].getValue()
         file_text = G.set_INCR_mode()
         file_text += G.G0_XY((- diameter / 2, 0))
-        file_text += cut_instruction
+        return file_text
+
+    def returnToHome(self):
+        diameter = self.option_queries[PathDiameterQuery].getValue()
+        file_text = G.set_INCR_mode()
         file_text += G.G0_XY((diameter / 2, 0))
         return file_text
