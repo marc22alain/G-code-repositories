@@ -1,18 +1,15 @@
 #!/usr/bin/env python
 from Tkinter import *
-from machines import SimpleMachine
-from workpieces import SimpleWorkpiece
 from option_queries import GeometricFeatureQuery
+from feature_manager import FeatureManager
 
 from OptionQueryDialog_class import OptionQueryDialog
 from FeatureList_class import FeatureList
 from ListItem_class import ListItem
-from utilities import Glib as G
 
 class Application(Frame):
     def __init__(self, master = None):
-        self.machine = SimpleMachine()
-        self.workpiece = SimpleWorkpiece()
+        self.feature_manager = FeatureManager(self)
         self.features = []
         Frame.__init__(self, master)
         self.grid()
@@ -50,31 +47,15 @@ class Application(Frame):
 
     def createFeature(self):
         feature_class = self.current_feature_choice.getValue()
-        feature = feature_class(self.machine, self.workpiece)
-
-        print feature
-        self.features.append(feature)
-        def addFunction():
-            self.feature_list.insertFeature(feature)
-            print 'running OK function'
-        def cancelFunction():
-            self.features.pop()
-            print 'running CANCEL function'
-        OptionQueryDialog(self, feature.getOptionQueries(), feature.name, addFunction, cancelFunction)
+        self.feature_manager.addFeature(feature_class)
 
     def genCode(self):
-        # wrapping the features' gcode:
-        feed_rate = self.machine.getParams()['feed_rate']
-        self.g_code = G.F_rate(feed_rate)
-        self.g_code += self.features[0].getGCode()
-        self.g_code += G.set_ABS_mode() + G.end_program()
-
-        print self.g_code
+        print self.feature_manager.getGCode()
 
     def insertMachine(self, row_num):
-        item = ListItem(self, self.machine)
+        item = ListItem(self, self.feature_manager.machine)
         item.grid(row=row_num, column=0, columnspan=2, pady=5)
 
     def insertWorkpiece(self, row_num):
-        item = ListItem(self, self.workpiece)
+        item = ListItem(self, self.feature_manager.work_piece)
         item.grid(row=row_num, column=0, columnspan=2, pady=5)

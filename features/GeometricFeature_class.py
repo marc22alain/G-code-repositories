@@ -6,7 +6,10 @@ from option_queries import *
 class GeometricFeature:
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, machine, work_piece, manages_depth=True):
+    def __init__(self, feature_manager, manages_depth=True):
+        self.feature_manager = feature_manager
+        self.machine = feature_manager.machine
+        self.work_piece = feature_manager.work_piece
         try:
             self.self_managed_depth = manages_depth and self.can_manage_depth
         except AttributeError:
@@ -15,9 +18,7 @@ class GeometricFeature:
         if self.self_managed_depth:
             from DepthStepper_class import DepthStepper
             self.option_query_classes = self.option_query_classes + DepthStepper.option_query_classes
-            self.depth_stepper = DepthStepper(machine, work_piece)
-        self.machine = machine
-        self.work_piece = work_piece
+            self.depth_stepper = DepthStepper(feature_manager)
         self.option_queries = { key: None for key in self.option_query_classes }
         self.child_features = { key: None for key in self.child_feature_classes }
         self.makeChildren()
@@ -74,10 +75,13 @@ class GeometricFeature:
         self.child_features[feature_class] = feature_class
 
     def makeChildren(self):
-        children = { key: key(self.machine, self.work_piece) for key in self.child_features}
+        children = { key: key(self.feature_manager) for key in self.child_features}
         self.child_features.update(children)
 
     def getBasicParams(self):
         params = self.machine.getParams().copy()
         params.update(self.work_piece.getParams().copy())
         return params
+
+    def delete(self):
+        self.feature_manager.deleteFeature(self)

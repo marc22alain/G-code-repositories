@@ -14,8 +14,12 @@ class ListItem(Frame):
         self.label = Label(self, text=self.item.name)
         self.label.grid(row=row_num, column=0)
 
-        self.edit_button = Button(self, text='Edit', command=self.openEditDialog, width=10)
+        self.edit_button = Button(self, text='Edit', command=self.openEditDialog, width=5)
         self.edit_button.grid(row=row_num, column=1)
+
+        if hasattr(self.item, 'delete'):
+            self.delete_button = Button(self, text='Delete', command=self.deleteItem, width=5)
+            self.delete_button.grid(row=row_num, column=2)
 
     def openEditDialog(self):
         OptionQueryDialog(self, self.item.getOptionQueries(), self.item.name, self.okFunction)
@@ -25,3 +29,6 @@ class ListItem(Frame):
         print 'confirming new value'
         for q in queries:
             print q.getValue()
+
+    def deleteItem(self):
+        self.item.delete()
