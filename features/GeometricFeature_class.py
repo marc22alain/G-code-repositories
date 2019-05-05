@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 import abc
 from option_queries import *
+from utilities import Glib as G
 
 
 class GeometricFeature:
     __metaclass__ = abc.ABCMeta
+
+    common_query_classes = [
+        ReferenceXQuery,
+        ReferenceYQuery
+    ]
 
     def __init__(self, feature_manager, manages_depth=True):
         self.feature_manager = feature_manager
@@ -20,6 +26,7 @@ class GeometricFeature:
             self.option_query_classes = self.option_query_classes + DepthStepper.option_query_classes
             self.depth_stepper = DepthStepper(feature_manager)
         self.option_queries = { key: None for key in self.option_query_classes }
+        self.option_queries.update({ key: None for key in self.common_query_classes })
         self.child_features = { key: None for key in self.child_feature_classes }
         self.makeChildren()
 
@@ -42,7 +49,7 @@ class GeometricFeature:
     def getManagedDepthInstructions(self):
         self.depth_stepper.option_queries[CutPerPassQuery] = self.option_queries[CutPerPassQuery]
         self.depth_stepper.option_queries[CutDepthQuery] = self.option_queries[CutDepthQuery]
-        return self.depth_stepper.getGCode(self.getInstructions, self.moveToStart, self.returnToHome)
+        return self.depth_stepper.getGCode(self.getInstructions, self.moveToReference, self.returnToHome)
 
     def getOptionQueries(self):
         # To prevent overwriting instantiated queries
@@ -85,3 +92,10 @@ class GeometricFeature:
 
     def delete(self):
         self.feature_manager.deleteFeature(self)
+
+    def moveToReference(self):
+        refX = self.option_queries[ReferenceXQuery].getValue()
+        refY = self.option_queries[ReferenceYQuery].getValue()
+        file_text = G.G0_XY((refX, refX))
+        file_text += self.moveToStart()
+        return file_text

@@ -10,4 +10,6 @@ from SafeZQuery_class import SafeZQuery
 from FeedRateQuery_class import FeedRateQuery
 from DeltaXQuery_class import DeltaXQuery
 from DeltaYQuery_class import DeltaYQuery
+from ReferenceXQuery_class import ReferenceXQuery
+from ReferenceYQuery_class import ReferenceYQuery
 from BogusQuery_class import BogusQuery
