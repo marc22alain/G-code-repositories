@@ -1,5 +1,5 @@
-from Query_class import Query
 from Tkinter import *
+from Query_class import Query
 
 
 class EntryQuery(Query):

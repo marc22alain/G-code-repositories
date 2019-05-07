@@ -1,6 +1,6 @@
+from Tkinter import *
 from Query_class import Query
 # import MC_defaults as MC
-from Tkinter import *
 
 
 class SpinboxQuery(Query):

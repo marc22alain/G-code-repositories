@@ -1,5 +1,4 @@
-from EntryQuery_class import EntryQuery
-from Tkinter import *
+from EntryQuery_class import *
 
 class DeltaYQuery(EntryQuery):
     name = 'DeltaYQuery'

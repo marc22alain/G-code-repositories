@@ -1,5 +1,4 @@
-from SpinboxQuery_class import SpinboxQuery
-from Tkinter import *
+from SpinboxQuery_class import *
 from utilities import MC
 
 class BitDiameterQuery(SpinboxQuery):
