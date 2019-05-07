@@ -1,0 +1,2 @@
+from TestFeatureInterfaces import testWithFeature
+from TestQueryInterfaces import testWithQuery
