@@ -2,6 +2,7 @@ from machines import SimpleMachine
 from workpieces import SimpleWorkpiece
 from ui import OptionQueryDialog
 from utilities import Glib as G
+from features import *
 
 
 class FeatureManager(object):
@@ -16,9 +17,11 @@ class FeatureManager(object):
         print feature
         self.features.append(feature)
         def addFunction():
+            print 'running OK function'
+            if feature_class == LinearDistribution:
+                feature.update()
             # would like a better binding with self.features
             self.app.feature_list.insertFeature(feature)
-            print 'running OK function'
         def cancelFunction():
             self.features.pop()
             print 'running CANCEL function'

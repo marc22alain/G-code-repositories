@@ -25,6 +25,13 @@ class Application(Frame):
         row_num = 1
         self.entry_frame = Frame(self)
         self.entry_frame.grid(row=0, column=1)
+
+        row_num += 1
+        self.insertMachine(row_num)
+        row_num += 1
+        self.insertWorkpiece(row_num)
+
+        row_num += 1
         self.refresh_view = Button(self.entry_frame,text="Add Class",command=self.createFeature, width=30)
         self.refresh_view.grid(row=row_num, column=0, columnspan=2, pady=5)
 
@@ -33,17 +40,13 @@ class Application(Frame):
         self.current_feature_choice.insertQuery(self.entry_frame, row_num)
 
         row_num += 1
-        self.feature_list = FeatureList(self)
+        self.feature_list = FeatureList(self.entry_frame)
         self.feature_list.grid(row=row_num, column=0, columnspan=2, pady=5)
 
         row_num += 1
         self.output_button = Button(self.entry_frame,text="test gen gcode",command=self.genCode, width=30)
         self.output_button.grid(row=row_num, column=0, columnspan=2, pady=5)
 
-        row_num += 1
-        self.insertMachine(row_num)
-        row_num += 1
-        self.insertWorkpiece(row_num)
 
     def createFeature(self):
         feature_class = self.current_feature_choice.getValue()
@@ -53,9 +56,9 @@ class Application(Frame):
         print self.feature_manager.getGCode()
 
     def insertMachine(self, row_num):
-        item = ListItem(self, self.feature_manager.machine)
+        item = ListItem(self.entry_frame, self.feature_manager.machine)
         item.grid(row=row_num, column=0, columnspan=2, pady=5)
 
     def insertWorkpiece(self, row_num):
-        item = ListItem(self, self.feature_manager.work_piece)
+        item = ListItem(self.entry_frame, self.feature_manager.work_piece)
         item.grid(row=row_num, column=0, columnspan=2, pady=5)
