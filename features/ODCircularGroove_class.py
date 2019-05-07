@@ -23,10 +23,6 @@ class ODCircularGroove(GeometricFeature):
         else:
             return self.getInstructions(None)
 
-    # def getGCode(self):
-    #     self.setUpChild()
-    #     return self.child_features.values()[0].getGCode()
-
     def getParams(self):
         diameter = self.option_queries[PathDiameterQuery].getValue()
         return (diameter, self.getBasicParams())
@@ -55,5 +51,3 @@ class ODCircularGroove(GeometricFeature):
         child = self.child_features.values()[0]
         child.option_queries[PathDiameterQuery].setValue(center_diameter)
         child.self_managed_depth = False
-
-
