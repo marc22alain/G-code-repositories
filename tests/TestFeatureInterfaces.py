@@ -10,7 +10,7 @@ def testWithFeature(feature):
 
         @classmethod
         def setUpClass(TestFeatureInterfaces):
-            print '%s --->' % (feature.__class__.__name__)
+            print '- %s --->' % (class_name)
 
         def test_feature_returns_query_options(self):
             result = feature.getOptionQueries()

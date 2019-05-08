@@ -7,7 +7,7 @@ def testWithQuery(query):
 
         @classmethod
         def setUpClass(TestFeatureInterfaces):
-            print '%s --->' % (query.__class__.__name__)
+            print '- %s --->' % (query.__class__.__name__)
 
         def test_query_sets_entry_value(self):
             print 'EntryQuery'
