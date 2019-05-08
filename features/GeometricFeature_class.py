@@ -49,7 +49,7 @@ class GeometricFeature:
     def getManagedDepthInstructions(self):
         self.depth_stepper.option_queries[CutPerPassQuery] = self.option_queries[CutPerPassQuery]
         self.depth_stepper.option_queries[CutDepthQuery] = self.option_queries[CutDepthQuery]
-        return self.depth_stepper.getGCode(self.getInstructions, self.moveToReference, self.returnToHome)
+        return self.depth_stepper.getGCode(self.getInstructions, self.moveToReference, self.returnFromReference)
 
     def getOptionQueries(self):
         # To prevent overwriting instantiated queries
@@ -96,6 +96,15 @@ class GeometricFeature:
     def moveToReference(self):
         refX = self.option_queries[ReferenceXQuery].getValue()
         refY = self.option_queries[ReferenceYQuery].getValue()
-        file_text = G.G0_XY((refX, refX))
+        file_text = G.set_INCR_mode()
+        file_text += G.G0_XY((refX, refY))
         file_text += self.moveToStart()
+        return file_text
+
+    def returnFromReference(self):
+        refX = self.option_queries[ReferenceXQuery].getValue()
+        refY = self.option_queries[ReferenceYQuery].getValue()
+        file_text = self.returnToHome()
+        file_text += G.set_INCR_mode()
+        file_text += G.G0_XY((- refX, - refY))
         return file_text
