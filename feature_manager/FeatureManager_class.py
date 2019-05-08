@@ -18,8 +18,8 @@ class FeatureManager(object):
         self.features.append(feature)
         def addFunction():
             print 'running OK function'
-            if feature_class == LinearDistribution:
-                feature.update()
+            if hasattr(feature, 'is_composed'):
+                feature.updateFeatures()
             # would like a better binding with self.features
             self.app.feature_list.insertFeature(feature)
         def cancelFunction():

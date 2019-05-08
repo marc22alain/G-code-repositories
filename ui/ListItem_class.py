@@ -37,10 +37,10 @@ class ListItem(Frame):
         print 'confirming new value'
         for q in queries:
             print q.getValue()
-        if hasattr(self.item, 'update'):
+        if hasattr(self.item, 'is_composed'):
             print 'ListItem row_num'
             # print self.sub_item['row_num']
-            self.item.update()
+            self.item.updateFeatures()
 
     def deleteItem(self):
         self.item.delete()
