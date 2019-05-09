@@ -1,2 +1,4 @@
 from TestFeatureInterfaces import testWithFeature
 from TestQueryInterfaces import testWithQuery
+from TestGeneratedGCode import testWithProgram
+from ScenariosLinearGroove import runLinearGrooveScenarios
