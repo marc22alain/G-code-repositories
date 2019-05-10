@@ -13,7 +13,6 @@ class SimpleMachine(object):
 
     def getOptionQueries(self):
         if len(self.option_queries.keys()) == 0:
-            print 'instantiating new Query objects'
             self.option_queries = { key: key() for key in self.option_query_classes }
         return self.option_queries
 
