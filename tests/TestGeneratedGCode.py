@@ -29,6 +29,9 @@ def testWithProgram(program):
         def test_program_defines_feed_rate(self):
             self.assertTrue(self.program_data['feed_rate'] > 0, 'Program defines feed rate')
 
+        def test_program_avoids_negative_Z(self):
+            self.assertFalse(self.program_data['negative_Z'], 'Program avoids negative Z')
+
 
     suite = unittest.TestSuite()
     suite.addTest(TestGeneratedGCode("test_program_ends_without_errors"))
@@ -36,5 +39,6 @@ def testWithProgram(program):
     suite.addTest(TestGeneratedGCode("test_program_ends_in_ABS_mode"))
     suite.addTest(TestGeneratedGCode("test_program_ends"))
     suite.addTest(TestGeneratedGCode("test_program_defines_feed_rate"))
+    suite.addTest(TestGeneratedGCode("test_program_avoids_negative_Z"))
 
     unittest.TextTestRunner().run(suite)

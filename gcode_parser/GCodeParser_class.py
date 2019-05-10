@@ -27,6 +27,7 @@ class GCodeParser(object):
         self.program_errors = {}
         self.abs_incr_mode = None
         self.program_ended = False
+        self.negative_Z = False
 
     def getProgramData(self):
         return {
@@ -36,7 +37,8 @@ class GCodeParser(object):
             'ending_z_pos': self.z_pos,
             'feed_rate': self.feed_rate,
             'ending_mode': self.abs_incr_mode,
-            'program_ended': self.program_ended
+            'program_ended': self.program_ended,
+            'negative_Z': self.negative_Z
         }
 
     def parseProgram(self):
@@ -125,6 +127,7 @@ class GCodeParser(object):
                 else:
                     self.z_pos = num
                 if self.z_pos < 0:
+                    self.negative_Z = True
                     raise ValueError('move to negative Z')
 
     def endProgram(self, token):
