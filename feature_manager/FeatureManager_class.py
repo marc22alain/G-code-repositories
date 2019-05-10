@@ -6,7 +6,7 @@ from features import *
 
 
 class FeatureManager(object):
-    def __init__(self, app):
+    def __init__(self, app=None):
         self.machine = SimpleMachine()
         self.work_piece = SimpleWorkpiece()
         self.features = []
