@@ -10,12 +10,13 @@ class ScenarioRunner(object):
 
     def runAllScenarios(self):
         for feature in self.scenarios.keys():
-            self.announceScenarioSet(feature)
-            for scenario_key in self.scenarios[feature]:
-                scenario = self.scenarios[feature][scenario_key]
-                self.runScenario(feature, scenario)
-                # for scenarios in scenario_set.values():
-                    # print scenario['description']
+            if len(self.scenarios[feature].keys()) == 0:
+                self.announceNoScenarioExist(feature)
+            else:
+                self.announceScenarioSet(feature)
+                for scenario_key in self.scenarios[feature]:
+                    scenario = self.scenarios[feature][scenario_key]
+                    self.runScenario(feature, scenario)
 
     def runScenario(self, feature, scenario):
         feature_manager = self.configureAll(feature, scenario)
@@ -47,7 +48,12 @@ class ScenarioRunner(object):
         print '* * * * * *'
         print '* * * * * *   starting %s scenarios   * * * * * *' % (feature.name)
         print '* * * * * *'
-        print
 
     def announceScenarioTest(self, description):
+        print
         print '- - - >  %s' % (description)
+
+    def announceNoScenarioExist(self, feature):
+        print
+        print '  !  !  !   no scenarios defined for %s   !  !  !' % (feature.name)
+
