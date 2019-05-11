@@ -1,5 +1,6 @@
 from DistributedFeature_class import DistributedFeature
 from option_queries import *
+from utilities import Glib as G
 
 
 class LinearDistribution(DistributedFeature):
@@ -16,17 +17,22 @@ class LinearDistribution(DistributedFeature):
 
     child_feature_classes = []
 
-    def getGCode(self):
-        return self.child_features.values()[0].getGCode()
+    # defined in DistributedFeature class
+    # def getGCode(self):
 
     def getInstructions(self):
         pass
 
     def moveToStart(self):
-        pass
+        return ''
 
     def returnToHome(self):
-        pass
+        delta_X = self.option_queries[DeltaXQuery].getValue()
+        delta_Y = self.option_queries[DeltaYQuery].getValue()
+        num_repeats = self.option_queries[NumRepeatQuery].getValue() - 1
+        file_text = G.set_INCR_mode()
+        file_text += G.G0_XY((- (delta_X * num_repeats), - (delta_Y * num_repeats)))
+        return file_text
 
     def manageChild(self):
         print 'managing child'
@@ -48,4 +54,11 @@ class LinearDistribution(DistributedFeature):
         self.child_features = { k:v for k,v in self.child_features.iteritems() if v != feature }
 
     def distributeChildFeature(self):
-        pass
+        file_text = self.child_features.values()[0].getGCode()
+        delta_X = self.option_queries[DeltaXQuery].getValue()
+        delta_Y = self.option_queries[DeltaYQuery].getValue()
+        for i in xrange(self.option_queries[NumRepeatQuery].getValue() - 1):
+            file_text += G.set_INCR_mode()
+            file_text += G.G0_XY((delta_X, delta_Y))
+            file_text += self.child_features.values()[0].getGCode()
+        return file_text
