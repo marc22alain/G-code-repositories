@@ -26,4 +26,18 @@ cg_scenarios = {
         },
         'description': 'Makes a single pass'
     },
+
+    'cg_config_2': {
+        'name': 'cg_config_2',
+        'machine_config': machine_config,
+        'work_piece_config': work_piece_config,
+        'config': {
+            PathDiameterQuery: 3.75,
+            ReferenceXQuery: 50,
+            ReferenceYQuery: 45,
+            CutPerPassQuery: 2,
+            CutDepthQuery: 3
+        },
+        'description': 'Makes two passes'
+    }
 }
