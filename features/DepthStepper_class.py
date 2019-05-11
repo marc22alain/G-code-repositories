@@ -72,6 +72,3 @@ class DepthStepper(GeometricFeature):
 
     def returnToHome(self):
         pass
-
-    def getInstructions(self):
-        pass

@@ -1,12 +1,11 @@
-from GeometricFeature_class import GeometricFeature
+from DepthSteppingFeature_class import DepthSteppingFeature
 from CircularGroove_class import CircularGroove
 from option_queries import *
 
 
-class ODCircularGroove(GeometricFeature):
+class ODCircularGroove(DepthSteppingFeature):
     name = 'OD Circular Groove'
     user_selectable = True
-    can_manage_depth = True
     option_query_classes = [
         PathDiameterQuery
     ]

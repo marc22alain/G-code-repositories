@@ -1,12 +1,11 @@
-from GeometricFeature_class import GeometricFeature
+from DepthSteppingFeature_class import DepthSteppingFeature
 from utilities import Glib as G
 from option_queries import *
 
 
-class CircularGroove(GeometricFeature):
+class CircularGroove(DepthSteppingFeature):
     name = 'Circular Groove'
     user_selectable = True
-    can_manage_depth = True
     option_query_classes = [
         PathDiameterQuery
     ]

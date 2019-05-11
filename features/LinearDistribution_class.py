@@ -20,9 +20,6 @@ class LinearDistribution(DistributedFeature):
     # defined in DistributedFeature class
     # def getGCode(self):
 
-    def getInstructions(self):
-        pass
-
     def moveToStart(self):
         return ''
 

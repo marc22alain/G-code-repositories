@@ -1,13 +1,12 @@
-from GeometricFeature_class import GeometricFeature
+from DepthSteppingFeature_class import DepthSteppingFeature
 from DepthStepper_class import DepthStepper
 from utilities import Glib as G
 from option_queries import *
 
 
-class LinearGroove(GeometricFeature):
+class LinearGroove(DepthSteppingFeature):
     name = 'Linear Groove'
     user_selectable = True
-    can_manage_depth = True
     option_query_classes = [
         DeltaXQuery,
         DeltaYQuery
