@@ -18,10 +18,10 @@ class ScenarioRunner(object):
                     scenario = self.scenarios[feature][scenario_key]
                     self.runScenario(feature, scenario)
 
-    def runScenario(self, feature, scenario):
+    def runScenario(self, feature, scenario, output_program=False):
         feature_manager = self.configureAll(feature, scenario)
         self.announceScenarioTest(scenario['description'])
-        self.runTests(feature_manager)
+        self._runTests(feature_manager, output_program)
 
     def configureAll(self, feature, scenario):
         fm = FeatureManager()
@@ -30,6 +30,10 @@ class ScenarioRunner(object):
         self.configure(fm.machine, scenario['machine_config'])
         self.configure(fm.work_piece, scenario['work_piece_config'])
         self.configure(feat, scenario['config'])
+        if hasattr(feat, 'is_composed'):
+            feat.updateFeatures()
+            for child_key in feat.child_features.keys():
+                self.configure(feat.child_features[child_key], scenario['child_features'][child_key])
         return fm
 
     def configure(self, thing, config):
@@ -38,9 +42,11 @@ class ScenarioRunner(object):
         for item in config.keys():
             queries[item].setValue(config[item])
 
-    def runTests(self, feature_manager):
+    def _runTests(self, feature_manager, output_program):
         program = feature_manager.getGCode()
         testWithProgram(program)
+        if output_program:
+            print program
 
 
     def announceScenarioSet(self, feature):

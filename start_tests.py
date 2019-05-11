@@ -17,7 +17,7 @@ class MockFeatureManager(object):
 
 def feature_suite():
     fm = MockFeatureManager()
-    feature_classes = parseModuleClasses(features, ['GeometricFeature'])
+    feature_classes = parseModuleClasses(features, ['GeometricFeature', 'ComposedFeature', 'DistributedFeature'])
     num_feature_class_tests = 0
     for feature in feature_classes.values():
         testWithFeature(feature(fm))

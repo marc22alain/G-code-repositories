@@ -1,8 +1,8 @@
-from GeometricFeature_class import GeometricFeature
+from DistributedFeature_class import DistributedFeature
 from option_queries import *
 
 
-class LinearDistribution(GeometricFeature):
+class LinearDistribution(DistributedFeature):
     name = 'Linear Distribution'
     user_selectable = True
     option_query_classes = [
@@ -17,7 +17,7 @@ class LinearDistribution(GeometricFeature):
     child_feature_classes = []
 
     def getGCode(self):
-        return self.child_features.values()[0].getGCode(sequence)
+        return self.child_features.values()[0].getGCode()
 
     def getInstructions(self):
         pass
@@ -46,3 +46,6 @@ class LinearDistribution(GeometricFeature):
     # ... it seems applicable to structures that hold many features
     def deleteFeature(self, feature):
         self.child_features = { k:v for k,v in self.child_features.iteritems() if v != feature }
+
+    def distributeChildFeature(self):
+        pass

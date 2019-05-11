@@ -32,12 +32,19 @@ def testWithFeature(feature):
             feature.deleteFeature(original_children[LinearGroove])
             self.assertNotEqual(original_children, feature.child_features)
 
+        def test_feature_distributes_child_feature(self):
+            self.assertTrue(hasattr(feature, 'distributeChildFeature'), '%s does not support `distribute`' % (class_name))
+
     suite = unittest.TestSuite()
     suite.addTest(TestFeatureInterfaces("test_feature_returns_query_options"))
 
-    if hasattr(feature, 'is_composed'):
+    base_class = feature.__class__.__base__.__name__
+
+    if base_class in ['ComposedFeature', 'DistributedFeature']:
         suite.addTest(TestFeatureInterfaces("test_composable_feature_updates_child"))
         suite.addTest(TestFeatureInterfaces("test_composable_feature_deletes_features"))
 
+    if base_class in ['DistributedFeature']:
+        suite.addTest(TestFeatureInterfaces("test_feature_distributes_child_feature"))
 
     unittest.TextTestRunner().run(suite)
