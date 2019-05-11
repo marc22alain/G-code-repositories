@@ -1,6 +1,7 @@
 """
 Glib for python 2, for LinuxCNC
 The purpose of this library is simple: provide G-code functions.
+REF: http://www.linuxcnc.org/docs/html/gcode/g-code.html
 """
 
 def sane(number):
@@ -80,6 +81,8 @@ def G2XY_to_ABS(point, center):
     Takes two tuples, returns a string.
     point represents the ending point.
     Runs in ABSOLUTE IJ mode G2 == CW.
+    With G90.1, is in Absolute Arc Distance Mode.
+    With G17, traces circle in XY plane.
     '''
     return 'G90.1 G17 G2 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' I' + \
            sane(center[0]) + ' J' + sane(center[1]) + ' \n'
