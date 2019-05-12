@@ -1,21 +1,41 @@
 from GeometricFeature_class import GeometricFeature
-from OptionQuery_class import OptionQuery
+from utilities import Glib as G
+from option_queries import *
 
 class Peck(GeometricFeature):
+    '''
+    This feature does not require composition with DepthSteppingFeature.
+    '''
     name = 'Peck'
     user_selectable = True
-    '''
-    This does not require wrapping with DepthStepper.
-    '''
-    def __init__(self):
-        pass
+    option_query_classes = [
+        CutDepthQuery
+    ]
+
+    child_feature_classes = []
 
     def getGCode(self):
+        basic_params, cut_depth = self.getParams()
+        file_text = G.set_ABS_mode()
+        file_text += G.G0_Z(basic_params['safe_z'])
+        file_text += self.moveToReference()
+        file_text += G.set_ABS_mode()
+        file_text += G.G0_Z(basic_params['stock_height'])
+        file_text += G.set_INCR_mode()
+        file_text += G.G1_Z(- cut_depth)
+        file_text += G.set_dwell(0.5)
+        file_text += G.set_ABS_mode()
+        file_text += G.G0_Z(basic_params['safe_z'])
+        file_text += self.returnFromReference()
+        return file_text
+
+    def moveToStart(self):
         return ''
 
-    def getOptionQueries(self):
-        return [OptionQuery(float, 'What depth of cut')]
+    def returnToHome(self):
+        return ''
 
-# p = Peck()
-
-# print p.getOptionQueries()[0].variable_type
+    def getParams(self):
+        basic_params = self.getBasicParams()
+        cut_depth = self.option_queries[CutDepthQuery].getValue()
+        return (basic_params, cut_depth)

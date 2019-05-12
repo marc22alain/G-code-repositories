@@ -16,7 +16,7 @@ work_piece_config = {
 
 ldist_scenarios = {
     'ldist_config_1': {
-        'name': 'odcg_config_1',
+        'name': 'ldist_config_1',
         'machine_config': machine_config,
         'work_piece_config': work_piece_config,
         'config': {
@@ -33,6 +33,27 @@ ldist_scenarios = {
                 ReferenceYQuery: 0,
                 CutPerPassQuery: 2,
                 CutDepthQuery: 1
+            }
+        }
+    },
+    'ldist_config_2': {
+        'name': 'ldist_config_2',
+        'machine_config': machine_config,
+        'work_piece_config': work_piece_config,
+        'config': {
+            GeometricFeatureQuery: 'Peck',
+            ReferenceXQuery: 3.75,
+            ReferenceYQuery: 3.75,
+            DeltaXQuery: 1.2,
+            DeltaYQuery: 2.375,
+            NumRepeatQuery: 3
+        },
+        'description': 'Makes a single pass',
+        'child_features': {
+            Peck: {
+                ReferenceXQuery: 0,
+                ReferenceYQuery: 0,
+                CutDepthQuery: 7.23
             }
         }
     }

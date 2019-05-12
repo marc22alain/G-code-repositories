@@ -92,6 +92,11 @@ class GCodeParser(object):
                 # TODO: raise an error if there are tokens left
                 self.processCircular(circular)
                 continue
+            if token == 'G4':
+                next_token = tokens.pop(0)
+                if not next_token[0] == 'P':
+                    raise ValueError('dwell command must have "P" word parameter')
+                continue
             if token in ['G17', 'G18', 'G19']:
                 self.selectPlane(token)
                 continue
