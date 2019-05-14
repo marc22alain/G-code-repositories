@@ -12,14 +12,14 @@ class CircularGroove(DepthSteppingFeature):
 
     child_feature_classes = []
 
-    def getGCode(self):
+    def getGCode(self, sequence = None):
         # manage height - optionally -
         if self.self_managed_depth:
             return self.getManagedDepthInstructions()
         else:
-            return self.getInstructions(None)
+            return self._getInstructions(sequence)
 
-    def getInstructions(self, sequence):
+    def _getInstructions(self, sequence):
         diameter = self.option_queries[PathDiameterQuery].getValue()
         return G.G2XY_to_INCR_FULL((0,0),(diameter / 2, 0))
 

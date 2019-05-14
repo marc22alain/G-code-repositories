@@ -15,8 +15,13 @@ class DepthSteppingFeature(GeometricFeature):
     def getManagedDepthInstructions(self):
         self.depth_stepper.option_queries[CutPerPassQuery] = self.option_queries[CutPerPassQuery]
         self.depth_stepper.option_queries[CutDepthQuery] = self.option_queries[CutDepthQuery]
-        return self.depth_stepper.getGCode(self.getInstructions, self.moveToReference, self.returnFromReference)
+        return self.depth_stepper.getGCode(self._getInstructions, self.moveToReference, self.returnFromReference)
 
     @abc.abstractmethod
-    def getInstructions(self):
+    def _getInstructions(self, sequence):
+        '''
+        Use of sequence is to enable the implementing class to provide different
+        procedures depending on the current sequence for the requested cutting
+        instructions.
+        '''
         pass

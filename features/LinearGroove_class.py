@@ -19,9 +19,9 @@ class LinearGroove(DepthSteppingFeature):
         if self.self_managed_depth:
             return self.getManagedDepthInstructions()
         else:
-            return self.getInstructions()
+            return self._getInstructions()
 
-    def getInstructions(self, sequence):
+    def _getInstructions(self, sequence):
         delta_x = self.option_queries[DeltaXQuery].getValue()
         delta_y = self.option_queries[DeltaYQuery].getValue()
         file_text = G.set_INCR_mode()

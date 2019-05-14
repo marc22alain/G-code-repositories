@@ -14,24 +14,20 @@ class ODCircularGroove(DepthSteppingFeature):
         CircularGroove
     ]
 
-    def getGCode(self):
+    def getGCode(self, sequence = None):
         self.setUpChild()
         # manage height - optionally -
         if self.self_managed_depth:
             return self.getManagedDepthInstructions()
         else:
-            return self.getInstructions(None)
+            return self._getInstructions(sequence)
 
     def getParams(self):
         diameter = self.option_queries[PathDiameterQuery].getValue()
         return (diameter, self.getBasicParams())
 
-    def getInstructions(self, sequence):
-        # redundant ?
-        self.setUpChild()
-        # optionally call getInstructions()
-        # would allow passing in 'sequence', and ignore its DepthStepper
-        return self.child_features.values()[0].getInstructions(sequence)
+    def _getInstructions(self, sequence):
+        return self.child_features.values()[0].getGCode(sequence)
 
     def moveToStart(self):
         # redundant ?
