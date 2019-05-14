@@ -21,7 +21,7 @@ class ScenarioRunner(object):
     def runScenario(self, feature, scenario, output_program=False):
         feature_manager = self.configureAll(feature, scenario)
         self.announceScenarioTest(scenario['description'])
-        self._runTests(feature_manager, output_program)
+        self._runTests(feature_manager, output_program, scenario)
 
     def configureAll(self, feature, scenario):
         fm = FeatureManager()
@@ -42,9 +42,9 @@ class ScenarioRunner(object):
         for item in config.keys():
             queries[item].setValue(config[item])
 
-    def _runTests(self, feature_manager, output_program):
+    def _runTests(self, feature_manager, output_program, scenario):
         program = feature_manager.getGCode()
-        testWithProgram(program)
+        testWithProgram(program, scenario)
         if output_program:
             print program
 

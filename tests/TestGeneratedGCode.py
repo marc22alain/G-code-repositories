@@ -2,7 +2,7 @@ import unittest
 from gcode_parser import *
 
 
-def testWithProgram(program):
+def testWithProgram(program, scenario):
     class TestGeneratedGCode(unittest.TestCase):
 
         @classmethod
@@ -32,6 +32,15 @@ def testWithProgram(program):
         def test_program_avoids_negative_Z(self):
             self.assertFalse(self.program_data['negative_Z'], 'Program avoids negative Z')
 
+        def test_program_matches_benchmark_program(self):
+            len1 = len(program)
+            len2 = len(scenario['benchmark']['program'])
+            # print '- - - - - - - '
+            # print 'is this matching %s :: %s ?' % (str(len1), str(len2))
+            # print '- - - - - - - '
+            self.assertEqual(len1, len2, 'Program g-code matches benchmark length')
+            self.assertEqual(len(program), len(scenario['benchmark']['program']), 'Program g-code matches benchmark')
+
 
     suite = unittest.TestSuite()
     suite.addTest(TestGeneratedGCode("test_program_ends_without_errors"))
@@ -40,5 +49,9 @@ def testWithProgram(program):
     suite.addTest(TestGeneratedGCode("test_program_ends"))
     suite.addTest(TestGeneratedGCode("test_program_defines_feed_rate"))
     suite.addTest(TestGeneratedGCode("test_program_avoids_negative_Z"))
+
+    if scenario['benchmark']:
+        if scenario['benchmark']['program']:
+            suite.addTest(TestGeneratedGCode("test_program_matches_benchmark_program"))
 
     unittest.TextTestRunner().run(suite)
