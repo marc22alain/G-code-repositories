@@ -1,6 +1,7 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
 from CircularGroove_class import CircularGroove
 from option_queries import *
+import inspect
 
 
 class ODCircularGroove(DepthSteppingFeature):
@@ -27,17 +28,23 @@ class ODCircularGroove(DepthSteppingFeature):
         return (diameter, self.getBasicParams())
 
     def _getInstructions(self, sequence):
-        return self.child_features.values()[0].getGCode(sequence)
+        file_text = self.addDebug(inspect.currentframe())
+        file_text += self.child_features.values()[0].getGCode(sequence)
+        return file_text
 
     def moveToStart(self):
+        file_text = self.addDebug(inspect.currentframe())
         # redundant ?
         self.setUpChild()
-        return self.child_features.values()[0].moveToStart()
+        file_text += self.child_features.values()[0].moveToStart()
+        return file_text
 
     def returnToHome(self):
+        file_text = self.addDebug(inspect.currentframe())
         # redundant ?
         self.setUpChild()
-        return self.child_features.values()[0].returnToHome()
+        file_text += self.child_features.values()[0].returnToHome()
+        return file_text
 
     def setUpChild(self):
         diameter, basic_params = self.getParams()

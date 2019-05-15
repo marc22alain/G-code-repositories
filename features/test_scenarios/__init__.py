@@ -3,6 +3,7 @@ from CircularGroove_scenarios import cg_scenarios
 from ODCircularGroove_scenarios import odcg_scenarios
 from LinearDistribution_scenarios import ldist_scenarios
 from Peck_scenarios import peck_scenarios
+from CircularPocket_scenarios import circ_pock_scenarios
 from features import *
 
 scenarios = {
@@ -11,4 +12,5 @@ scenarios = {
     ODCircularGroove: odcg_scenarios,
     LinearDistribution: ldist_scenarios,
     Peck: peck_scenarios,
+    CircularPocket: circ_pock_scenarios,
 }

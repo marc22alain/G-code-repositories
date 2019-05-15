@@ -2,7 +2,8 @@
 import abc
 from option_queries import *
 from utilities import Glib as G
-
+import inspect
+import os
 
 class GeometricFeature:
     __metaclass__ = abc.ABCMeta
@@ -56,8 +57,9 @@ class GeometricFeature:
         May be spun out to other interface
         '''
         try:
-            # TODO: resolve for multiple children, for composed features
-            child_query_instances = self.child_features.values()[0].getOptionQueries().copy()
+            child_query_instances = {}
+            for child in self.child_features.values():
+                child_query_instances.update(child.getOptionQueries().copy())
         except IndexError:
             child_query_instances = {}
         return child_query_instances
@@ -98,9 +100,10 @@ class GeometricFeature:
         '''
         Core interface
         '''
+        file_text = self.addDebug(inspect.currentframe())
         refX = self.option_queries[ReferenceXQuery].getValue()
         refY = self.option_queries[ReferenceYQuery].getValue()
-        file_text = G.set_INCR_mode()
+        file_text += G.set_INCR_mode()
         file_text += G.G0_XY((refX, refY))
         file_text += self.moveToStart()
         return file_text
@@ -109,9 +112,18 @@ class GeometricFeature:
         '''
         Core interface
         '''
+        file_text = self.addDebug(inspect.currentframe())
         refX = self.option_queries[ReferenceXQuery].getValue()
         refY = self.option_queries[ReferenceYQuery].getValue()
-        file_text = self.returnToHome()
+        file_text += self.returnToHome()
         file_text += G.set_INCR_mode()
         file_text += G.G0_XY((- refX, - refY))
         return file_text
+
+    def addDebug(self, frame):
+        if 'DEBUG_GCODE' in os.environ.keys():
+            trace = inspect.getframeinfo(frame)
+            class_file = trace.filename.split('/')[-1].split('_class')[0]
+            return '# %s \n' % (class_file + '.' + trace.function + ' - line:' + str(trace.lineno))
+        else:
+            return ''

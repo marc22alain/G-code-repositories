@@ -1,6 +1,7 @@
 from GeometricFeature_class import GeometricFeature
 from utilities import Glib as G
 from option_queries import *
+import inspect
 
 class Peck(GeometricFeature):
     '''
@@ -15,10 +16,12 @@ class Peck(GeometricFeature):
     child_feature_classes = []
 
     def getGCode(self):
+        file_text = self.addDebug(inspect.currentframe())
         basic_params, cut_depth = self.getParams()
-        file_text = G.set_ABS_mode()
+        file_text += G.set_ABS_mode()
         file_text += G.G0_Z(basic_params['safe_z'])
         file_text += self.moveToReference()
+        file_text += self.addDebug(inspect.currentframe())
         file_text += G.set_ABS_mode()
         file_text += G.G0_Z(basic_params['stock_height'])
         file_text += G.set_INCR_mode()

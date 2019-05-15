@@ -1,6 +1,7 @@
 from GeometricFeature_class import GeometricFeature
 from option_queries import *
 from utilities import Glib as G
+import inspect
 
 class DepthStepper(GeometricFeature):
     '''
@@ -23,6 +24,7 @@ class DepthStepper(GeometricFeature):
     child_feature_classes = []
 
     def getGCode(self, instruction_callback, to_start_callback, return_callback):
+        file_text = self.addDebug(inspect.currentframe())
         basic_params, cut_per_pass, cut_depth = self.getParams()
         stock_height = basic_params['stock_height']
         target_depth = stock_height - cut_depth
@@ -30,9 +32,10 @@ class DepthStepper(GeometricFeature):
         sequence = 'first'
         # pre-amble
         # Z-axis move to starting point from Z-safe
-        file_text = G.set_ABS_mode()
+        file_text += G.set_ABS_mode()
         file_text += G.G0_Z(basic_params['safe_z'])
         file_text += to_start_callback()
+        file_text += self.addDebug(inspect.currentframe())
         file_text += G.set_ABS_mode()
         file_text += G.G0_Z(basic_params['stock_height'])
 
@@ -47,16 +50,19 @@ class DepthStepper(GeometricFeature):
                 file_text += G.G1_Z(stock_height)
                 file_text += ('# ' + sequence + '\n')
                 file_text += instruction_callback(sequence)
+                file_text += self.addDebug(inspect.currentframe())
                 sequence = 'next'
         else:
             sequence = 'only'
             file_text += G.G1_Z(target_depth)
             file_text += instruction_callback(sequence)
+            file_text += self.addDebug(inspect.currentframe())
 
         # post-amble
         file_text += G.set_ABS_mode()
         file_text += G.G0_Z(basic_params['safe_z'])
         file_text += return_callback()
+        file_text += self.addDebug(inspect.currentframe())
         file_text += G.set_ABS_mode()
 
         return file_text
