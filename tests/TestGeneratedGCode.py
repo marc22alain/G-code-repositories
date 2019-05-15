@@ -50,8 +50,8 @@ def testWithProgram(program, scenario):
     suite.addTest(TestGeneratedGCode("test_program_defines_feed_rate"))
     suite.addTest(TestGeneratedGCode("test_program_avoids_negative_Z"))
 
-    if scenario['benchmark']:
-        if scenario['benchmark']['program']:
+    if hasattr(scenario,'benchmark'):
+        if hasattr(scenario['benchmark'],'program'):
             suite.addTest(TestGeneratedGCode("test_program_matches_benchmark_program"))
 
     unittest.TextTestRunner().run(suite)
