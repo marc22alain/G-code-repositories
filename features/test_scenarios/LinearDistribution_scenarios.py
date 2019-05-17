@@ -25,7 +25,7 @@ ldist_scenarios = {
             DeltaYQuery: 2.375,
             NumRepeatQuery: 3
         },
-        'description': 'Makes a single pass',
+        'description': 'Makes a single pass with CircularGroove',
         'child_features': {
             CircularGroove: {
                 PathDiameterQuery: 6.175,
@@ -48,12 +48,33 @@ ldist_scenarios = {
             DeltaYQuery: 2.375,
             NumRepeatQuery: 3
         },
-        'description': 'Makes a single pass',
+        'description': 'Makes a single pass with Peck',
         'child_features': {
             Peck: {
                 ReferenceXQuery: 0,
                 ReferenceYQuery: 0,
                 CutDepthQuery: 7.23
+            }
+        }
+    },
+    'ldist_config_3': {
+        'name': 'ldist_config_3',
+        'machine_config': machine_config,
+        'work_piece_config': work_piece_config,
+        'config': {
+            GeometricFeatureQuery: 'CircularGroove',
+            DeltaXQuery: -1.2,
+            DeltaYQuery: -2.375,
+            NumRepeatQuery: 3
+        },
+        'description': 'Makes a two passes with CircularGroove',
+        'child_features': {
+            CircularGroove: {
+                PathDiameterQuery: 16.3175,
+                ReferenceXQuery: 0,
+                ReferenceYQuery: 0,
+                CutPerPassQuery: 2.5,
+                CutDepthQuery: 3
             }
         }
     }
