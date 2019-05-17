@@ -39,7 +39,7 @@ def testWithProgram(program, scenario):
             # print 'is this matching %s :: %s ?' % (str(len1), str(len2))
             # print '- - - - - - - '
             self.assertEqual(len1, len2, 'Program g-code matches benchmark length')
-            self.assertEqual(len(program), len(scenario['benchmark']['program']), 'Program g-code matches benchmark')
+            self.assertEqual(program, scenario['benchmark']['program'], 'Program g-code matches benchmark')
 
 
     suite = unittest.TestSuite()
@@ -50,8 +50,8 @@ def testWithProgram(program, scenario):
     suite.addTest(TestGeneratedGCode("test_program_defines_feed_rate"))
     suite.addTest(TestGeneratedGCode("test_program_avoids_negative_Z"))
 
-    if hasattr(scenario,'benchmark'):
-        if hasattr(scenario['benchmark'],'program'):
+    if 'benchmark' in scenario.keys():
+        if 'program' in scenario['benchmark'].keys():
             suite.addTest(TestGeneratedGCode("test_program_matches_benchmark_program"))
 
     unittest.TextTestRunner().run(suite)
