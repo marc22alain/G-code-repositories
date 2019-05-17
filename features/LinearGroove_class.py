@@ -24,7 +24,7 @@ class LinearGroove(DepthSteppingFeature):
     def _getInstructions(self, sequence):
         delta_x = self.option_queries[DeltaXQuery].getValue()
         delta_y = self.option_queries[DeltaYQuery].getValue()
-        file_text = G.set_INCR_mode()
+        file_text = self.machine.setMode('INCR')
         if self.at_start:
             file_text += G.G1_XY((delta_x, delta_y))
         else:
@@ -44,7 +44,7 @@ class LinearGroove(DepthSteppingFeature):
         delta_y = self.option_queries[DeltaYQuery].getValue()
         file_text = ''
         if not self.at_start:
-            file_text = G.set_INCR_mode()
+            file_text = self.machine.setMode('INCR')
             file_text += G.G0_XY((- delta_x, - delta_y))
             self.at_start = True
         return file_text

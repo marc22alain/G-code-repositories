@@ -27,7 +27,7 @@ class LinearDistribution(DistributedFeature):
         delta_X = self.option_queries[DeltaXQuery].getValue()
         delta_Y = self.option_queries[DeltaYQuery].getValue()
         num_repeats = self.option_queries[NumRepeatQuery].getValue() - 1
-        file_text = G.set_INCR_mode()
+        file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((- (delta_X * num_repeats), - (delta_Y * num_repeats)))
         return file_text
 
@@ -55,7 +55,7 @@ class LinearDistribution(DistributedFeature):
         delta_X = self.option_queries[DeltaXQuery].getValue()
         delta_Y = self.option_queries[DeltaYQuery].getValue()
         for i in xrange(self.option_queries[NumRepeatQuery].getValue() - 1):
-            file_text += G.set_INCR_mode()
+            file_text += self.machine.setMode('INCR')
             file_text += G.G0_XY((delta_X, delta_Y))
             file_text += self.child_features.values()[0].getGCode()
         return file_text

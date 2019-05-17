@@ -37,6 +37,6 @@ class FeatureManager(object):
         self.g_code = G.F_rate(feed_rate)
         for feature in self.features:
             self.g_code += feature.getGCode()
-        self.g_code += G.set_ABS_mode()
+        self.g_code += self.machine.setMode('ABS')
         self.g_code += G.end_program()
         return self.g_code

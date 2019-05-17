@@ -1,4 +1,5 @@
 from option_queries import *
+from utilities import Glib as G
 
 class SimpleMachine(object):
     name = 'Simple Machine'
@@ -10,6 +11,7 @@ class SimpleMachine(object):
 
     def __init__(self):
         self.option_queries = {}
+        self.mode = None
 
     def getOptionQueries(self):
         if len(self.option_queries.keys()) == 0:
@@ -23,3 +25,17 @@ class SimpleMachine(object):
             'feed_rate': self.option_queries[FeedRateQuery].getValue()
         }
         return params
+
+    def setMode(self, mode):
+        file_text = ''
+        if mode.lower() == 'abs':
+            if self.mode != 'abs':
+                self.mode = 'abs'
+                file_text = G.set_ABS_mode()
+        elif mode.lower() == 'incr':
+            if self.mode != 'incr':
+                self.mode = 'incr'
+                file_text = G.set_INCR_mode()
+        else:
+            raise ValueError('"%s" mode is not handled by SimpleMachine' % (mode))
+        return file_text

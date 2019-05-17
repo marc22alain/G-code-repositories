@@ -32,7 +32,7 @@ class CircularPocket(DepthSteppingFeature):
             starting_od = current_od
             current_od = min(current_od + (2 * (basic_params['bit_diameter'] - self.getOverlap())), diameter)
             self.setUpODcircularGroove(current_od)
-            file_text += G.set_INCR_mode()
+            file_text += self.machine.setMode('INCR')
             file_text += G.G1_XY((- (current_od - starting_od) / 2, 0))
             file_text += od_feature.getGCode()
             file_text += self.addDebug(inspect.currentframe())

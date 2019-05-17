@@ -21,16 +21,18 @@ class CircularGroove(DepthSteppingFeature):
 
     def _getInstructions(self, sequence):
         diameter = self.option_queries[PathDiameterQuery].getValue()
-        return G.G2XY_to_INCR_FULL((0,0),(diameter / 2, 0))
+        file_text = self.machine.setMode('INCR')
+        file_text += G.G2XY((0,0),(diameter / 2, 0))
+        return file_text
 
     def moveToStart(self):
         diameter = self.option_queries[PathDiameterQuery].getValue()
-        file_text = G.set_INCR_mode()
+        file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((- diameter / 2, 0))
         return file_text
 
     def returnToHome(self):
         diameter = self.option_queries[PathDiameterQuery].getValue()
-        file_text = G.set_INCR_mode()
+        file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((diameter / 2, 0))
         return file_text

@@ -32,11 +32,11 @@ class DepthStepper(GeometricFeature):
         sequence = 'first'
         # pre-amble
         # Z-axis move to starting point from Z-safe
-        file_text += G.set_ABS_mode()
+        file_text += self.machine.setMode('ABS')
         file_text += G.G0_Z(basic_params['safe_z'])
         file_text += to_start_callback()
         file_text += self.addDebug(inspect.currentframe())
-        file_text += G.set_ABS_mode()
+        file_text += self.machine.setMode('ABS')
         file_text += G.G0_Z(stock_height)
 
         if multipass:
@@ -46,7 +46,7 @@ class DepthStepper(GeometricFeature):
                     stock_height = target_depth
                     sequence = 'last'
                 # Z-axis move
-                file_text += G.set_ABS_mode()
+                file_text += self.machine.setMode('ABS')
                 file_text += G.G1_Z(stock_height)
                 file_text += G.set_dwell(0.5)
                 file_text += ('# ' + sequence + '\n')
@@ -60,11 +60,11 @@ class DepthStepper(GeometricFeature):
             file_text += self.addDebug(inspect.currentframe())
 
         # post-amble
-        file_text += G.set_ABS_mode()
+        file_text += self.machine.setMode('ABS')
         file_text += G.G0_Z(basic_params['safe_z'])
         file_text += return_callback()
         file_text += self.addDebug(inspect.currentframe())
-        file_text += G.set_ABS_mode()
+        file_text += self.machine.setMode('ABS')
 
         return file_text
 

@@ -103,7 +103,7 @@ class GeometricFeature:
         file_text = self.addDebug(inspect.currentframe())
         refX = self.option_queries[ReferenceXQuery].getValue()
         refY = self.option_queries[ReferenceYQuery].getValue()
-        file_text += G.set_INCR_mode()
+        file_text += self.machine.setMode('INCR')
         file_text += G.G0_XY((refX, refY))
         file_text += self.moveToStart()
         return file_text
@@ -116,7 +116,7 @@ class GeometricFeature:
         refX = self.option_queries[ReferenceXQuery].getValue()
         refY = self.option_queries[ReferenceYQuery].getValue()
         file_text += self.returnToHome()
-        file_text += G.set_INCR_mode()
+        file_text += self.machine.setMode('INCR')
         file_text += G.G0_XY((- refX, - refY))
         return file_text
 

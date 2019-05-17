@@ -98,6 +98,15 @@ def G2XY_to_INCR_FULL(point, center_offset):
     return 'G91 G17 G2 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' I' + \
            sane(center_offset[0]) + ' J' + sane(center_offset[1]) + ' P1 \n'
 
+def G2XY(point, center_offset):
+    '''
+    Takes two tuples, returns a string.
+    ***Consider taking out the P1 and making the method more general;
+        P1 seems to be optional (p.114 of LinuxCNC User Guide).
+    '''
+    return 'G17 G2 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' I' + \
+           sane(center_offset[0]) + ' J' + sane(center_offset[1]) + ' P1 \n'
+
 
 def G3XY_to(point, center):
     '''
