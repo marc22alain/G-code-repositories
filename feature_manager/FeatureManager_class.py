@@ -33,10 +33,8 @@ class FeatureManager(object):
 
     def getGCode(self):
         # wrapping the features' gcode:
-        feed_rate = self.machine.getParams()['feed_rate']
-        self.g_code = G.F_rate(feed_rate)
+        self.g_code = self.machine.setUpProgram()
         for feature in self.features:
             self.g_code += feature.getGCode()
-        self.g_code += self.machine.setMode('ABS')
-        self.g_code += G.end_program()
+        self.g_code += self.machine.endProgram()
         return self.g_code

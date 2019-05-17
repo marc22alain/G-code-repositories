@@ -39,3 +39,14 @@ class SimpleMachine(object):
         else:
             raise ValueError('"%s" mode is not handled by SimpleMachine' % (mode))
         return file_text
+
+    def setUpProgram(self):
+        feed_rate = self.option_queries[FeedRateQuery].getValue()
+        file_text = G.F_rate(feed_rate)
+        return file_text
+
+    def endProgram(self):
+        file_text = self.setMode('ABS')
+        file_text += G.end_program()
+        return file_text
+
