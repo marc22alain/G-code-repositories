@@ -13,7 +13,10 @@ from tests import ScenarioRunner
 # scenario = ScenarioRunner.test_scenarios.peck_scenarios['peck_config_1']
 # feature = classes_dict['Peck']
 
-scenario = ScenarioRunner.test_scenarios.circ_pock_scenarios['circ_pock_config_2']
-feature = classes_dict['CircularPocket']
+# scenario = ScenarioRunner.test_scenarios.circ_pock_scenarios['circ_pock_config_2']
+# feature = classes_dict['CircularPocket']
+
+scenario = ScenarioRunner.test_scenarios.odrect_scenarios['odrect_config_2']
+feature = classes_dict['ODRectangularGroove']
 
 ScenarioRunner.ScenarioRunner().runScenario(feature, scenario, True)

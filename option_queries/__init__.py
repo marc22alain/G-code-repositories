@@ -14,3 +14,5 @@ from ReferenceXQuery_class import ReferenceXQuery
 from ReferenceYQuery_class import ReferenceYQuery
 from NumRepeatQuery_class import NumRepeatQuery
 from BogusQuery_class import BogusQuery
+from SideXQuery_class import SideXQuery
+from SideYQuery_class import SideYQuery
