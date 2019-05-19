@@ -56,6 +56,7 @@ class DepthStepper(GeometricFeature):
         else:
             sequence = 'only'
             file_text += G.G1_Z(target_depth)
+            file_text += G.set_dwell(0.5)
             file_text += instruction_callback(sequence)
             file_text += self.addDebug(inspect.currentframe())
 

@@ -31,12 +31,13 @@ class CircularPocket(DepthSteppingFeature):
             # increase current_od
             starting_od = current_od
             current_od = min(current_od + (2 * (basic_params['bit_diameter'] - self.getOverlap())), diameter)
-            self.setUpODcircularGroove(current_od)
             file_text += self.machine.setMode('INCR')
             file_text += G.G1_XY((- (current_od - starting_od) / 2, 0))
+            self.setUpODcircularGroove(current_od)
             file_text += od_feature.getGCode()
             file_text += self.addDebug(inspect.currentframe())
         if sequence not in ['last', 'only']:
+            # returns to center of pocket
             file_text += od_feature.returnToHome()
         return file_text
 
@@ -45,6 +46,9 @@ class CircularPocket(DepthSteppingFeature):
         return ''
 
     def returnToHome(self):
+        '''
+        Called after the last depth step in the pocket has been cut.
+        '''
         od_feature = self.child_features[ODCircularGroove]
         file_text = self.addDebug(inspect.currentframe())
         file_text += od_feature.returnToHome()
