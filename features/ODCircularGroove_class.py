@@ -34,15 +34,11 @@ class ODCircularGroove(DepthSteppingFeature):
 
     def moveToStart(self):
         file_text = self.addDebug(inspect.currentframe())
-        # redundant ?
-        self.setUpChild()
         file_text += self.child_features.values()[0].moveToStart()
         return file_text
 
     def returnToHome(self):
         file_text = self.addDebug(inspect.currentframe())
-        # redundant ?
-        self.setUpChild()
         file_text += self.child_features.values()[0].returnToHome()
         return file_text
 
