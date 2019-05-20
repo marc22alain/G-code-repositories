@@ -34,6 +34,9 @@ class GeometricFeature:
     def returnToHome(self):
         pass
 
+    def validateParams(self):
+        pass
+
     def getOptionQueries(self):
         '''
         Core interface

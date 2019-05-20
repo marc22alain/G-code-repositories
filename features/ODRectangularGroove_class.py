@@ -22,6 +22,7 @@ class ODRectangularGroove(DepthSteppingFeature):
     ]
 
     def getGCode(self, sequence = None):
+        self.validateParams()
         self.setUpChild()
         # manage height - optionally -
         if self.self_managed_depth:
@@ -63,3 +64,10 @@ class ODRectangularGroove(DepthSteppingFeature):
         side_y = self.option_queries[SideYQuery].getValue()
         return (side_x, side_y, self.getBasicParams())
 
+    def validateParams(self):
+        side_x, side_y, basic_params = self.getParams()
+        bit_diameter = basic_params['bit_diameter']
+        if side_x < bit_diameter:
+            raise ValueError('Side X is smaller than 2x bit diameter')
+        if side_y < bit_diameter:
+            raise ValueError('Side Y is smaller than 2x bit diameter')
