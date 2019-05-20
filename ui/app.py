@@ -6,10 +6,14 @@ from feature_manager import FeatureManager
 from OptionQueryDialog_class import OptionQueryDialog
 from FeatureList_class import FeatureList
 from ListItem_class import ListItem
+from ViewSpace_class import ViewSpace
+
+
+view_init = { "view_plane": "XY", \
+                  "extents": {"width": 50, "height": 50, "center": (25, 25)}}
 
 class Application(Frame):
     def __init__(self, master = None):
-        self.feature_manager = FeatureManager(self)
         self.features = []
         Frame.__init__(self, master)
         self.grid()
@@ -19,8 +23,10 @@ class Application(Frame):
 
     def createSubframes(self):
         self.geo_frame = Frame(self)
-        self.geo_frame.grid(row=0, column=1)
-        # self.view_space = ViewSpace(self.geo_frame, self.machined_geometry_engine.getViewSpaceInit())
+        self.geo_frame.grid(row=0, column=0)
+        self.view_space = ViewSpace(self.geo_frame, view_init)
+        # TODO resolve who owns this
+        self.feature_manager = FeatureManager(self, self.view_space)
 
         row_num = 1
         self.entry_frame = Frame(self)

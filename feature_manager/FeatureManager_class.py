@@ -6,11 +6,12 @@ from features import *
 
 
 class FeatureManager(object):
-    def __init__(self, app=None):
+    def __init__(self, app=None, view_space=None):
         self.machine = SimpleMachine()
         self.work_piece = SimpleWorkpiece()
         self.features = []
         self.app = app
+        self.view_space = view_space
 
     def addFeature(self, feature_class):
         feature = feature_class(self)
@@ -22,6 +23,7 @@ class FeatureManager(object):
                 feature.updateFeatures()
             # would like a better binding with self.features
             self.app.feature_list.insertFeature(feature)
+            self.view_space.drawGeometry(feature.getDrawnGeometry())
         def cancelFunction():
             self.features.pop()
             print 'running CANCEL function'

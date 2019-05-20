@@ -2,6 +2,8 @@ from GeometricFeature_class import GeometricFeature
 from utilities import Glib as G
 from option_queries import *
 import inspect
+from drawn_entities import Circle
+
 
 class Peck(GeometricFeature):
     '''
@@ -42,3 +44,23 @@ class Peck(GeometricFeature):
         basic_params = self.getBasicParams()
         cut_depth = self.option_queries[CutDepthQuery].getValue()
         return (basic_params, cut_depth)
+
+    def getDrawnGeometry(self):
+        self.entities = []
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        diameter = self.getBasicParams()['bit_diameter']
+        refX = self.option_queries[ReferenceXQuery].getValue()
+        refY = self.option_queries[ReferenceYQuery].getValue()
+
+        self.entities.append(Circle().setAllByCenterRadius((refX, refY, diameter), options))
+
+        return {"entities":self.entities,
+                "extents": {"width": refX * 2, "height": refY * 2, "center": (refX, refY)}}
+
+    # def updateDrawnEntities(self):
+    #     options = {"tag":"geometry","outline":"yellow","fill":None}
+    #     diameter = self.getBasicParams()['bit_diameter']
+    #     refX = self.option_queries[ReferenceXQuery].getValue()
+    #     refY = self.option_queries[ReferenceYQuery].getValue()
+    #     circle = self.entities[0]
+    #     circle.updateAllByCenterRadius((refX, refY, diameter), options)
