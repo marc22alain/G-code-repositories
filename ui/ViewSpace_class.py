@@ -57,18 +57,30 @@ class ViewSpace(Frame):
                         options
                     ).draw()
 
-        self.canvas.create_text(self.x_conv((self.view_center[0] + (self.view_width / 2.0)) + (self.view_width / 12.0)), self.y_conv(0), text=self.view_plane[0], fill="green")
-        self.canvas.create_text(self.x_conv(0), self.y_conv((self.view_center[0] + (self.view_height / 2.0)) + (self.view_height / 12.0)), text=self.view_plane[1], fill="green")
+        self.canvas.create_text(
+            self.x_conv((self.view_center[0] + (self.view_width / 2.0)) + (self.view_width / 12.0)),
+            self.y_conv(0),
+            text=self.view_plane[0],
+            fill="green",
+            # tag="grid_num"
+        )
+        self.canvas.create_text(
+            self.x_conv(0),
+            self.y_conv((self.view_center[0] + (self.view_height / 2.0)) + (self.view_height / 12.0)),
+            text=self.view_plane[1],
+            fill="green",
+            # tag="grid_num"
+        )
 
         self._drawGridNumbers()
 
     def _convertOptions(self, options):
         try:
-            self.view_plane = (options["view_plane"][0], options["view_plane"][1])
+            self.view_plane = options["view_plane"]
             # TODO: determine what happens when a view plane gets selected ...
             #   - show right letters for the plane
         except:
-            self.view_plane = ("H","V")
+            self.view_plane = 'HV'
         try:
             # Defines the mapping between coordinate systems, if flipping is required
             # Also must relocate the axis lines
@@ -133,20 +145,6 @@ class ViewSpace(Frame):
                 fill="magenta",
                 tag="grid_num"
             )
-
-
-    def drawGeometry(self, *geometries):
-        """
-        Generic function to draw any kind of geometry.
-        """
-        for geometry in geometries:
-            self._convertOptions(geometry)
-        self.canvas.delete("geometry")
-        self.canvas.delete("grid_num")
-        for geometry in geometries:
-            for entity in geometry["entities"]:
-                entity.draw(self.canvas, self.x_conv, self.y_conv)
-        self._drawGridNumbers()
 
     def changeViewPlane(self, plane):
         self.current_plane = plane

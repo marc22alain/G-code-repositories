@@ -31,23 +31,29 @@ class SimpleWorkpiece(object):
     def drawGeometry(self):
         options = {"tag":"geometry","outline":"cyan","fill":None}
         params = self.getParams()
-        height = params['stock_height']
-        length = params['stock_length']
-        width = params['stock_width']
-        if length > 0 and width > 0:
-            self.setExtents()
-            if len(self.entities) == 0:
-                self.entities.append(Rectangle(self.view_space).setParams((0, 0, length, width), options).draw())
+        stock_Z = params['stock_height']
+        stock_X = params['stock_length']
+        stock_Y = params['stock_width']
+        if stock_X > 0 and stock_Y > 0:
+            if self.view_space.view_plane == 'XY':
+                extent_X = stock_X
+                extent_Y = stock_Y
+            elif self.view_space.view_plane == 'YZ':
+                extent_X = stock_Y
+                extent_Y = stock_Z
             else:
-                self.entities[0].setParams((0, 0, length, width), options).draw()
+                extent_X = stock_X
+                extent_Y = stock_Z
 
-    def setExtents(self):
-        params = self.getParams()
-        height = params['stock_height']
-        length = params['stock_length']
-        width = params['stock_width']
-        view_init = { "view_plane": "XY", \
-                  "extents": {"width": length, "height": width, "center": (length / 2, width / 2)}}
+            self.setExtents(extent_X, extent_Y)
+            if len(self.entities) == 0:
+                self.entities.append(Rectangle(self.view_space).setParams((0, 0, extent_X, extent_Y), options).draw())
+            else:
+                self.entities[0].setParams((0, 0, extent_X, extent_Y), options).draw()
+
+    def setExtents(self, extent_X, extent_Y):
+        view_init = { "view_plane": self.view_space.view_plane, \
+                  "extents": {"width": extent_X, "height": extent_Y, "center": (extent_X / 2, extent_Y / 2)}}
         self.view_space.setExtents(view_init)
         self.feature_manager.reDrawAll()
 

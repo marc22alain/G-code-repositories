@@ -53,6 +53,11 @@ class Application(Frame):
         self.output_button = Button(self.entry_frame,text="test gen gcode",command=self.genCode, width=30)
         self.output_button.grid(row=row_num, column=0, columnspan=2, pady=5)
 
+        row_num += 1
+        self.view_plane_var = StringVar()
+        self.view_plane_button = Spinbox(self.entry_frame, values=["XY","YZ","XZ"], textvariable=self.view_plane_var, width=13, command=self.setViewPlane)
+        self.view_plane_button.grid(row=row_num, column=0)
+
 
     def createFeature(self):
         feature_class = self.current_feature_choice.getValue()
@@ -68,3 +73,12 @@ class Application(Frame):
     def insertWorkpiece(self, row_num):
         item = ListItem(self.entry_frame, self.feature_manager.work_piece)
         item.grid(row=row_num, column=0, columnspan=2, pady=5)
+
+    def setViewPlane(self):
+        plane = self.view_plane_var.get()
+        print 'plane'
+        print plane
+        print self.view_space.view_plane
+        self.view_space.view_plane = plane
+        self.feature_manager.work_piece.drawGeometry()
+        self.feature_manager.reDrawAll()
