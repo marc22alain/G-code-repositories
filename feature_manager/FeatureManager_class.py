@@ -7,14 +7,14 @@ from features import *
 
 class FeatureManager(object):
     def __init__(self, app=None, view_space=None):
-        self.machine = SimpleMachine()
-        self.work_piece = SimpleWorkpiece()
+        self.machine = SimpleMachine(self)
+        self.work_piece = SimpleWorkpiece(self, view_space)
         self.features = []
         self.app = app
         self.view_space = view_space
 
     def addFeature(self, feature_class):
-        feature = feature_class(self)
+        feature = feature_class(self, self.view_space)
         print feature
         self.features.append(feature)
         def addFunction():
@@ -23,7 +23,7 @@ class FeatureManager(object):
                 feature.updateFeatures()
             # would like a better binding with self.features
             self.app.feature_list.insertFeature(feature)
-            self.view_space.drawGeometry(feature.getDrawnGeometry())
+            feature.drawGeometry()
         def cancelFunction():
             self.features.pop()
             print 'running CANCEL function'
@@ -44,3 +44,8 @@ class FeatureManager(object):
     def changeViewPlane(self):
         for feature in self.features:
             feature.draw(self.view_space.current_plane)
+
+    def reDrawAll(self):
+        for feature in self.features:
+            feature.drawGeometry()
+
