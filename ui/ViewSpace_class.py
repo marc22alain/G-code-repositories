@@ -42,16 +42,20 @@ class ViewSpace(Frame):
         options = {"fill":"green","arrow":LAST,"dash":(16, 4, 4, 4)}
 
         x1 = self.view_center[0] - (self.view_width / 2.0)
-        Line().setParams((self.view_center[0] - (self.view_width / 2.0)) - (self.view_width / 16.0), \
+        Line(self).setParams(
+                        ((self.view_center[0] - (self.view_width / 2.0)) - (self.view_width / 16.0), \
                         0, \
                         (self.view_center[0] + (self.view_width / 2.0)) + (self.view_width / 16.0), \
-                        0 \
-                        ).setOptions(options).draw(self.canvas, self.x_conv, self.y_conv)
-        Line().setParams(0, \
+                        0),
+                        options
+                    ).draw()
+        Line(self).setParams(
+                        (0, \
                         (self.view_center[1] - (self.view_height / 2.0)) - (self.view_height / 16.0), \
                         0, \
-                        (self.view_center[0] + (self.view_height / 2.0)) + (self.view_height / 16.0), \
-                        ).setOptions(options).draw(self.canvas, self.x_conv, self.y_conv)
+                        (self.view_center[0] + (self.view_height / 2.0)) + (self.view_height / 16.0)),
+                        options
+                    ).draw()
 
         self.canvas.create_text(self.x_conv((self.view_center[0] + (self.view_width / 2.0)) + (self.view_width / 12.0)), self.y_conv(0), text=self.view_plane[0], fill="green")
         self.canvas.create_text(self.x_conv(0), self.y_conv((self.view_center[0] + (self.view_height / 2.0)) + (self.view_height / 12.0)), text=self.view_plane[1], fill="green")
@@ -115,8 +119,20 @@ class ViewSpace(Frame):
             # assumes that the view area is square
             x_num = (i + x_shift) * increment
             y_num = (i + y_shift) * increment
-            self.canvas.create_text(self.x_conv(x_num), self.y_conv(- increment / 3), text=str(int(round(x_num))), fill="magenta", tag="grid_num")
-            self.canvas.create_text(self.x_conv(- increment / 3), self.y_conv(y_num), text=str(int(round(y_num))), fill="magenta", tag="grid_num")
+            self.canvas.create_text(
+                self.x_conv(x_num),
+                self.y_conv(- increment / 3),
+                text=str(int(round(x_num))),
+                fill="magenta",
+                tag="grid_num"
+            )
+            self.canvas.create_text(
+                self.x_conv(- increment / 3),
+                self.y_conv(y_num),
+                text=str(int(round(y_num))),
+                fill="magenta",
+                tag="grid_num"
+            )
 
 
     def drawGeometry(self, *geometries):
@@ -131,3 +147,15 @@ class ViewSpace(Frame):
             for entity in geometry["entities"]:
                 entity.draw(self.canvas, self.x_conv, self.y_conv)
         self._drawGridNumbers()
+
+    def changeViewPlane(self, plane):
+        self.current_plane = plane
+        # delete all of own self.entities
+        # command the FeatureManager to get all features to redraw themselves, per new plane
+        self.feature_manager.changeViewPlane()
+
+    def setExtents(self, options):
+        self._convertOptions(options)
+        self.canvas.delete("grid_num")
+        self._drawGridNumbers()
+        # if it changes, get FeatureManager to redraw all

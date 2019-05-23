@@ -38,16 +38,15 @@ class CircularGroove(DepthSteppingFeature):
         file_text += G.G0_XY((diameter / 2, 0))
         return file_text
 
-    def getDrawnGeometry(self):
-        entities = []
+    def drawGeometry(self):
         options = {"tag":"geometry","outline":"yellow","fill":None}
-        diameter = self.option_queries[PathDiameterQuery].getValue()
+        radius= self.option_queries[PathDiameterQuery].getValue() / 2
         bit_radius = self.getBasicParams()['bit_diameter'] / 2
         refX = self.option_queries[ReferenceXQuery].getValue()
         refY = self.option_queries[ReferenceYQuery].getValue()
-
-        entities.append(Circle().setAllByCenterRadius((refX, refY, diameter - bit_radius), options))
-        entities.append(Circle().setAllByCenterRadius((refX, refY, diameter + bit_radius), options))
-
-        return {"entities":entities,
-                "extents": {"width": refX * 2, "height": refY * 2, "center": (refX, refY)}}
+        if len(self.entities) == 0:
+            self.entities.append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius - bit_radius), options).draw())
+            self.entities.append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius + bit_radius), options).draw())
+        else:
+            self.entities[0].setAllByCenterRadius((refX, refY, radius - bit_radius), options).draw()
+            self.entities[1].setAllByCenterRadius((refX, refY, radius + bit_radius), options).draw()

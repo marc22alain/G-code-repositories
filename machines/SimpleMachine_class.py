@@ -9,8 +9,9 @@ class SimpleMachine(object):
         FeedRateQuery
     ]
 
-    def __init__(self):
+    def __init__(self, feature_manager):
         self.option_queries = {}
+        self.feature_manager = feature_manager
         self.mode = None
 
     def getOptionQueries(self):

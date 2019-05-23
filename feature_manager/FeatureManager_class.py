@@ -40,3 +40,7 @@ class FeatureManager(object):
             self.g_code += feature.getGCode()
         self.g_code += self.machine.endProgram()
         return self.g_code
+
+    def changeViewPlane(self):
+        for feature in self.features:
+            feature.draw(self.view_space.current_plane)

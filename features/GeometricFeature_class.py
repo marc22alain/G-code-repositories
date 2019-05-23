@@ -13,8 +13,10 @@ class GeometricFeature:
         ReferenceYQuery
     ]
 
-    def __init__(self, feature_manager):
+    def __init__(self, feature_manager, view_space):
+        self.entities = []
         self.feature_manager = feature_manager
+        self.view_space = view_space
         self.machine = feature_manager.machine
         self.work_piece = feature_manager.work_piece
         self.option_queries = { key: None for key in self.option_query_classes }
@@ -32,6 +34,10 @@ class GeometricFeature:
 
     @abc.abstractmethod
     def returnToHome(self):
+        pass
+
+    @abc.abstractmethod
+    def drawGeometry(self):
         pass
 
     def validateParams(self):
@@ -82,7 +88,7 @@ class GeometricFeature:
         '''
         May be spun out to other interface
         '''
-        children = { key: key(self.feature_manager) for key in self.child_features}
+        children = { key: key(self.feature_manager, self.view_space) for key in self.child_features}
         self.child_features.update(children)
 
     def getBasicParams(self):
@@ -97,6 +103,8 @@ class GeometricFeature:
         '''
         Core interface
         '''
+        for entity in self.entities:
+            entity.remove()
         self.feature_manager.deleteFeature(self)
 
     def moveToReference(self):

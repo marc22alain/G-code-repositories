@@ -87,8 +87,9 @@ class BasicDialog(Toplevel):
         except AttributeError as e:
             print 'no OK function defined - AttributeError'
             print e
-        except TypeError:
+        except TypeError as e:
             print 'no OK function defined - TypeError'
+            print e
 
         self.close()
 

@@ -3,13 +3,11 @@ from Tkinter import *
 
 
 class Arc(GeometricEntity):
-    def __init__(self):
-        pass
 
     def assertValid(self):
         pass
 
-    def setParams(self, *params):
+    def _setParams(self, params):
         """ Takes in the standard bounding box parameters, plus 'start' and 'extent' angles. """
         if len(params) != 6:
             raise ValueError("Incorrect number of params submitted!")
@@ -19,9 +17,11 @@ class Arc(GeometricEntity):
         self.y2 = params[3]
         self.start = params[4]
         self.extent = params[5]
-        return self
 
-    def _draw(self, canvas, mapping_x, mapping_y):
+    def _draw(self):
+        canvas = self.view_space.canvas
+        mapping_x = self.view_space.x_conv
+        mapping_y = self.view_space.y_conv
         return canvas.create_arc(mapping_x(self.x1), mapping_y(self.y1), mapping_x(self.x2), mapping_y(self.y2), start=self.start, extent=self.extent)
 
     def setAllByCenterRadius(self, params, options):
@@ -41,3 +41,9 @@ class Arc(GeometricEntity):
         options["style"] = ARC
         self.options = options
         return self
+
+    def _update(self):
+        canvas = self.view_space.canvas
+        mapping_x = self.view_space.x_conv
+        mapping_y = self.view_space.y_conv
+        canvas.coords(self.id, mapping_x(self.x1), mapping_y(self.y1), mapping_x(self.x2), mapping_y(self.y2), start=self.start, extent=self.extent)

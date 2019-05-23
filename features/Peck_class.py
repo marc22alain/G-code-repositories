@@ -45,22 +45,12 @@ class Peck(GeometricFeature):
         cut_depth = self.option_queries[CutDepthQuery].getValue()
         return (basic_params, cut_depth)
 
-    def getDrawnGeometry(self):
-        self.entities = []
+    def drawGeometry(self):
         options = {"tag":"geometry","outline":"yellow","fill":None}
-        diameter = self.getBasicParams()['bit_diameter']
+        radius = self.getBasicParams()['bit_diameter'] / 2
         refX = self.option_queries[ReferenceXQuery].getValue()
         refY = self.option_queries[ReferenceYQuery].getValue()
-
-        self.entities.append(Circle().setAllByCenterRadius((refX, refY, diameter), options))
-
-        return {"entities":self.entities,
-                "extents": {"width": refX * 2, "height": refY * 2, "center": (refX, refY)}}
-
-    # def updateDrawnEntities(self):
-    #     options = {"tag":"geometry","outline":"yellow","fill":None}
-    #     diameter = self.getBasicParams()['bit_diameter']
-    #     refX = self.option_queries[ReferenceXQuery].getValue()
-    #     refY = self.option_queries[ReferenceYQuery].getValue()
-    #     circle = self.entities[0]
-    #     circle.updateAllByCenterRadius((refX, refY, diameter), options)
+        if len(self.entities) == 0:
+            self.entities.append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius), options).draw())
+        else:
+            self.entities[0].setAllByCenterRadius((refX, refY, radius), options).draw()
