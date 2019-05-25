@@ -1,5 +1,5 @@
-from ui import Application
+from ui import app
 
-app = Application()
+app = app.Application()
 app.master.title('Feature compositor')
 app.mainloop()

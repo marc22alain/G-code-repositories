@@ -1,2 +1,2 @@
 from OptionQueryDialog_class import OptionQueryDialog
-from app import Application
+from ViewSpace_class import ViewSpace

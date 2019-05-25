@@ -3,6 +3,8 @@ from machines import SimpleMachine
 from workpieces import SimpleWorkpiece
 from tests import testWithProgram
 from feature_manager import FeatureManager
+from Tkinter import *
+Tk()
 
 class ScenarioRunner(object):
     def __init__(self):
