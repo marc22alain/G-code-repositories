@@ -75,8 +75,6 @@ class GeometricEntity:
             if "width" in keys:
                 canvas.itemconfig(id, width=self.options["width"])
             if "style" in keys:
-                print 'attempting to set STYLE'
-                print self.options["style"]
                 try:
                     canvas.itemconfig(id, style=self.options["style"])
                 except:

@@ -43,7 +43,7 @@ class LinearDistribution(DistributedFeature):
         child_class = self.option_queries[GeometricFeatureQuery].getValue()
         if child_class not in self.child_features.keys():
             # LinearDistribution standing in as FeatureManager
-            self.child_features = { child_class: child_class(self) }
+            self.child_features = { child_class: child_class(self, self.view_space) }
 
     # TODO: determine whether this can go into the GeometricFeature class
     # ... it seems applicable to structures that hold many features

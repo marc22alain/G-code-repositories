@@ -100,7 +100,7 @@ class ODCircularGroove(DepthSteppingFeature):
         basic_params, cut_depth, diameter, refX, refY = self.getParams()
         options = {"tag":"geometry","outline":"yellow","fill":None}
         radius = diameter / 2
-        bit_radius = basic_params['bit_diameter'] / 2
+        bit_diameter = basic_params['bit_diameter']
         stock_height = basic_params['stock_height']
         if len(self.entities['XZ']) == 0:
             self.entities['XZ'].append(Rectangle(self.view_space).setAll(
