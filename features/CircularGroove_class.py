@@ -1,7 +1,7 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
 from utilities import Glib as G
 from option_queries import *
-from drawn_entities import Circle
+from drawn_entities import Circle, Rectangle
 
 
 class CircularGroove(DepthSteppingFeature):
@@ -21,32 +21,90 @@ class CircularGroove(DepthSteppingFeature):
             return self._getInstructions(sequence)
 
     def _getInstructions(self, sequence):
-        diameter = self.option_queries[PathDiameterQuery].getValue()
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
         file_text = self.machine.setMode('INCR')
         file_text += G.G2XY((0,0),(diameter / 2, 0))
         return file_text
 
     def moveToStart(self):
-        diameter = self.option_queries[PathDiameterQuery].getValue()
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((- diameter / 2, 0))
         return file_text
 
     def returnToHome(self):
-        diameter = self.option_queries[PathDiameterQuery].getValue()
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((diameter / 2, 0))
         return file_text
 
-    def drawGeometry(self):
+    def _drawXYentities(self):
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
         options = {"tag":"geometry","outline":"yellow","fill":None}
-        radius= self.option_queries[PathDiameterQuery].getValue() / 2
-        bit_radius = self.getBasicParams()['bit_diameter'] / 2
+        radius = diameter / 2
+        bit_radius = basic_params['bit_diameter'] / 2
+        if len(self.entities['XY']) == 0:
+            self.entities['XY'].append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius - bit_radius), options).draw())
+            self.entities['XY'].append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius + bit_radius), options).draw())
+        else:
+            self.entities['XY'][0].setAllByCenterRadius((refX, refY, radius - bit_radius), options).draw()
+            self.entities['XY'][1].setAllByCenterRadius((refX, refY, radius + bit_radius), options).draw()
+
+
+    def _drawYZentities(self):
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        radius = diameter / 2
+        bit_radius = basic_params['bit_diameter'] / 2
+        stock_height = basic_params['stock_height']
+        if len(self.entities['YZ']) == 0:
+            self.entities['YZ'].append(Rectangle(self.view_space).setAll(
+                (refY - radius - bit_radius, stock_height - cut_depth, refY + radius + bit_radius, stock_height),
+                options
+            ).draw())
+            self.entities['YZ'].append(Rectangle(self.view_space).setAll(
+                (refY - radius + bit_radius, stock_height - cut_depth, refY + radius - bit_radius, stock_height),
+                options
+            ).draw())
+        else:
+            self.entities['YZ'][0].setAll(
+                (refY - radius - bit_radius, stock_height - cut_depth, refY + radius + bit_radius, stock_height),
+                options
+            ).draw()
+            self.entities['YZ'][1].setAll(
+                (refY - radius + bit_radius, stock_height - cut_depth, refY + radius - bit_radius, stock_height),
+                options
+            ).draw()
+
+    def _drawXZentities(self):
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        radius = diameter / 2
+        bit_radius = basic_params['bit_diameter'] / 2
+        stock_height = basic_params['stock_height']
+        if len(self.entities['XZ']) == 0:
+            self.entities['XZ'].append(Rectangle(self.view_space).setAll(
+                (refX - radius - bit_radius, stock_height - cut_depth, refX + radius + bit_radius, stock_height),
+                options
+            ).draw())
+            self.entities['XZ'].append(Rectangle(self.view_space).setAll(
+                (refX - radius + bit_radius, stock_height - cut_depth, refX + radius - bit_radius, stock_height),
+                options
+            ).draw())
+        else:
+            self.entities['XZ'][0].setAll(
+                (refX - radius - bit_radius, stock_height - cut_depth, refX + radius + bit_radius, stock_height),
+                options
+            ).draw()
+            self.entities['XZ'][1].setAll(
+                (refX - radius + bit_radius, stock_height - cut_depth, refX + radius - bit_radius, stock_height),
+                options
+            ).draw()
+
+    def getParams(self):
+        basic_params = self.getBasicParams()
+        cut_depth = self.option_queries[CutDepthQuery].getValue()
+        diameter = self.option_queries[PathDiameterQuery].getValue()
         refX = self.option_queries[ReferenceXQuery].getValue()
         refY = self.option_queries[ReferenceYQuery].getValue()
-        if len(self.entities) == 0:
-            self.entities.append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius - bit_radius), options).draw())
-            self.entities.append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius + bit_radius), options).draw())
-        else:
-            self.entities[0].setAllByCenterRadius((refX, refY, radius - bit_radius), options).draw()
-            self.entities[1].setAllByCenterRadius((refX, refY, radius + bit_radius), options).draw()
+        return (basic_params, cut_depth, diameter, refX, refY)

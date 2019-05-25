@@ -117,10 +117,7 @@ class GeometricFeature:
         '''
         Core interface
         '''
-        params = {
-            'refX': self.option_queries[ReferenceXQuery].getValue(),
-            'refY': self.option_queries[ReferenceYQuery].getValue()
-        }
+        params = {}
         params.update(self.machine.getParams().copy())
         params.update(self.work_piece.getParams().copy())
         return params

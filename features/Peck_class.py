@@ -19,7 +19,7 @@ class Peck(GeometricFeature):
 
     def getGCode(self):
         file_text = self.addDebug(inspect.currentframe())
-        basic_params, cut_depth = self.getParams()
+        basic_params, cut_depth, refX, refY = self.getParams()
         file_text += self.machine.setMode('ABS')
         file_text += G.G0_Z(basic_params['safe_z'])
         file_text += self.moveToReference()
@@ -43,15 +43,14 @@ class Peck(GeometricFeature):
     def getParams(self):
         basic_params = self.getBasicParams()
         cut_depth = self.option_queries[CutDepthQuery].getValue()
-        return (basic_params, cut_depth)
+        refX = self.option_queries[ReferenceXQuery].getValue()
+        refY = self.option_queries[ReferenceYQuery].getValue()
+        return (basic_params, cut_depth, refX, refY)
 
     def _drawXYentities(self):
         options = {"tag":"geometry","outline":"yellow","fill":None}
-        basic_params, cut_depth = self.getParams()
+        basic_params, cut_depth, refX, refY = self.getParams()
         radius = basic_params['bit_diameter'] / 2
-        stock_height = basic_params['stock_height']
-        refX = basic_params['refX']
-        refY = basic_params['refY']
         if len(self.entities['XY']) == 0:
             self.entities['XY'].append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius), options).draw())
         else:
@@ -59,11 +58,9 @@ class Peck(GeometricFeature):
 
     def _drawYZentities(self):
         options = {"tag":"geometry","outline":"yellow","fill":None}
-        basic_params, cut_depth = self.getParams()
+        basic_params, cut_depth, refX, refY = self.getParams()
         radius = basic_params['bit_diameter'] / 2
         stock_height = basic_params['stock_height']
-        refX = basic_params['refX']
-        refY = basic_params['refY']
         if len(self.entities['YZ']) == 0:
             self.entities['YZ'].append(Rectangle(self.view_space).setAll(
                 (refY - radius, stock_height - cut_depth, refY + radius, stock_height),
@@ -77,11 +74,9 @@ class Peck(GeometricFeature):
 
     def _drawXZentities(self):
         options = {"tag":"geometry","outline":"yellow","fill":None}
-        basic_params, cut_depth = self.getParams()
+        basic_params, cut_depth, refX, refY = self.getParams()
         radius = basic_params['bit_diameter'] / 2
         stock_height = basic_params['stock_height']
-        refX = basic_params['refX']
-        refY = basic_params['refY']
         if len(self.entities['XZ']) == 0:
             self.entities['XZ'].append(Rectangle(self.view_space).setAll(
                 (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
