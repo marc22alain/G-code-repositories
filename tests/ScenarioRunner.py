@@ -1,10 +1,51 @@
 from features import test_scenarios
 from machines import SimpleMachine
 from workpieces import SimpleWorkpiece
-from tests import testWithProgram
+from tests import testWithProgram, testDrawingGeometry
 from feature_manager import FeatureManager
 from Tkinter import *
+
 Tk()
+
+class MockCanvas(object):
+    def __init__(self):
+        pass
+
+    def create_line(self, *params):
+        return self.mock_create()
+
+    def create_arc(self, *args, **kwds):
+        return self.mock_create()
+
+    def create_oval(self, *args, **kwds):
+        return self.mock_create()
+
+    def create_rectangle(self, *args, **kwds):
+        return self.mock_create()
+
+    def itemconfig(self, *args, **kwds):
+        pass
+
+    def coords(self, *args, **kwds):
+        pass
+
+    def delete(self, *args, **kwds):
+        pass
+
+    def mock_create(self):
+        return 1
+
+
+class MockViewSpace(object):
+    def __init__(self, canvas = None):
+        self.view_plane = 'XY'
+        self.canvas = canvas
+        self.x_conv = lambda x: x
+        self.y_conv = lambda x: x
+
+    def setExtents(self, *args, **kwds):
+        pass
+
 
 class ScenarioRunner(object):
     def __init__(self):
@@ -26,8 +67,9 @@ class ScenarioRunner(object):
         self._runTests(feature_manager, output_program, scenario)
 
     def configureAll(self, feature, scenario):
-        fm = FeatureManager()
-        feat = feature(fm)
+        vs = MockViewSpace(MockCanvas())
+        fm = FeatureManager(None, vs)
+        feat = feature(fm, vs)
         fm.features.append(feat)
         self.configure(fm.machine, scenario['machine_config'])
         self.configure(fm.work_piece, scenario['work_piece_config'])
@@ -49,6 +91,7 @@ class ScenarioRunner(object):
         testWithProgram(program, scenario)
         if output_program:
             print program
+        testDrawingGeometry(feature_manager)
 
 
     def announceScenarioSet(self, feature):

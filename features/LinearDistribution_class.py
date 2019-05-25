@@ -59,3 +59,12 @@ class LinearDistribution(DistributedFeature):
             file_text += G.G0_XY((delta_X, delta_Y))
             file_text += self.child_features.values()[0].getGCode()
         return file_text
+
+    def _drawXYentities(self):
+        raise TypeError('LinearDistribution does not implement _drawXYentities')
+
+    def _drawYZentities(self):
+        raise TypeError('LinearDistribution does not implement _drawYZentities')
+
+    def _drawXZentities(self):
+        raise TypeError('LinearDistribution does not implement _drawXZentities')

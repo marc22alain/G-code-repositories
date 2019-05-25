@@ -48,3 +48,12 @@ class LinearGroove(DepthSteppingFeature):
             file_text += G.G0_XY((- delta_x, - delta_y))
             self.at_start = True
         return file_text
+
+    def _drawXYentities(self):
+        raise TypeError('LinearGroove does not implement _drawXYentities')
+
+    def _drawYZentities(self):
+        raise TypeError('LinearGroove does not implement _drawYZentities')
+
+    def _drawXZentities(self):
+        raise TypeError('LinearGroove does not implement _drawXZentities')

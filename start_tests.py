@@ -11,16 +11,20 @@ class MockFeatureManager(object):
     machine = None
     work_piece = None
 
+class MockViewSpace(object):
+    view_plane = 'XY'
+
 # -----------------------------------------------------------------------------
 # ----------------------------- GeometricFeature ------------------------------
 # -----------------------------------------------------------------------------
 
 def feature_suite():
     fm = MockFeatureManager()
+    vs = MockViewSpace()
     feature_classes = parseModuleClasses(features, ['GeometricFeature', 'ComposedFeature', 'DistributedFeature', 'DepthSteppingFeature'])
     num_feature_class_tests = 0
     for feature in feature_classes.values():
-        testWithFeature(feature(fm))
+        testWithFeature(feature(fm,vs))
         num_feature_class_tests += 1
     assert num_feature_class_tests == len(feature_classes), 'Must run one test for each query_class'
 
