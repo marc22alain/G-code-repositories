@@ -9,7 +9,7 @@ class GeometricEntity:
 
     def __init__(self, view_space):
         self.view_space = view_space
-        self.id = None
+        self.ids = []
 
     @abc.abstractmethod
     def assertValid(self):
@@ -29,10 +29,10 @@ class GeometricEntity:
         pass
 
     def draw(self, view_plane = 'XY'):
-        if self.id != None:
+        if len(self.ids) > 0:
             self._update()
         else:
-            self.id = self._draw()
+            self.ids = self._draw()
             self.applyOptions()
         return self
 
@@ -57,22 +57,33 @@ class GeometricEntity:
         TODO: expand to cover all possible options. """
         canvas = self.view_space.canvas
         keys = self.options.keys()
-        if "fill" in keys:
-            canvas.itemconfig(self.id, fill=self.options["fill"])
-        if "outline" in keys:
-            canvas.itemconfig(self.id, outline=self.options["outline"])
-        if "tag" in keys:
-            canvas.itemconfig(self.id, tag=self.options["tag"])
-        if "arrow" in keys:
-            canvas.itemconfig(self.id, arrow=self.options["arrow"])
-        if "dash" in keys:
-            canvas.itemconfig(self.id, dash=self.options["dash"])
-        if "width" in keys:
-            canvas.itemconfig(self.id, width=self.options["width"])
-        # if "style" in keys:
-        #     canvas.itemconfig(self.id, tag=self.options["style"])
+        for id in self.ids:
+            if "fill" in keys:
+                canvas.itemconfig(id, fill=self.options["fill"])
+            if "outline" in keys:
+                try:
+                    canvas.itemconfig(id, outline=self.options["outline"])
+                except:
+                    # because create_line() can't be configured with outline option
+                    canvas.itemconfig(id, fill=self.options["outline"])
+            if "tag" in keys:
+                canvas.itemconfig(id, tag=self.options["tag"])
+            if "arrow" in keys:
+                canvas.itemconfig(id, arrow=self.options["arrow"])
+            if "dash" in keys:
+                canvas.itemconfig(id, dash=self.options["dash"])
+            if "width" in keys:
+                canvas.itemconfig(id, width=self.options["width"])
+            if "style" in keys:
+                print 'attempting to set STYLE'
+                print self.options["style"]
+                try:
+                    canvas.itemconfig(id, style=self.options["style"])
+                except:
+                    pass
         return self
 
     def remove(self):
-        self.view_space.canvas.delete(self.id)
-        self.id = None
+        for id in self.ids:
+            self.view_space.canvas.delete(id)
+        self.ids = []

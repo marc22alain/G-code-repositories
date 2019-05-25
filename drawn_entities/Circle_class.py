@@ -20,7 +20,7 @@ class Circle(GeometricEntity):
         canvas = self.view_space.canvas
         mapping_x = self.view_space.x_conv
         mapping_y = self.view_space.y_conv
-        return canvas.create_oval(mapping_x(self.x1), mapping_y(self.y1), mapping_x(self.x2), mapping_y(self.y2))
+        return [canvas.create_oval(mapping_x(self.x1), mapping_y(self.y1), mapping_x(self.x2), mapping_y(self.y2))]
 
     def setAllByCenterRadius(self, params, options):
         """ Expects: params to be a tuple: (center_x, center_y, radius); options to be a dict.
@@ -40,4 +40,4 @@ class Circle(GeometricEntity):
         canvas = self.view_space.canvas
         mapping_x = self.view_space.x_conv
         mapping_y = self.view_space.y_conv
-        canvas.coords(self.id, mapping_x(self.x1), mapping_y(self.y1), mapping_x(self.x2), mapping_y(self.y2))
+        canvas.coords(self.ids[0], mapping_x(self.x1), mapping_y(self.y1), mapping_x(self.x2), mapping_y(self.y2))
