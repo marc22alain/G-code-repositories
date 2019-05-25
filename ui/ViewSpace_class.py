@@ -147,10 +147,7 @@ class ViewSpace(Frame):
             )
 
     def changeViewPlane(self, plane):
-        self.current_plane = plane
-        # delete all of own self.entities
-        # command the FeatureManager to get all features to redraw themselves, per new plane
-        self.feature_manager.changeViewPlane()
+        self.view_plane = plane
 
     def setExtents(self, options):
         self._convertOptions(options)

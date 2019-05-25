@@ -51,3 +51,6 @@ class SimpleMachine(object):
         file_text += G.end_program()
         return file_text
 
+    def didUpdateQueries(self):
+        self.feature_manager.reDrawAll()
+

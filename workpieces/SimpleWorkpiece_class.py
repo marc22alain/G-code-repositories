@@ -55,5 +55,8 @@ class SimpleWorkpiece(object):
         view_init = { "view_plane": self.view_space.view_plane, \
                   "extents": {"width": extent_X, "height": extent_Y, "center": (extent_X / 2, extent_Y / 2)}}
         self.view_space.setExtents(view_init)
+
+    def didUpdateQueries(self):
+        self.drawGeometry()
         self.feature_manager.reDrawAll()
 

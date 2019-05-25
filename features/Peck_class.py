@@ -2,7 +2,7 @@ from GeometricFeature_class import GeometricFeature
 from utilities import Glib as G
 from option_queries import *
 import inspect
-from drawn_entities import Circle
+from drawn_entities import Circle, Rectangle
 
 
 class Peck(GeometricFeature):
@@ -45,12 +45,50 @@ class Peck(GeometricFeature):
         cut_depth = self.option_queries[CutDepthQuery].getValue()
         return (basic_params, cut_depth)
 
-    def drawGeometry(self):
+    def _drawXYentities(self):
         options = {"tag":"geometry","outline":"yellow","fill":None}
-        radius = self.getBasicParams()['bit_diameter'] / 2
-        refX = self.option_queries[ReferenceXQuery].getValue()
-        refY = self.option_queries[ReferenceYQuery].getValue()
-        if len(self.entities) == 0:
-            self.entities.append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius), options).draw())
+        basic_params, cut_depth = self.getParams()
+        radius = basic_params['bit_diameter'] / 2
+        stock_height = basic_params['stock_height']
+        refX = basic_params['refX']
+        refY = basic_params['refY']
+        if len(self.entities['XY']) == 0:
+            self.entities['XY'].append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius), options).draw())
         else:
-            self.entities[0].setAllByCenterRadius((refX, refY, radius), options).draw()
+            self.entities['XY'][0].setAllByCenterRadius((refX, refY, radius), options).draw()
+
+    def _drawYZentities(self):
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        basic_params, cut_depth = self.getParams()
+        radius = basic_params['bit_diameter'] / 2
+        stock_height = basic_params['stock_height']
+        refX = basic_params['refX']
+        refY = basic_params['refY']
+        if len(self.entities['YZ']) == 0:
+            self.entities['YZ'].append(Rectangle(self.view_space).setAll(
+                (refY - radius, stock_height - cut_depth, refY + radius, stock_height),
+                options
+            ).draw())
+        else:
+            self.entities['YZ'][0].setAll(
+                (refY - radius, stock_height - cut_depth, refY + radius, stock_height),
+                options
+            ).draw()
+
+    def _drawXZentities(self):
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        basic_params, cut_depth = self.getParams()
+        radius = basic_params['bit_diameter'] / 2
+        stock_height = basic_params['stock_height']
+        refX = basic_params['refX']
+        refY = basic_params['refY']
+        if len(self.entities['XZ']) == 0:
+            self.entities['XZ'].append(Rectangle(self.view_space).setAll(
+                (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
+                options
+            ).draw())
+        else:
+            self.entities['XZ'][0].setAll(
+                (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
+                options
+            ).draw()

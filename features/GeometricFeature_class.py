@@ -14,7 +14,12 @@ class GeometricFeature:
     ]
 
     def __init__(self, feature_manager, view_space):
-        self.entities = []
+        self.entities = {
+            'XY': [],
+            'YZ': [],
+            'XZ': []
+        }
+        self.current_plane = view_space.view_plane
         self.feature_manager = feature_manager
         self.view_space = view_space
         self.machine = feature_manager.machine
@@ -36,8 +41,25 @@ class GeometricFeature:
     def returnToHome(self):
         pass
 
-    @abc.abstractmethod
     def drawGeometry(self):
+        view_plane = self.view_space.view_plane
+        if view_plane == 'XY':
+            self._drawXYentities()
+        elif view_plane == 'YZ':
+            self._drawYZentities()
+        else:
+            self._drawXZentities()
+
+    @abc.abstractmethod
+    def _drawXYentities(self):
+        pass
+
+    @abc.abstractmethod
+    def _drawYZentities(self):
+        pass
+
+    @abc.abstractmethod
+    def _drawXZentities(self):
         pass
 
     def validateParams(self):
@@ -95,7 +117,11 @@ class GeometricFeature:
         '''
         Core interface
         '''
-        params = self.machine.getParams().copy()
+        params = {
+            'refX': self.option_queries[ReferenceXQuery].getValue(),
+            'refY': self.option_queries[ReferenceYQuery].getValue()
+        }
+        params.update(self.machine.getParams().copy())
         params.update(self.work_piece.getParams().copy())
         return params
 
@@ -138,3 +164,13 @@ class GeometricFeature:
             return '# %s \n' % (class_file + '.' + trace.function + ' - line:' + str(trace.lineno))
         else:
             return ''
+
+    def didUpdateQueries(self):
+        self.drawGeometry()
+
+    def changeViewPlane(self):
+        for entity in self.entities[self.current_plane]:
+            entity.remove()
+        self.current_plane = self.view_space.view_plane
+        self.drawGeometry()
+

@@ -41,8 +41,7 @@ class ListItem(Frame):
             print 'ListItem row_num'
             # print self.sub_item['row_num']
             self.item.updateFeatures()
-        if hasattr(self.item, 'drawGeometry'):
-            self.item.drawGeometry()
+        self.item.didUpdateQueries()
 
     def deleteItem(self):
         self.item.delete()

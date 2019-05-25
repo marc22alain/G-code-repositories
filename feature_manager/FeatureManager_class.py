@@ -42,8 +42,9 @@ class FeatureManager(object):
         return self.g_code
 
     def changeViewPlane(self):
+        self.work_piece.drawGeometry()
         for feature in self.features:
-            feature.draw(self.view_space.current_plane)
+            feature.changeViewPlane()
 
     def reDrawAll(self):
         for feature in self.features:

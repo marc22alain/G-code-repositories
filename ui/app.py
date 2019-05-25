@@ -76,9 +76,5 @@ class Application(Frame):
 
     def setViewPlane(self):
         plane = self.view_plane_var.get()
-        print 'plane'
-        print plane
-        print self.view_space.view_plane
-        self.view_space.view_plane = plane
-        self.feature_manager.work_piece.drawGeometry()
-        self.feature_manager.reDrawAll()
+        self.view_space.changeViewPlane(plane)
+        self.feature_manager.changeViewPlane()
