@@ -50,7 +50,6 @@ class CircularGroove(DepthSteppingFeature):
             self.entities['XY'][0].setAllByCenterRadius((refX, refY, radius - bit_radius), options).draw()
             self.entities['XY'][1].setAllByCenterRadius((refX, refY, radius + bit_radius), options).draw()
 
-
     def _drawYZentities(self):
         basic_params, cut_depth, diameter, refX, refY = self.getParams()
         options = {"tag":"geometry","outline":"yellow","fill":None}

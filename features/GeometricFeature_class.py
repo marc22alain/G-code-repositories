@@ -126,7 +126,7 @@ class GeometricFeature:
         '''
         Core interface
         '''
-        for entity in self.entities:
+        for entity in self.entities[self.current_plane]:
             entity.remove()
         self.feature_manager.deleteFeature(self)
 
