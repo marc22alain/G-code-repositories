@@ -1,6 +1,7 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
 from ODCircularGroove_class import ODCircularGroove
 from option_queries import *
+from drawn_entities import Circle, Rectangle
 from utilities import Glib as G
 import inspect
 
@@ -24,7 +25,7 @@ class CircularPocket(DepthSteppingFeature):
 
     def _getInstructions(self, sequence):
         file_text = self.addDebug(inspect.currentframe())
-        diameter, basic_params = self.getParams()
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
         current_od = basic_params['bit_diameter']
         od_feature = self.child_features[ODCircularGroove]
         while current_od < diameter:
@@ -59,9 +60,14 @@ class CircularPocket(DepthSteppingFeature):
         circ_groove_child.option_queries[PathDiameterQuery].setValue(od)
         circ_groove_child.self_managed_depth = False
 
+
     def getParams(self):
+        basic_params = self.getBasicParams()
+        cut_depth = self.option_queries[CutDepthQuery].getValue()
         diameter = self.option_queries[PathDiameterQuery].getValue()
-        return (diameter, self.getBasicParams())
+        refX = self.option_queries[ReferenceXQuery].getValue()
+        refY = self.option_queries[ReferenceYQuery].getValue()
+        return (basic_params, cut_depth, diameter, refX, refY)
 
     def getOverlap(self):
         '''
@@ -71,3 +77,44 @@ class CircularPocket(DepthSteppingFeature):
         Unit is mm of course.
         '''
         return 0.5
+
+    def _drawXYentities(self):
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
+        radius = diameter / 2
+        if len(self.entities['XY']) == 0:
+            self.entities['XY'].append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius), options).draw())
+        else:
+            self.entities['XY'][0].setAllByCenterRadius((refX, refY, radius), options).draw()
+
+    def _drawYZentities(self):
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
+        radius = diameter / 2
+        stock_height = basic_params['stock_height']
+        if len(self.entities['YZ']) == 0:
+            self.entities['YZ'].append(Rectangle(self.view_space).setAll(
+                (refY - radius, stock_height - cut_depth, refY + radius, stock_height),
+                options
+            ).draw())
+        else:
+            self.entities['YZ'][0].setAll(
+                (refY - radius, stock_height - cut_depth, refY + radius, stock_height),
+                options
+            ).draw()
+
+    def _drawXZentities(self):
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        basic_params, cut_depth, diameter, refX, refY = self.getParams()
+        radius = diameter / 2
+        stock_height = basic_params['stock_height']
+        if len(self.entities['XZ']) == 0:
+            self.entities['XZ'].append(Rectangle(self.view_space).setAll(
+                (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
+                options
+            ).draw())
+        else:
+            self.entities['XZ'][0].setAll(
+                (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
+                options
+            ).draw()
