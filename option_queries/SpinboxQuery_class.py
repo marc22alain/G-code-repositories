@@ -25,12 +25,18 @@ class SpinboxQuery(Query):
         assert type(self.options["values"]) == type(()), "'values' argument must be a tuple"
 
     def insertQuery(self, master, row_num):
+        try:
+            stored = self.var.get()
+        except:
+            stored = False
         self.label = Label(master, text=self.options["name"])
         self.label.grid(row=row_num, column=0)
         # this resets the associated variable, so must elsewhere store the previously chosen value,
         # then restore after defining
         self.input = Spinbox(master, values=self.options["values"], textvariable=self.var, width=13)
         self.input.grid(row=row_num, column=1)
+        if stored:
+            self.var.set(stored)
 
     def getValue(self):
         return self.var.get()
