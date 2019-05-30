@@ -85,3 +85,10 @@ class GeometricEntity:
         for id in self.ids:
             self.view_space.canvas.delete(id)
         self.ids = []
+
+    def move(self, delta_x, delta_y):
+        view_scale = self.view_space.view_scale
+        for id in self.ids:
+            # TODO: leaky abstraction, also make this a lambda !
+            self.view_space.canvas.move(id, view_scale * delta_x, - view_scale * delta_y)
+

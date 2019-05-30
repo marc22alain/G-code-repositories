@@ -150,3 +150,15 @@ class RoundedRectangle(GeometricEntity):
             mapping_y(self.y2),
             mapping_x(self.x2 - diameter),
             mapping_y(self.y2 - diameter))
+
+    def getParams(self):
+        return (
+            [
+                self.x1,
+                self.y1,
+                self.x2,
+                self.y2,
+                self.radius
+            ],
+            self.options
+        )

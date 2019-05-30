@@ -1,6 +1,7 @@
 from DistributedFeature_class import DistributedFeature
 from option_queries import *
 from utilities import Glib as G
+from drawn_entities import DuplicateEntity
 
 
 class LinearDistribution(DistributedFeature):
@@ -32,7 +33,7 @@ class LinearDistribution(DistributedFeature):
         return file_text
 
     def manageChild(self):
-        print 'managing child'
+        pass
         # open a dialog for this task
 
     def getChild(self):
@@ -44,6 +45,7 @@ class LinearDistribution(DistributedFeature):
         if child_class not in self.child_features.keys():
             # LinearDistribution standing in as FeatureManager
             self.child_features = { child_class: child_class(self, self.view_space) }
+        self.drawGeometry()
 
     # TODO: determine whether this can go into the GeometricFeature class
     # ... it seems applicable to structures that hold many features
@@ -61,10 +63,22 @@ class LinearDistribution(DistributedFeature):
         return file_text
 
     def _drawXYentities(self):
-        raise TypeError('LinearDistribution does not implement _drawXYentities')
+        while len(self.entities['XY']) > 0:
+            self.entities['XY'].pop().remove()
+        child = self.child_features.values()[0]
+        child_entities = child.entities['XY']
+        delta_X = self.option_queries[DeltaXQuery].getValue()
+        delta_Y = self.option_queries[DeltaYQuery].getValue()
+        for i in xrange(self.option_queries[NumRepeatQuery].getValue() - 1):
+            for entity in child_entities:
+                self.entities['XY'].append(DuplicateEntity(self.view_space, entity).draw().move(delta_X * (i + 2), delta_Y * (i + 2)))
+        for entity in child_entities:
+            entity.move(delta_X, delta_Y)
 
     def _drawYZentities(self):
-        raise TypeError('LinearDistribution does not implement _drawYZentities')
+        pass
+        # raise TypeError('LinearDistribution does not implement _drawYZentities')
 
     def _drawXZentities(self):
-        raise TypeError('LinearDistribution does not implement _drawXZentities')
+        pass
+        # raise TypeError('LinearDistribution does not implement _drawXZentities')

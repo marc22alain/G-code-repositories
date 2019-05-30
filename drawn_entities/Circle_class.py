@@ -41,3 +41,14 @@ class Circle(GeometricEntity):
         mapping_x = self.view_space.x_conv
         mapping_y = self.view_space.y_conv
         canvas.coords(self.ids[0], mapping_x(self.x1), mapping_y(self.y1), mapping_x(self.x2), mapping_y(self.y2))
+
+    def getParams(self):
+        return (
+            [
+                self.x1,
+                self.y1,
+                self.x2,
+                self.y2
+            ],
+            self.options
+        )
