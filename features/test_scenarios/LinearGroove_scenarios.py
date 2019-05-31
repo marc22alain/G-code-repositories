@@ -33,8 +33,8 @@ lg_scenarios = {
         'machine_config': machine_config,
         'work_piece_config': work_piece_config,
         'config': {
-            DeltaXQuery: 3.75,
-            DeltaYQuery: 2.1,
+            DeltaXQuery: 0,
+            DeltaYQuery: 13.75,
             ReferenceXQuery: 50,
             ReferenceYQuery: 45,
             CutPerPassQuery: 2,
