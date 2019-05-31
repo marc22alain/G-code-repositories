@@ -61,7 +61,7 @@ class Application(Frame):
 
     def createFeature(self):
         feature_class = self.current_feature_choice.getValue()
-        self.feature_manager.addFeature(feature_class)
+        self.feature_manager.addChild(feature_class)
 
     def genCode(self):
         print self.feature_manager.getGCode()

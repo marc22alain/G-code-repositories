@@ -1,3 +1,4 @@
+from AbstractFeatureManager_class import AbstractFeatureManager
 from machines import SimpleMachine
 from workpieces import SimpleWorkpiece
 from ui import OptionQueryDialog
@@ -5,7 +6,7 @@ from utilities import Glib as G
 from features import *
 
 
-class FeatureManager(object):
+class FeatureManager(AbstractFeatureManager):
     def __init__(self, app=None, view_space=None):
         self.machine = SimpleMachine(self)
         self.work_piece = SimpleWorkpiece(self, view_space)
@@ -13,7 +14,7 @@ class FeatureManager(object):
         self.app = app
         self.view_space = view_space
 
-    def addFeature(self, feature_class):
+    def addChild(self, feature_class):
         feature = feature_class(self, self.view_space)
         print feature
         self.features.append(feature)
@@ -29,7 +30,7 @@ class FeatureManager(object):
             print 'running CANCEL function'
         OptionQueryDialog(self.app, feature.getOptionQueries(), feature.name, addFunction, cancelFunction)
 
-    def deleteFeature(self, feature):
+    def deleteChild(self, feature):
         self.app.feature_list.removeFeature(feature)
         self.features.remove(feature)
 
@@ -50,3 +51,5 @@ class FeatureManager(object):
         for feature in self.features:
             feature.drawGeometry()
 
+    def childDidUpdate(self):
+        pass

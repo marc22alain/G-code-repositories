@@ -40,17 +40,12 @@ class LinearDistribution(DistributedFeature):
         return self.child_features.values()[0]
 
     # TODO: decide whether this should be explicitly `updateFeature`
-    def updateFeatures(self):
+    def addChild(self):
         child_class = self.option_queries[GeometricFeatureQuery].getValue()
         if child_class not in self.child_features.keys():
             # LinearDistribution standing in as FeatureManager
             self.child_features = { child_class: child_class(self, self.view_space) }
         self.drawGeometry()
-
-    # TODO: determine whether this can go into the GeometricFeature class
-    # ... it seems applicable to structures that hold many features
-    def deleteFeature(self, feature):
-        self.child_features = { k:v for k,v in self.child_features.iteritems() if v != feature }
 
     def distributeChildFeature(self):
         file_text = self.child_features.values()[0].getGCode()
@@ -82,3 +77,6 @@ class LinearDistribution(DistributedFeature):
     def _drawXZentities(self):
         pass
         # raise TypeError('LinearDistribution does not implement _drawXZentities')
+
+    def childDidUpdate(self, feature_instance):
+        pass

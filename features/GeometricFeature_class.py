@@ -128,7 +128,7 @@ class GeometricFeature:
         '''
         for entity in self.entities[self.current_plane]:
             entity.remove()
-        self.feature_manager.deleteFeature(self)
+        self.feature_manager.deleteChild(self)
 
     def moveToReference(self):
         '''
@@ -163,6 +163,10 @@ class GeometricFeature:
             return ''
 
     def didUpdateQueries(self):
+        '''
+        Maybe trigger notifications instead.
+        self.continuation.trigger()
+        '''
         self.drawGeometry()
 
     def changeViewPlane(self):
