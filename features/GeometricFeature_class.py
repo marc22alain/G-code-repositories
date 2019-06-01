@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import abc
+from observeder import Observable
 from option_queries import *
 from utilities import Glib as G
 import inspect
 import os
 
-class GeometricFeature:
+class GeometricFeature(Observable):
     __metaclass__ = abc.ABCMeta
 
     common_query_classes = [
@@ -14,12 +15,7 @@ class GeometricFeature:
     ]
 
     def __init__(self, feature_manager, view_space):
-        self.entities = {
-            'XY': [],
-            'YZ': [],
-            'XZ': []
-        }
-        self.current_plane = view_space.view_plane
+        Observable.__init__(self)
         self.feature_manager = feature_manager
         self.view_space = view_space
         self.machine = feature_manager.machine
@@ -28,6 +24,7 @@ class GeometricFeature:
         self.option_queries.update({ key: None for key in self.common_query_classes })
         self.child_features = { key: None for key in self.child_feature_classes }
         self.makeChildren()
+        self.drawing_class = None
 
     @abc.abstractmethod
     def getGCode(self):
@@ -41,26 +38,18 @@ class GeometricFeature:
     def returnToHome(self):
         pass
 
+    @abc.abstractmethod
+    def getParams(self):
+        pass
+
+    @abc.abstractmethod
+    def makeDrawingClass(self):
+        pass
+
     def drawGeometry(self):
-        view_plane = self.view_space.view_plane
-        if view_plane == 'XY':
-            self._drawXYentities()
-        elif view_plane == 'YZ':
-            self._drawYZentities()
-        else:
-            self._drawXZentities()
-
-    @abc.abstractmethod
-    def _drawXYentities(self):
-        pass
-
-    @abc.abstractmethod
-    def _drawYZentities(self):
-        pass
-
-    @abc.abstractmethod
-    def _drawXZentities(self):
-        pass
+        print 'drawGeometry'
+        drawer = self.drawing_class()
+        drawer.draw()
 
     def validateParams(self):
         pass
@@ -126,8 +115,7 @@ class GeometricFeature:
         '''
         Core interface
         '''
-        for entity in self.entities[self.current_plane]:
-            entity.remove()
+        self.removeObservers('remove')
         self.feature_manager.deleteChild(self)
 
     def moveToReference(self):
@@ -167,11 +155,14 @@ class GeometricFeature:
         Maybe trigger notifications instead.
         self.continuation.trigger()
         '''
-        self.drawGeometry()
+        print 'didUpdateQueries'
+        if self.drawing_class == None:
+            self.drawing_class = self.makeDrawingClass()
+        else:
+            self.drawing_class.params = self.getParams()
+            self.notifyObservers('draw')
 
     def changeViewPlane(self):
-        for entity in self.entities[self.current_plane]:
-            entity.remove()
-        self.current_plane = self.view_space.view_plane
+        self.removeObservers('remove')
         self.drawGeometry()
 

@@ -23,6 +23,7 @@ class FeatureManager(AbstractFeatureManager):
             if hasattr(feature, 'is_composed'):
                 feature.updateFeatures()
             # would like a better binding with self.features
+            feature.didUpdateQueries()
             self.app.feature_list.insertFeature(feature)
             feature.drawGeometry()
         def cancelFunction():
