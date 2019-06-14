@@ -19,10 +19,10 @@ class Query:
         else:
             self.value = 0
 
-    def insertQuery(self, master, row_num):
     def getValue(self):
         return self.value
 
+    def setValue(self, value):
         print '* * *** * * ** * ** **     ran setValue !     * * *** * * ** * *'
         self.value = value
         return self.var.set(value)
