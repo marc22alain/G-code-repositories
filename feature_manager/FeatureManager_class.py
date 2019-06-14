@@ -7,29 +7,11 @@ from features import *
 
 
 class FeatureManager(AbstractFeatureManager):
-    def __init__(self, app=None, view_space=None):
+    def __init__(self, view_space=None):
         self.machine = SimpleMachine(self)
         self.work_piece = SimpleWorkpiece(self, view_space)
-        self.features = []
-        self.app = app
         self.view_space = view_space
-
-    def addChild(self, feature_class):
-        feature = feature_class(self, self.view_space)
-        print feature
-        self.features.append(feature)
-        def addFunction():
-            print 'running OK function'
-            if hasattr(feature, 'is_composed'):
-                feature.updateFeatures()
-            # would like a better binding with self.features
-            feature.didUpdateQueries()
-            self.app.feature_list.insertFeature(feature)
-            feature.drawGeometry()
-        def cancelFunction():
-            self.features.pop()
-            print 'running CANCEL function'
-        OptionQueryDialog(self.app, feature.getOptionQueries(), feature.name, addFunction, cancelFunction)
+        AbstractFeatureManager.__init__(self)
 
     def deleteChild(self, feature):
         self.app.feature_list.removeFeature(feature)

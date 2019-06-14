@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from Tkinter import *
 from option_queries import GeometricFeatureQuery
-from feature_manager import FeatureManager
+from feature_manager import AbstractFeatureManager, FeatureManager
 
 from OptionQueryDialog_class import OptionQueryDialog
 from FeatureList_class import FeatureList
@@ -18,6 +18,7 @@ class Application(Frame):
         Frame.__init__(self, master)
         self.grid()
         self.createSubframes()
+        AbstractFeatureManager.app = self
 
         # create or inject machine and workpiece
 
@@ -26,7 +27,8 @@ class Application(Frame):
         self.geo_frame.grid(row=0, column=0)
         self.view_space = ViewSpace(self.geo_frame, view_init)
         # TODO resolve who owns this
-        self.feature_manager = FeatureManager(self, self.view_space)
+        self.feature_manager = FeatureManager(self.view_space)
+        self.feature_manager.root = True
 
         row_num = 1
         self.entry_frame = Frame(self)

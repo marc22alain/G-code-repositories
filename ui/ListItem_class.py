@@ -40,7 +40,7 @@ class ListItem(Frame):
         if hasattr(self.item, 'is_composed'):
             print 'ListItem row_num'
             # print self.sub_item['row_num']
-            self.item.updateFeatures()
+            self.item.addChild()
         self.item.didUpdateQueries()
 
     def deleteItem(self):

@@ -68,7 +68,7 @@ class ScenarioRunner(object):
 
     def configureAll(self, feature, scenario):
         vs = MockViewSpace(MockCanvas())
-        fm = FeatureManager(None, vs)
+        fm = FeatureManager(vs)
         feat = feature(fm, vs)
         fm.features.append(feat)
         self.configure(fm.machine, scenario['machine_config'])
