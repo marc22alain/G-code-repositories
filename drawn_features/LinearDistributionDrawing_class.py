@@ -2,6 +2,7 @@ from DistributedFeatureDrawing_class import DistributedFeatureDrawing
 from observeder import AutoObserver
 
 # used by Peck and CircularPocket
+# used by LinearDistribution
 class LinearDistributionDrawing(DistributedFeatureDrawing, AutoObserver):
 
     child_object_function = None
@@ -9,6 +10,7 @@ class LinearDistributionDrawing(DistributedFeatureDrawing, AutoObserver):
     def __init__(self):
         AutoObserver.__init__(self)
         FeatureDrawing.__init__(self)
+        DistributedFeatureDrawing.__init__(self)
 
     def _drawXYentities(self):
         self._clearEntities('XY')
