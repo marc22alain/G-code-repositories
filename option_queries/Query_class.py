@@ -13,22 +13,25 @@ class Query:
     '''
     def __init__(self):
         self.assertValidInit()
+        # Is used to set/get query dialog data.
         self.var = self.options["type"]()
+        # Is the Query's stored data.
         if "default" in self.options:
             self.value = self.options["default"]
         else:
+            # May get bugs here:
             self.value = 0
 
     def getValue(self):
         return self.value
 
     def setValue(self, value):
-        print '* * *** * * ** * ** **     ran setValue !     * * *** * * ** * *'
         self.value = value
-        return self.var.set(value)
 
     def updateValue(self):
-        print 'will update value'
+        '''
+        Update from query dialog.
+        '''
         self.value = self.var.get()
 
     def getName(self):
@@ -40,6 +43,9 @@ class Query:
 
     @abc.abstractmethod
     def insertQuery(self, master, row_num):
+        '''
+        Insert into query dialogs.
+        '''
         pass
 
     @abc.abstractmethod
