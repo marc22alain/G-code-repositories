@@ -86,9 +86,19 @@ class GeometricEntity:
             self.view_space.canvas.delete(id)
         self.ids = []
 
-    def move(self, delta_x, delta_y):
+    def move(self, params):
         view_scale = self.view_space.view_scale
+        if self.view_space.view_plane == 'XY':
+            move_X = params['delta_X']
+            move_Y = params['delta_Y']
+        elif self.view_space.view_plane == 'YZ':
+            move_X = params['delta_Y']
+            move_Y = params['delta_Z']
+        else:
+            move_X = params['delta_X']
+            move_Y = params['delta_Z']
+
         for id in self.ids:
             # TODO: leaky abstraction, also make this a lambda !
-            self.view_space.canvas.move(id, view_scale * delta_x, - view_scale * delta_y)
+            self.view_space.canvas.move(id, view_scale * move_X, - view_scale * move_Y)
 

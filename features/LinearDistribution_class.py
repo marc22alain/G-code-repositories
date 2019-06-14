@@ -1,10 +1,14 @@
 from DistributedFeature_class import DistributedFeature
+from drawn_features import LinearDistributionDrawing
 from option_queries import *
 from utilities import Glib as G
 from drawn_entities import DuplicateEntity
 
 
 class LinearDistribution(DistributedFeature):
+    '''
+    Is composed of a single feature.
+    '''
     name = 'Linear Distribution'
     user_selectable = True
     option_query_classes = [
@@ -13,8 +17,6 @@ class LinearDistribution(DistributedFeature):
         DeltaYQuery,
         NumRepeatQuery
     ]
-
-    is_composed = True
 
     child_feature_classes = []
 
@@ -32,51 +34,34 @@ class LinearDistribution(DistributedFeature):
         file_text += G.G0_XY((- (delta_X * num_repeats), - (delta_Y * num_repeats)))
         return file_text
 
-    def manageChild(self):
-        pass
-        # open a dialog for this task
-
     def getChild(self):
-        return self.child_features.values()[0]
-
-    # TODO: decide whether this should be explicitly `updateFeature`
-    def addChild(self):
-        child_class = self.option_queries[GeometricFeatureQuery].getValue()
-        if child_class not in self.child_features.keys():
-            # LinearDistribution standing in as FeatureManager
-            self.child_features = { child_class: child_class(self, self.view_space) }
-        self.drawGeometry()
+        return self.features[0]
 
     def distributeChildFeature(self):
-        file_text = self.child_features.values()[0].getGCode()
+        file_text = self.features[0].getGCode()
         delta_X = self.option_queries[DeltaXQuery].getValue()
         delta_Y = self.option_queries[DeltaYQuery].getValue()
         for i in xrange(self.option_queries[NumRepeatQuery].getValue() - 1):
             file_text += self.machine.setMode('INCR')
             file_text += G.G0_XY((delta_X, delta_Y))
-            file_text += self.child_features.values()[0].getGCode()
+            file_text += self.features[0].getGCode()
         return file_text
 
-    def _drawXYentities(self):
-        while len(self.entities['XY']) > 0:
-            self.entities['XY'].pop().remove()
-        child = self.child_features.values()[0]
-        child_entities = child.entities['XY']
-        delta_X = self.option_queries[DeltaXQuery].getValue()
-        delta_Y = self.option_queries[DeltaYQuery].getValue()
-        for i in xrange(self.option_queries[NumRepeatQuery].getValue() - 1):
-            for entity in child_entities:
-                self.entities['XY'].append(DuplicateEntity(self.view_space, entity).draw().move(delta_X * (i + 2), delta_Y * (i + 2)))
-        for entity in child_entities:
-            entity.move(delta_X, delta_Y)
+    def getParams(self):
+        basic_params = self.getBasicParams()
+        basic_params.update({
+            'refX': self.option_queries[ReferenceXQuery].getValue(),
+            'refY': self.option_queries[ReferenceYQuery].getValue(),
+            'delta_X': self.option_queries[DeltaXQuery].getValue(),
+            'delta_Y': self.option_queries[DeltaYQuery].getValue(),
+            'num_repeats': self.option_queries[NumRepeatQuery].getValue()
+        })
+        return basic_params
 
-    def _drawYZentities(self):
-        pass
-        # raise TypeError('LinearDistribution does not implement _drawYZentities')
-
-    def _drawXZentities(self):
-        pass
-        # raise TypeError('LinearDistribution does not implement _drawXZentities')
-
-    def childDidUpdate(self, feature_instance):
-        pass
+    def makeDrawingClass(self):
+        class Anon(LinearDistributionDrawing):
+            params = self.getParams()
+            observable = self
+            child_object_function = self.getChild().makeDrawingClass()
+            view_space = self.view_space
+        return Anon

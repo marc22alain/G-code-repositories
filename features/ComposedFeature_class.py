@@ -4,9 +4,15 @@ import abc
 
 class ComposedFeature(GeometricFeature, AbstractFeatureManager):
 
+    is_composed = True
+
+    def __init__(self, feature_manager, view_space):
+        AbstractFeatureManager.__init__(self)
+        GeometricFeature.__init__(self, feature_manager, view_space)
+
     def deleteChild(self, feature_instance):
         '''
         Delete the feature instance.
         TODO: maybe move this to DistributedFeature
         '''
-        self.child_features = { k:v for k,v in self.child_features.iteritems() if v != feature_instance }
+        self.features.pop(feature_instance)

@@ -4,7 +4,7 @@ class FeatureDrawing:
     __metaclass__ = abc.ABCMeta
 
     def __init__(self):
-        self.transform_funcs = []
+        self.transforms = []
         self.entities = {
             'XY': [],
             'YZ': [],
@@ -19,13 +19,25 @@ class FeatureDrawing:
             self._drawYZentities()
         else:
             self._drawXZentities()
+        # Separating out the execution of transforms only makes sense at the leaf feature.
         self.executeTransforms()
+        return self
 
-    def addTransform(self, func):
-        self.transform_funcs.append(func)
+    def addTransform(self, transforms):
+        self.transforms = transforms
+        return self
 
     def executeTransforms(self):
-        # chain execution of the transforms
+        '''
+        This method only runs in leaf features.
+        '''
+        # Chain execution of the transforms
+        for transform in self.transforms:
+            print transform
+            if 'move' in transform.keys():
+                self.move(transform['move'])
+            if 'rotate' in transform.keys():
+                self.rotate(transform['rotate'])
         return self
 
     def remove(self):
@@ -33,13 +45,21 @@ class FeatureDrawing:
         for entity in reduce(add, self.entities.values()):
             entity.remove()
 
-    @abc.abstractmethod
-    def move(self, params):
-        pass
+    def move(self, params = None):
+        '''
+        This method only runs in leaf features.
+        '''
+        if params:
+            for entity in self.entities[self.view_space.view_plane]:
+                entity.move(params)
 
-    @abc.abstractmethod
-    def rotate(self, params):
-        pass
+    def rotate(self, params = None):
+        '''
+        This method only runs in leaf features.
+        '''
+        if params:
+            for entity in self.entities[self.view_space.view_plane]:
+                entity.rotate(params)
 
     @abc.abstractmethod
     def _drawXYentities(self):

@@ -53,9 +53,3 @@ class HoleDrawing(FeatureDrawing, AutoObserver):
                 (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
                 options
             ).draw()
-
-    def move(self):
-        pass
-
-    def rotate(self):
-        pass

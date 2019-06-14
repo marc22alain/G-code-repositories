@@ -47,7 +47,6 @@ class GeometricFeature(Observable):
         pass
 
     def drawGeometry(self):
-        print 'drawGeometry'
         drawer = self.drawing_class()
         drawer.draw()
 
@@ -151,11 +150,6 @@ class GeometricFeature(Observable):
             return ''
 
     def didUpdateQueries(self):
-        '''
-        Maybe trigger notifications instead.
-        self.continuation.trigger()
-        '''
-        print 'didUpdateQueries'
         if self.drawing_class == None:
             self.drawing_class = self.makeDrawingClass()
         else:
