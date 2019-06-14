@@ -34,6 +34,8 @@ class ListItem(Frame):
 
     def okFunction(self):
         queries = self.item.getOptionQueries().values()
+        for query in queries:
+            query.updateValue()
         print 'confirming new value'
         for q in queries:
             print q.getValue()

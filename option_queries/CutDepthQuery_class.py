@@ -9,4 +9,4 @@ class CutDepthQuery(EntryQuery):
     }
 
     def validate(self):
-        return self.getValue() > 0
+        return self.var.get() > 0

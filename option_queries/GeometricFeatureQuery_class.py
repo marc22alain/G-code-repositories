@@ -14,10 +14,11 @@ class GeometricFeatureQuery(SpinboxQuery):
             'name': 'Feature',
             'type': StringVar,
             'values': tuple(classes_dict.keys()),
-            'hint': 'What feature to make'
+            'hint': 'What feature to make',
+            'default': 'Peck'
         }
         SpinboxQuery.__init__(self)
 
     def getValue(self):
         # translate from string to feature class
-        return self.classes_dict[self.var.get()]
+        return self.classes_dict[self.value]

@@ -9,4 +9,4 @@ class BogusQuery(EntryQuery):
     }
 
     def validate(self):
-        return len(self.getValue()) > 0
+        return len(self.var.get()) > 0

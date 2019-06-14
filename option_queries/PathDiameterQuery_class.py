@@ -10,4 +10,4 @@ class PathDiameterQuery(EntryQuery):
 
     def validate(self):
         # TODO: consider whether == 0 is acceptable, for Peck ?
-        return self.getValue() > 0
+        return self.var.get() > 0

@@ -20,6 +20,9 @@ class AbstractFeatureManager:
         self.features.append(feature)
         # passed in as callback
         def addFunction():
+            queries = feature.getOptionQueries().values()
+            for query in queries:
+                query.updateValue()
             if hasattr(feature, 'is_composed'):
                 feature.addChild()
             # makes the initial call to makeDrawingClass()

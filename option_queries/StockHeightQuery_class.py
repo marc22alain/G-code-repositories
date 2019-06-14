@@ -9,4 +9,4 @@ class StockHeightQuery(EntryQuery):
     }
 
     def validate(self):
-        return self.getValue() > 0
+        return self.var.get() > 0
