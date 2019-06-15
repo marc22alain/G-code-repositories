@@ -1,6 +1,7 @@
 import abc
 from ui import OptionQueryDialog
 from option_queries import *
+from utilities import log
 
 class AbstractFeatureManager:
     __metaclass__ = abc.ABCMeta
@@ -8,6 +9,7 @@ class AbstractFeatureManager:
     app = None
 
     def __init__(self):
+        log('AbstractFeatureManager ran __init__')
         self.features = []
         self.root = False   # default value; set to True for root by app
 
@@ -19,10 +21,12 @@ class AbstractFeatureManager:
             query.updateValue()
             feature_class = query.getValue()
         feature = feature_class(self, self.view_space)
+        log(feature)
         self.features.append(feature)
         # passed in as callback
         def addFunction():
             queries = feature.getOptionQueries().values()
+            log('running FeatureManager OK function: %s' % (self.__repr__()))
             if hasattr(feature, 'is_composed'):
                 feature.addChild()
             # makes the initial call to makeDrawingClass()
@@ -34,7 +38,7 @@ class AbstractFeatureManager:
         # passed in as callback
         def cancelFunction():
             self.features.pop()
-            print 'running CANCEL function'
+            log('running CANCEL function')
         OptionQueryDialog(self.app, feature.getOptionQueries(), feature.name, addFunction, cancelFunction)
 
     @abc.abstractmethod

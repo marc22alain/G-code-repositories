@@ -1,4 +1,5 @@
 from Tkinter import *
+from utilities import log
 
 class BasicDialog(Toplevel):
     '''
@@ -30,7 +31,7 @@ class BasicDialog(Toplevel):
         self.grab_set()
 
         if not self.initial_focus:
-            print 'WTF **********'
+            log('WTF **********')
             self.initial_focus = self
 
         self.protocol("WM_DELETE_WINDOW", self.cancel)
@@ -85,11 +86,11 @@ class BasicDialog(Toplevel):
         try:
             self.ok_callback()
         except AttributeError as e:
-            print 'no OK function defined - AttributeError'
-            print e
+            log('no OK function defined - AttributeError')
+            log(e)
         except TypeError as e:
-            print 'no OK function defined - TypeError'
-            print e
+            log('no OK function defined - TypeError')
+            log(e)
 
         self.close()
 
@@ -97,10 +98,10 @@ class BasicDialog(Toplevel):
         try:
             self.cancel_callback()
         except AttributeError as e:
-            print 'no CANCEL function defined - AttributeError'
-            print e
+            log('no CANCEL function defined - AttributeError')
+            log(e)
         except TypeError:
-            print 'no CANCEL function defined - TypeError'
+            log('no CANCEL function defined - TypeError')
         self.close()
 
     def close(self):

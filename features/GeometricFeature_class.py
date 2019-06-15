@@ -5,6 +5,7 @@ from option_queries import *
 from utilities import Glib as G
 import inspect
 import os
+from utilities import log
 
 class GeometricFeature(Observable):
     __metaclass__ = abc.ABCMeta
@@ -15,6 +16,7 @@ class GeometricFeature(Observable):
     ]
 
     def __init__(self, feature_manager, view_space):
+        log('GeometricFeature ran __init__')
         Observable.__init__(self)
         self.feature_manager = feature_manager
         self.view_space = view_space
@@ -47,6 +49,7 @@ class GeometricFeature(Observable):
         pass
 
     def drawGeometry(self):
+        log('GeometricFeature drawGeometry')
         drawer = self.drawing_class()
         drawer.draw()
 
@@ -145,13 +148,14 @@ class GeometricFeature(Observable):
         if 'DEBUG_GCODE' in os.environ.keys():
             trace = inspect.getframeinfo(frame)
             class_file = trace.filename.split('/')[-1].split('_class')[0]
-            return '# %s \n' % (class_file + '.' + trace.function + ' - line:' + str(trace.lineno))
+            return G.comment('# %s \n' % (class_file + '.' + trace.function + ' - line:' + str(trace.lineno)))
         else:
             return ''
 
     def didUpdateQueries(self):
         for query in self.option_queries.values():
             query.updateValue()
+        log('GeometricFeature didUpdateQueries')
         if self.drawing_class == None:
             self.drawing_class = self.makeDrawingClass()
         else:

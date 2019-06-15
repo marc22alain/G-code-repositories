@@ -1,4 +1,5 @@
 import abc
+from utilities import log
 
 class FeatureDrawing:
     __metaclass__ = abc.ABCMeta
@@ -24,6 +25,7 @@ class FeatureDrawing:
         return self
 
     def addTransform(self, transforms):
+        log('FeatureDrawing addTransform: %s' % (self.__repr__()))
         self.transforms = transforms
         return self
 
@@ -31,9 +33,11 @@ class FeatureDrawing:
         '''
         This method only runs in leaf features.
         '''
+        log('FeatureDrawing executeTransforms: %s' % (self.__repr__()))
         # Chain execution of the transforms
         for transform in self.transforms:
             print transform
+            log(transform)
             if 'move' in transform.keys():
                 self.move(transform['move'])
             if 'rotate' in transform.keys():
@@ -49,6 +53,7 @@ class FeatureDrawing:
         '''
         This method only runs in leaf features.
         '''
+        log('******* FeatureDrawing called move(): %s' % (self.__repr__()))
         if params:
             for entity in self.entities[self.view_space.view_plane]:
                 entity.move(params)
@@ -57,6 +62,7 @@ class FeatureDrawing:
         '''
         This method only runs in leaf features.
         '''
+        log('******* FeatureDrawing called rotate(): %s' % (self.__repr__()))
         if params:
             for entity in self.entities[self.view_space.view_plane]:
                 entity.rotate(params)

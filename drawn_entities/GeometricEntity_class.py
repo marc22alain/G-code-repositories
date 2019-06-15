@@ -3,6 +3,7 @@ GeometricEntity sets the pattern for wrapping TKinter canvas classes.
 """
 
 import abc
+from utilities import log
 
 class GeometricEntity:
     __metaclass__ = abc.ABCMeta
@@ -87,6 +88,7 @@ class GeometricEntity:
         self.ids = []
 
     def move(self, params):
+        log('GeometricEntity move()')
         view_scale = self.view_space.view_scale
         if self.view_space.view_plane == 'XY':
             move_X = params['delta_X']

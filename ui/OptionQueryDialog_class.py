@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from Tkinter import *
 from BasicDialog_class import BasicDialog
+from utilities import log
 
 class OptionQueryDialog(BasicDialog):
     def __init__(self, parent, option_queries, feature_name, ok_callback=None, cancel_callback=None):
@@ -38,8 +39,8 @@ class OptionQueryDialog(BasicDialog):
             try:
                 query.getValue()
                 if not query.validate():
-                    print query.name
-                    print 'query FAILED validation'
+                    log(query.name)
+                    log('query FAILED validation')
                     return False
             # for instance attempting to convert 'bogus' to a numerical type
             except ValueError:
@@ -51,5 +52,5 @@ class OptionQueryDialog(BasicDialog):
         Override to set the OptionQuery values
         '''
         # for query in self.option_queries.values():
-        #     print query.name
-        #     print query.getValue()
+        #     log(query.name)
+        #     log(query.getValue())

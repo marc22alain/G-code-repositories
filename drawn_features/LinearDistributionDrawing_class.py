@@ -1,5 +1,6 @@
 from DistributedFeatureDrawing_class import DistributedFeatureDrawing
 from observeder import AutoObserver
+from utilities import log
 
 # used by LinearDistribution
 class LinearDistributionDrawing(DistributedFeatureDrawing, AutoObserver):
@@ -12,6 +13,7 @@ class LinearDistributionDrawing(DistributedFeatureDrawing, AutoObserver):
 
     def _drawXYentities(self):
         self._clearEntities('XY')
+        log('LinearDistributionDrawing _drawXYentities: %s' % (self.__repr__()))
         delta_X = self.params['delta_X']
         delta_Y = self.params['delta_Y']
         refX = self.params['refX']

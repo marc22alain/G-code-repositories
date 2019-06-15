@@ -1,6 +1,7 @@
 from FeatureDrawing_class import FeatureDrawing
 from observeder import AutoObserver
 from drawn_entities import Circle, Rectangle
+from utilities import log
 
 # used by Peck and CircularPocket
 class HoleDrawing(FeatureDrawing, AutoObserver):
@@ -8,6 +9,7 @@ class HoleDrawing(FeatureDrawing, AutoObserver):
     def __init__(self):
         AutoObserver.__init__(self)
         FeatureDrawing.__init__(self)
+        log('HoleDrawing __init__')
 
     def _drawXYentities(self):
         options = {"tag":"geometry","outline":"yellow","fill":None}

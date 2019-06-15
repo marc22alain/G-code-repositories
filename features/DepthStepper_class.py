@@ -49,7 +49,7 @@ class DepthStepper(GeometricFeature):
                 file_text += self.machine.setMode('ABS')
                 file_text += G.G1_Z(stock_height)
                 file_text += G.set_dwell(0.5)
-                file_text += ('# ' + sequence + '\n')
+                file_text += G.comment('# ' + sequence + '\n')
                 file_text += instruction_callback(sequence)
                 file_text += self.addDebug(inspect.currentframe())
                 sequence = 'next'

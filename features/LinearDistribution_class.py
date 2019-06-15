@@ -3,6 +3,7 @@ from drawn_features import LinearDistributionDrawing
 from option_queries import *
 from utilities import Glib as G
 from drawn_entities import DuplicateEntity
+from utilities import log
 
 
 class LinearDistribution(DistributedFeature):
@@ -35,6 +36,7 @@ class LinearDistribution(DistributedFeature):
         return file_text
 
     def getChild(self):
+        log(self.features)
         return self.features[0]
 
     def distributeChildFeature(self):
@@ -59,6 +61,7 @@ class LinearDistribution(DistributedFeature):
         return basic_params
 
     def makeDrawingClass(self):
+        log('LinearDistribution makeDrawingClass: %s' % (self.__repr__()))
         class Anon(LinearDistributionDrawing):
             params = self.getParams()
             observable = self

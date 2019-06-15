@@ -168,3 +168,9 @@ def pause():
     the next line when the cycle start button is pressed.
     '''
     return 'M0 \n'
+
+def comment(message):
+    '''
+    Returns the message in LinuxCNC comment format.
+    '''
+    return '(%s)' % (message)

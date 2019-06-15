@@ -3,6 +3,7 @@ from drawn_features import HoleDrawing
 from utilities import Glib as G
 from option_queries import *
 import inspect
+from utilities import log
 
 
 class Peck(GeometricFeature):
@@ -50,6 +51,7 @@ class Peck(GeometricFeature):
         return basic_params
 
     def makeDrawingClass(self):
+        log('Peck makeDrawingClass')
         class Anon(HoleDrawing):
             params = self.getParams()
             # options = self.getOptions()

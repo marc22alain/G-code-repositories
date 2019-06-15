@@ -1,6 +1,7 @@
 from FeatureDrawing_class import FeatureDrawing
 from observeder import AutoObserver
 from drawn_entities import Rectangle, RoundedRectangle
+from utilities import log
 
 # used by LinearGroove
 class RoundedRectangleDrawing(FeatureDrawing, AutoObserver):
@@ -8,7 +9,7 @@ class RoundedRectangleDrawing(FeatureDrawing, AutoObserver):
     def __init__(self):
         AutoObserver.__init__(self)
         FeatureDrawing.__init__(self)
-        print 'RoundedRectangleDrawing __init__'
+        log('RoundedRectangleDrawing __init__')
 
     def _drawXYentities(self):
         options = {"tag":"geometry","outline":"yellow","fill":None}

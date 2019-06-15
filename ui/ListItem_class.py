@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from Tkinter import *
 from OptionQueryDialog_class import OptionQueryDialog
+from utilities import log
 
 class ListItem(Frame):
     def __init__(self, master, item):
@@ -34,12 +35,12 @@ class ListItem(Frame):
 
     def okFunction(self):
         queries = self.item.getOptionQueries().values()
-        print 'confirming new value'
+        log('confirming new value')
         for q in queries:
-            print q.getValue()
+            log(q.getValue())
         if hasattr(self.item, 'is_composed'):
-            print 'ListItem row_num'
-            # print self.sub_item['row_num']
+            log('ListItem row_num')
+            # log(self.sub_item['row_num'])
             self.item.addChild()
         self.item.didUpdateQueries()
 

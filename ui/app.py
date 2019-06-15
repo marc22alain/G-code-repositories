@@ -8,7 +8,7 @@ from FeatureList_class import FeatureList
 from ListItem_class import ListItem
 from ViewSpace_class import ViewSpace
 import os
-
+from utilities import log
 
 IN_AXIS = os.environ.has_key("AXIS_PROGRESS_BAR")
 
@@ -70,7 +70,7 @@ class Application(Frame):
         self.feature_manager.addChild(feature_class)
 
     def genCode(self):
-        print self.feature_manager.getGCode()
+        return self.feature_manager.getGCode()
 
     def insertMachine(self, row_num):
         item = ListItem(self.entry_frame, self.feature_manager.machine)
@@ -98,15 +98,13 @@ class Application(Frame):
         self.printButton.grid(row=row_num, column=0, columnspan=2)
 
     def printToConsole(self):
-        self.g_code = self.genCode()
-        print self.g_code
+        log(self.genCode())
         # since self.quit() does not work on OSX
         os._exit(0)
 
 
     def writeToAxis(self):
-        self.g_code = self.genCode()
-        sys.stdout.write(self.g_code)
+        sys.stdout.write(self.genCode())
         # may want to keep this alive, for writing many similar holes
         # of course if AXIS does not delete the program, then maybe this
         # does work fine for UI
