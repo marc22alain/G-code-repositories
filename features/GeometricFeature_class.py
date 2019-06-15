@@ -148,7 +148,7 @@ class GeometricFeature(Observable):
         if 'DEBUG_GCODE' in os.environ.keys():
             trace = inspect.getframeinfo(frame)
             class_file = trace.filename.split('/')[-1].split('_class')[0]
-            return G.comment('# %s \n' % (class_file + '.' + trace.function + ' - line:' + str(trace.lineno)))
+            return G.comment('# %s' % (class_file + '.' + trace.function + ' - line:' + str(trace.lineno)))
         else:
             return ''
 
