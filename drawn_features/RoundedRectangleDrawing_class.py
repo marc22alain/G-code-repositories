@@ -35,43 +35,49 @@ class RoundedRectangleDrawing(FeatureDrawing, AutoObserver):
             raise TypeError('LinearGroove does not implement _drawXYentities')
 
     def _drawYZentities(self):
-        pass
-    #     basic_params, cut_depth, delta_X, delta_Y, refX, refY = self.getParams()
-    #     options = {"tag":"geometry","outline":"yellow","fill":None}
-    #     half_side_y = delta_Y / 2
-    #     bit_radius = basic_params['bit_diameter']
-    #     stock_height = basic_params['stock_height']
-    #     if (delta_X + delta_Y != 0) and (delta_Y * delta_X == 0):
-    #         if len(self.entities['YZ']) == 0:
-    #             self.entities['YZ'].append(Rectangle(self.view_space).setAll(
-    #                 (refY - half_side_y - bit_radius, stock_height - cut_depth, refY + half_side_y + bit_radius, stock_height),
-    #                 options
-    #             ).draw())
-    #         else:
-    #             self.entities['YZ'][0].setAll(
-    #                 (refY - half_side_y - bit_radius, stock_height - cut_depth, refY + half_side_y + bit_radius, stock_height),
-    #                 options
-    #             ).draw()
-    #     else:
-    #         raise TypeError('LinearGroove does not implement _drawYZentities')
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        cut_depth = self.params['cut_depth']
+        refY = self.params['refY']
+        delta_X = self.params['delta_X']
+        delta_Y = self.params['delta_Y']
+        half_side_x = delta_X / 2
+        half_side_y = delta_Y / 2
+        bit_radius = self.params['bit_diameter'] / 2
+        stock_height = self.params['stock_height']
+        if (delta_X + delta_Y != 0) and (delta_Y * delta_X == 0):
+            if len(self.entities['YZ']) == 0:
+                self.entities['YZ'].append(Rectangle(self.view_space).setAll(
+                    (refY - half_side_y - bit_radius, stock_height - cut_depth, refY + half_side_y + bit_radius, stock_height),
+                    options
+                ).draw())
+            else:
+                self.entities['YZ'][0].setAll(
+                    (refY - half_side_y - bit_radius, stock_height - cut_depth, refY + half_side_y + bit_radius, stock_height),
+                    options
+                ).draw()
+        else:
+            raise TypeError('LinearGroove does not implement _drawYZentities')
 
     def _drawXZentities(self):
-        pass
-    #     basic_params, cut_depth, delta_X, delta_Y, refX, refY = self.getParams()
-    #     options = {"tag":"geometry","outline":"yellow","fill":None}
-    #     half_side_x = delta_X / 2
-    #     bit_radius = basic_params['bit_diameter']
-    #     stock_height = basic_params['stock_height']
-    #     if (delta_X + delta_Y != 0) and (delta_Y * delta_X == 0):
-    #         if len(self.entities['XZ']) == 0:
-    #             self.entities['XZ'].append(Rectangle(self.view_space).setAll(
-    #                 (refX - half_side_x - bit_radius, stock_height - cut_depth, refX + half_side_x + bit_radius, stock_height),
-    #                 options
-    #             ).draw())
-    #         else:
-    #             self.entities['XZ'][0].setAll(
-    #                 (refX - half_side_x - bit_radius, stock_height - cut_depth, refX + half_side_x + bit_radius, stock_height),
-    #                 options
-    #             ).draw()
-    #     else:
-    #         raise TypeError('LinearGroove does not implement _drawXZentities')
+        options = {"tag":"geometry","outline":"yellow","fill":None}
+        cut_depth = self.params['cut_depth']
+        refX = self.params['refX']
+        delta_X = self.params['delta_X']
+        delta_Y = self.params['delta_Y']
+        half_side_x = delta_X / 2
+        half_side_y = delta_Y / 2
+        bit_radius = self.params['bit_diameter'] / 2
+        stock_height = self.params['stock_height']
+        if (delta_X + delta_Y != 0) and (delta_Y * delta_X == 0):
+            if len(self.entities['XZ']) == 0:
+                self.entities['XZ'].append(Rectangle(self.view_space).setAll(
+                    (refX - half_side_x - bit_radius, stock_height - cut_depth, refX + half_side_x + bit_radius, stock_height),
+                    options
+                ).draw())
+            else:
+                self.entities['XZ'][0].setAll(
+                    (refX - half_side_x - bit_radius, stock_height - cut_depth, refX + half_side_x + bit_radius, stock_height),
+                    options
+                ).draw()
+        else:
+            raise TypeError('LinearGroove does not implement _drawXZentities')
