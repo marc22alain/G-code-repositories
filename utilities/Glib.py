@@ -173,4 +173,4 @@ def comment(message):
     '''
     Returns the message in LinuxCNC comment format.
     '''
-    return '(%s)' % (message)
+    return '(%s)\n' % (message)
