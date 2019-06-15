@@ -27,6 +27,7 @@ class Query:
 
     def setValue(self, value):
         self.value = value
+        # in the event that updateValue gets called afterwards
         self.var.set(value)
 
     def updateValue(self):
