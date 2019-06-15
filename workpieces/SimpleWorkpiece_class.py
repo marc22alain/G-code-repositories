@@ -57,6 +57,8 @@ class SimpleWorkpiece(object):
         self.view_space.setExtents(view_init)
 
     def didUpdateQueries(self):
+        for query in self.option_queries.values():
+            query.updateValue()
         self.drawGeometry()
         self.feature_manager.reDrawAll()
 

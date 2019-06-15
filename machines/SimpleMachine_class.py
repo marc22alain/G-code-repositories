@@ -52,5 +52,7 @@ class SimpleMachine(object):
         return file_text
 
     def didUpdateQueries(self):
+        for query in self.option_queries.values():
+            query.updateValue()
         self.feature_manager.reDrawAll()
 

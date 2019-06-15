@@ -15,14 +15,14 @@ class AbstractFeatureManager:
     def addChild(self, feature_class = None):
         # for ComposedFeature
         if feature_class == None:
-            feature_class = self.option_queries[GeometricFeatureQuery].getValue()
+            query = self.option_queries[GeometricFeatureQuery]
+            query.updateValue()
+            feature_class = query.getValue()
         feature = feature_class(self, self.view_space)
         self.features.append(feature)
         # passed in as callback
         def addFunction():
             queries = feature.getOptionQueries().values()
-            for query in queries:
-                query.updateValue()
             if hasattr(feature, 'is_composed'):
                 feature.addChild()
             # makes the initial call to makeDrawingClass()

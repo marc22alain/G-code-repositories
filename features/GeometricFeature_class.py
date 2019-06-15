@@ -150,6 +150,8 @@ class GeometricFeature(Observable):
             return ''
 
     def didUpdateQueries(self):
+        for query in self.option_queries.values():
+            query.updateValue()
         if self.drawing_class == None:
             self.drawing_class = self.makeDrawingClass()
         else:
