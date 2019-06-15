@@ -27,6 +27,7 @@ class Query:
 
     def setValue(self, value):
         self.value = value
+        self.var.set(value)
 
     def updateValue(self):
         '''

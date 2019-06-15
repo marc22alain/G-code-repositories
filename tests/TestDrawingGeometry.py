@@ -5,6 +5,8 @@ def testDrawingGeometry(feature_manager):
     class TestDrawingGeometry(unittest.TestCase):
 
         def test_class_can_draw_in_XY_plane(self):
+            for feature in feature_manager.features:
+                feature.didUpdateQueries()
             feature_manager.reDrawAll()
 
         def test_class_can_draw_in_YZ_plane(self):
