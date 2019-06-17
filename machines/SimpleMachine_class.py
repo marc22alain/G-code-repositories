@@ -13,6 +13,9 @@ class SimpleMachine(object):
         self.option_queries = {}
         self.feature_manager = feature_manager
         self.mode = None
+        # to auto-initialize itself to default values
+        # ... all of its option queries have defaults
+        self.getOptionQueries()
 
     def getOptionQueries(self):
         if len(self.option_queries.keys()) == 0:
