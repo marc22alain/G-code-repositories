@@ -36,7 +36,6 @@ class FeatureDrawing:
         log('FeatureDrawing executeTransforms: %s' % (self.__repr__()))
         # Chain execution of the transforms
         for transform in self.transforms:
-            print transform
             log(transform)
             if 'move' in transform.keys():
                 self.move(transform['move'])
