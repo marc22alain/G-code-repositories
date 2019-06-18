@@ -95,10 +95,10 @@ class GeometricEntity:
             move_Y = params['delta_Y']
         elif self.view_space.view_plane == 'YZ':
             move_X = params['delta_Y']
-            move_Y = params['delta_Z']
+            move_Y= 0
         else:
             move_X = params['delta_X']
-            move_Y = params['delta_Z']
+            move_Y= 0
 
         for id in self.ids:
             # TODO: leaky abstraction, also make this a lambda !
