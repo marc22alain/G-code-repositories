@@ -16,3 +16,9 @@ class ComposedFeature(GeometricFeature, AbstractFeatureManager):
         TODO: maybe move this to DistributedFeature
         '''
         self.features.pop(feature_instance)
+
+    def changeViewPlane(self):
+        self.removeObservers('remove')
+        for feature in self.features:
+            feature.removeObservers('remove')
+        self.drawGeometry()
