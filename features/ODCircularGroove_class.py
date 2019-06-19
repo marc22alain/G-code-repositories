@@ -120,3 +120,7 @@ class ODCircularGroove(DepthSteppingFeature):
                 (refX - radius + bit_diameter, stock_height - cut_depth, refX + radius - bit_diameter, stock_height),
                 options
             ).draw()
+
+    def makeDrawingClass(self):
+        pass
+

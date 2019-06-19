@@ -16,7 +16,7 @@ class HoleDrawing(FeatureDrawing, AutoObserver):
         cut_depth = self.params['cut_depth']
         refX = self.params['refX']
         refY = self.params['refY']
-        radius = self.params['bit_diameter'] /2
+        radius = self.params['diameter'] /2
         if len(self.entities['XY']) == 0:
             self.entities['XY'].append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius), options).draw())
         else:
@@ -26,7 +26,7 @@ class HoleDrawing(FeatureDrawing, AutoObserver):
         options = {"tag":"geometry","outline":"yellow","fill":None}
         cut_depth = self.params['cut_depth']
         refY = self.params['refY']
-        radius = self.params['bit_diameter'] /2
+        radius = self.params['diameter'] /2
         stock_height = self.params['stock_height']
         if len(self.entities['YZ']) == 0:
             self.entities['YZ'].append(Rectangle(self.view_space).setAll(
@@ -43,7 +43,7 @@ class HoleDrawing(FeatureDrawing, AutoObserver):
         options = {"tag":"geometry","outline":"yellow","fill":None}
         cut_depth = self.params['cut_depth']
         refX = self.params['refX']
-        radius = self.params['bit_diameter'] /2
+        radius = self.params['diameter'] /2
         stock_height = self.params['stock_height']
         if len(self.entities['XZ']) == 0:
             self.entities['XZ'].append(Rectangle(self.view_space).setAll(

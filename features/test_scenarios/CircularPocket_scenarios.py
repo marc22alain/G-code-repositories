@@ -40,7 +40,7 @@ circ_pock_scenarios = {
         },
         'description': 'Makes two passes',
         'benchmark': {
-            'program': 'F1000.0 \nG90 \nG0 Z80.0 \nG91 \nG0 X10.0 Y14.5 \nG90 \nG0 Z15.0 \nG1 Z13.0 \nG4 P0.5 \n# first\nG91 \nG1 X-4.5 Y0.0 \nG17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG1 X-4.5 Y0.0 \nG17 G2 X0.0 Y0.0 I9.0 J0.0 P1 \nG1 X-1.5875 Y0.0 \nG17 G2 X0.0 Y0.0 I10.5875 J0.0 P1 \nG0 X10.5875 Y0.0 \nG90 \nG1 Z12.0 \nG4 P0.5 \n# last\nG91 \nG1 X-4.5 Y0.0 \nG17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG1 X-4.5 Y0.0 \nG17 G2 X0.0 Y0.0 I9.0 J0.0 P1 \nG1 X-1.5875 Y0.0 \nG17 G2 X0.0 Y0.0 I10.5875 J0.0 P1 \nG90 \nG0 Z80.0 \nG91 \nG0 X10.5875 Y0.0 \nG0 X-10.0 Y-14.5 \nG90 \nM2 \n'
+            'program': 'F1000.0 \nG90 \nG0 Z80.0 \nG91 \nG0 X10.0 Y14.5 \nG90 \nG0 Z15.0 \nG1 Z13.0 \nG4 P0.5 \n(# first)\nG91 \nG1 X-4.5 Y0.0 \nG17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG1 X-4.5 Y0.0 \nG17 G2 X0.0 Y0.0 I9.0 J0.0 P1 \nG1 X-1.5875 Y0.0 \nG17 G2 X0.0 Y0.0 I10.5875 J0.0 P1 \nG0 X10.5875 Y0.0 \nG90 \nG1 Z12.0 \nG4 P0.5 \n(# last)\nG91 \nG1 X-4.5 Y0.0 \nG17 G2 X0.0 Y0.0 I4.5 J0.0 P1 \nG1 X-4.5 Y0.0 \nG17 G2 X0.0 Y0.0 I9.0 J0.0 P1 \nG1 X-1.5875 Y0.0 \nG17 G2 X0.0 Y0.0 I10.5875 J0.0 P1 \nG90 \nG0 Z80.0 \nG91 \nG0 X10.5875 Y0.0 \nG0 X-10.0 Y-14.5 \nG90 \nM2 \n'
         }
     },
 }
