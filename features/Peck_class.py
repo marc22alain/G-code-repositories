@@ -59,4 +59,5 @@ class Peck(GeometricFeature):
             # options = self.getOptions()
             observable = self
             view_space = self.view_space
+        self.drawing_class = Anon
         return Anon
