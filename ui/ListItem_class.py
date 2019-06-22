@@ -37,7 +37,7 @@ class ListItem(Frame):
         queries = self.item.getOptionQueries().values()
         log('confirming new value')
         for q in queries:
-            log(q.getValue())
+            log(q.var.get())
         if hasattr(self.item, 'is_composed'):
             log('ListItem row_num')
             # log(self.sub_item['row_num'])
