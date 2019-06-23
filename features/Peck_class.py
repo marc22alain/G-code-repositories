@@ -52,12 +52,11 @@ class Peck(GeometricFeature):
         })
         return basic_params
 
-    def makeDrawingClass(self):
+    def _makeDrawingClass(self):
         log('Peck makeDrawingClass')
         class Anon(HoleDrawing):
             params = self.getParams()
             # options = self.getOptions()
             observable = self
             view_space = self.view_space
-        self.drawing_class = Anon
         return Anon

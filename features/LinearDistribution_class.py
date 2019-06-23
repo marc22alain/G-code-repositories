@@ -60,7 +60,7 @@ class LinearDistribution(DistributedFeature):
         })
         return basic_params
 
-    def makeDrawingClass(self):
+    def _makeDrawingClass(self):
         log('LinearDistribution makeDrawingClass: %s' % (self.__repr__()))
         class Anon(LinearDistributionDrawing):
             params = self.getParams()

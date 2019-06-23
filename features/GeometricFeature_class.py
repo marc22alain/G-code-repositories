@@ -45,7 +45,7 @@ class GeometricFeature(Observable):
         pass
 
     @abc.abstractmethod
-    def makeDrawingClass(self):
+    def _makeDrawingClass(self):
         pass
 
     def drawGeometry(self):
@@ -158,7 +158,7 @@ class GeometricFeature(Observable):
             query.updateValue()
         log('GeometricFeature didUpdateQueries')
         if self.drawing_class == None:
-            self.drawing_class = self.makeDrawingClass()
+            self.makeDrawingClass()
         else:
             self.drawing_class.params = self.getParams()
             self.notifyObservers('draw')
@@ -167,3 +167,7 @@ class GeometricFeature(Observable):
         self.removeObservers('remove')
         self.drawGeometry()
 
+    def makeDrawingClass(self):
+        Anon = self._makeDrawingClass()
+        self.drawing_class = Anon
+        return Anon
