@@ -64,7 +64,7 @@ class LinearGroove(DepthSteppingFeature):
         })
         return basic_params
 
-    def makeDrawingClass(self):
+    def _makeDrawingClass(self):
         log('LinearGroove makeDrawingClass: %s' % (self.__repr__()))
         class Anon(RoundedRectangleDrawing):
             params = self.getParams()

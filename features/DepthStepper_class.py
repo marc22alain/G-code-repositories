@@ -81,5 +81,5 @@ class DepthStepper(GeometricFeature):
     def returnToHome(self):
         pass
 
-    def makeDrawingClass(self):
+    def _makeDrawingClass(self):
         pass

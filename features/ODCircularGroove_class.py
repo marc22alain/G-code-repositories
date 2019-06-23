@@ -57,7 +57,7 @@ class ODCircularGroove(DepthSteppingFeature):
         child.option_queries[PathDiameterQuery].setValue(center_diameter)
         child.self_managed_depth = False
 
-    def makeDrawingClass(self):
+    def _makeDrawingClass(self):
         class Anon(ODCircularGrooveDrawing):
             params = self.getParams()
             observable = self

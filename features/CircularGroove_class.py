@@ -48,7 +48,7 @@ class CircularGroove(DepthSteppingFeature):
         })
         return basic_params
 
-    def makeDrawingClass(self):
+    def _makeDrawingClass(self):
         class Anon(CircularGrooveDrawing):
             params = self.getParams()
             observable = self
