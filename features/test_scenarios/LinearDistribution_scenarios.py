@@ -56,16 +56,6 @@ ldist_scenarios = {
                 CutDepthQuery: 7.23
             }
         },
-        'test-drawing-instructions': {
-            'YZ': [
-                'feature_manager.features[0].features[0].option_queries[CutDepthQuery].setValue(6)',
-                'feature_manager.features[0].features[0].didUpdateQueries()'
-            ],
-            'XZ': [
-                'feature_manager.features[0].features[0].option_queries[CutDepthQuery].setValue(8)',
-                'feature_manager.features[0].features[0].didUpdateQueries()'
-            ]
-        },
         'benchmark': {
             'num_drawn_entities': {
                 'XY': {
@@ -104,3 +94,20 @@ ldist_scenarios = {
         }
     }
 }
+
+bug_fix_1 = {}
+bug_fix_1.update(ldist_scenarios['ldist_config_2'])
+bug_fix_1['name'] = 'ldist_bug_fix_1'
+bug_fix_1['description'] = 'Chalenges whether LinearDistribution deletes child entities on view change'
+bug_fix_1['test-drawing-instructions']= {
+    'YZ': [
+        'feature_manager.features[0].features[0].option_queries[CutDepthQuery].setValue(6)',
+        'feature_manager.features[0].features[0].didUpdateQueries()'
+    ],
+    'XZ': [
+        'feature_manager.features[0].features[0].option_queries[CutDepthQuery].setValue(8)',
+        'feature_manager.features[0].features[0].didUpdateQueries()'
+    ]
+}
+
+ldist_scenarios['ldist_bug_fix_1'] = bug_fix_1
