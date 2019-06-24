@@ -39,7 +39,8 @@ class AbstractFeatureManager:
         def cancelFunction():
             self.features.pop()
             log('running CANCEL function')
-        OptionQueryDialog(self.app, feature.getOptionQueries(), feature.name, addFunction, cancelFunction)
+        if self.app:
+            OptionQueryDialog(self.app, feature.getOptionQueries(), feature.name, addFunction, cancelFunction)
 
     @abc.abstractmethod
     def deleteChild(self, feature_instance):

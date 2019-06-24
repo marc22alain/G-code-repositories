@@ -34,6 +34,8 @@ class MockCanvas(object):
 
     def mock_create(self):
         return 1
+    def move(self, *args, **kwds):
+        pass
 
 
 class MockViewSpace(object):
@@ -42,6 +44,7 @@ class MockViewSpace(object):
         self.canvas = canvas
         self.x_conv = lambda x: x
         self.y_conv = lambda x: x
+        self.view_scale = 1
 
     def setExtents(self, *args, **kwds):
         pass
@@ -76,8 +79,8 @@ class ScenarioRunner(object):
         self.configure(feat, scenario['config'])
         if hasattr(feat, 'is_composed'):
             feat.addChild()
-            for child_key in feat.child_features.keys():
-                self.configure(feat.child_features[child_key], scenario['child_features'][child_key])
+            for child in feat.features:
+                self.configure(child, scenario['child_features'][child.__class__])
         return fm
 
     def configure(self, thing, config):
