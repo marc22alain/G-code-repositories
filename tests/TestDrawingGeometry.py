@@ -1,10 +1,12 @@
 import unittest
+from option_queries import *
 
 
 def testDrawingGeometry(feature_manager, scenario):
     class TestDrawingGeometry(unittest.TestCase):
 
         def test_class_can_draw_in_XY_plane(self):
+            self.executeInstructions(feature_manager, 'XY')
             self.assertEqual(feature_manager.view_space.view_plane, 'XY')
             # feature_manager.work_piece.didUpdateQueries()
             for feature in feature_manager.features:
@@ -13,11 +15,13 @@ def testDrawingGeometry(feature_manager, scenario):
             self.testDrawnEntities(scenario, 'XY')
 
         def test_class_can_draw_in_YZ_plane(self):
+            self.executeInstructions(feature_manager, 'YZ')
             feature_manager.view_space.view_plane = 'YZ'
             feature_manager.changeViewPlane()
             self.testDrawnEntities(scenario, 'YZ')
 
         def test_class_can_draw_in_XZ_plane(self):
+            self.executeInstructions(feature_manager, 'XZ')
             feature_manager.view_space.view_plane = 'XZ'
             feature_manager.changeViewPlane()
             self.testDrawnEntities(scenario, 'XZ')
@@ -35,6 +39,12 @@ def testDrawingGeometry(feature_manager, scenario):
                             expected,
                             'Bad number of entities for %s %s, actual %i vs expected %i' % (plane, key, actual, expected)
                         )
+
+        def executeInstructions(self, feature_manager, plane):
+            if 'test-drawing-instructions' in scenario.keys():
+                if plane in scenario['test-drawing-instructions'].keys():
+                    for instruction in scenario['test-drawing-instructions'][plane]:
+                        eval(instruction)
 
 
 

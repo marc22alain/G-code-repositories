@@ -55,6 +55,31 @@ ldist_scenarios = {
                 ReferenceYQuery: 0,
                 CutDepthQuery: 7.23
             }
+        },
+        'test-drawing-instructions': {
+            'YZ': [
+                'feature_manager.features[0].features[0].option_queries[CutDepthQuery].setValue(6)',
+                'feature_manager.features[0].features[0].didUpdateQueries()'
+            ],
+            'XZ': [
+                'feature_manager.features[0].features[0].option_queries[CutDepthQuery].setValue(8)',
+                'feature_manager.features[0].features[0].didUpdateQueries()'
+            ]
+        },
+        'benchmark': {
+            'num_drawn_entities': {
+                'XY': {
+                    'oval': 3
+                },
+                'YZ': {
+                    'oval': 0,
+                    'rectangle': 4  # includes workpiece
+                },
+                'XZ': {
+                    'oval': 0,
+                    'rectangle': 4  # includes workpiece
+                }
+            }
         }
     },
     'ldist_config_3': {
