@@ -8,21 +8,25 @@ from Tkinter import *
 Tk()
 
 class MockCanvas(object):
+    '''
+    Mocks the Tkinter Canvas Widget.
+    Private methods (prefixed with `_`) are not part of the Canvas interface.
+    '''
     def __init__(self):
         self.entities = {}
         self.id_count = 0
 
     def create_line(self, *params):
-        return self.create_item('line')
+        return self._create_item('line')
 
     def create_arc(self, *args, **kwds):
-        return self.create_item('arc')
+        return self._create_item('arc')
 
     def create_oval(self, *args, **kwds):
-        return self.create_item('oval')
+        return self._create_item('oval')
 
     def create_rectangle(self, *args, **kwds):
-        return self.create_item('rectangle')
+        return self._create_item('rectangle')
 
     def itemconfig(self, *args, **kwds):
         pass
@@ -33,7 +37,7 @@ class MockCanvas(object):
     def delete(self, entity_id):
         del self.entities[entity_id]
 
-    def create_item(self, entity_type):
+    def _create_item(self, entity_type):
         self.id_count += 1
         self.entities[self.id_count] = entity_type
         return self.id_count
