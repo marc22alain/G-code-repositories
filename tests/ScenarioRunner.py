@@ -9,19 +9,20 @@ Tk()
 
 class MockCanvas(object):
     def __init__(self):
-        pass
+        self.entities = {}
+        self.id_count = 0
 
     def create_line(self, *params):
-        return self.mock_create()
+        return self.create_item('line')
 
     def create_arc(self, *args, **kwds):
-        return self.mock_create()
+        return self.create_item('arc')
 
     def create_oval(self, *args, **kwds):
-        return self.mock_create()
+        return self.create_item('oval')
 
     def create_rectangle(self, *args, **kwds):
-        return self.mock_create()
+        return self.create_item('rectangle')
 
     def itemconfig(self, *args, **kwds):
         pass
@@ -29,11 +30,17 @@ class MockCanvas(object):
     def coords(self, *args, **kwds):
         pass
 
-    def delete(self, *args, **kwds):
-        pass
+    def delete(self, entity_id):
+        del self.entities[entity_id]
 
-    def mock_create(self):
-        return 1
+    def create_item(self, entity_type):
+        self.id_count += 1
+        self.entities[self.id_count] = entity_type
+        return self.id_count
+
+    def find_all(self):
+        return self.entities.values()
+
     def move(self, *args, **kwds):
         pass
 
@@ -94,7 +101,7 @@ class ScenarioRunner(object):
         testWithProgram(program, scenario)
         if output_program:
             print program
-        testDrawingGeometry(feature_manager)
+        testDrawingGeometry(feature_manager, scenario)
 
 
     def announceScenarioSet(self, feature):
