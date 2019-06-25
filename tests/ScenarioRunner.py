@@ -32,18 +32,34 @@ class MockCanvas(object):
         pass
 
     def coords(self, *args, **kwds):
-        pass
+        # args is a tuple, and does not include `self`
+        self._count_entity_call(args[0], 'coords', args)
 
     def delete(self, entity_id):
         del self.entities[entity_id]
 
     def _create_item(self, entity_type):
         self.id_count += 1
-        self.entities[self.id_count] = entity_type
+        self.entities[self.id_count] = {
+            'entity_type': entity_type,
+            'calls': {}
+        }
         return self.id_count
 
+    def _count_entity_call(self, entity_id, call, args):
+        if call not in self.entities[entity_id]['calls'].keys():
+            self.entities[entity_id]['calls'][call] = []
+        # end up with a list of tuples
+        self.entities[entity_id]['calls'][call].append(args)
+
+    def _get_calls_of_call(self, entity_id, call):
+        if call not in self.entities[entity_id]['calls'].keys():
+            return []
+        return self.entities[entity_id]['calls'][call]
+
     def find_all(self):
-        return self.entities.values()
+        entities = self.entities.values()
+        return [entity['entity_type'] for entity in entities]
 
     def move(self, *args, **kwds):
         pass

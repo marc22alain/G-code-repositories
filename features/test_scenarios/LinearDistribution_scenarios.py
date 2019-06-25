@@ -112,3 +112,23 @@ bug_fix_1['test-drawing-pre-instructions']= {
 }
 
 ldist_scenarios['ldist_bug_fix_1'] = bug_fix_1
+
+# # # bug_fix_2
+# first fixed by commit 4a435f0c16bf861321b4000fcf66e08efa05cfba
+bug_fix_2 = {}
+bug_fix_2.update(ldist_scenarios['ldist_config_2'])
+bug_fix_2['name'] = 'ldist_bug_fix_2'
+bug_fix_2['description'] = 'Challenges whether Peck updates its entities on cut depth change'
+hole_id = 'feature_manager.features[0].features[0].observers[0].entities["YZ"][0].ids[0]'
+coords_calls = 'feature_manager.view_space.canvas._get_calls_of_call(' + hole_id + ', "coords")'
+bug_fix_2['test-drawing-post-instructions']= {
+    'YZ': [
+        'self.assertEquals(len(feature_manager.features[0].features[0].observers), 3)',
+        'self.assertEquals(len(' + coords_calls + '), 0)',
+        'feature_manager.features[0].features[0].option_queries[CutDepthQuery].setValue(6)',
+        'feature_manager.features[0].features[0].didUpdateQueries()',
+        'self.assertEquals(len(' + coords_calls + '), 1)',
+    ]
+}
+
+ldist_scenarios['ldist_bug_fix_2'] = bug_fix_2
