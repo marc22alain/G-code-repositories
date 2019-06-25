@@ -42,10 +42,12 @@ peck_scenarios = {
     },
 }
 
+# # # bug_fix_1
+# fixed by commit 6cdb4596e0e8097292b6ec2836301c430a0dc746
 bug_fix_1 = {}
 bug_fix_1.update(peck_scenarios['peck_config_1'])
 bug_fix_1['name'] = 'peck_bug_fix_1'
-bug_fix_1['description'] = 'Challenges whether GemoetricFeature creates new drawing_class child on work_piece change (it shouldn\'t).'
+bug_fix_1['description'] = 'Challenges whether GeometricFeature creates new drawing_class child on work_piece change (it shouldn\'t).'
 bug_fix_1['test-drawing-post-instructions']= {
     'XY': [
         'feature_manager.features[0].drawGeometry()'

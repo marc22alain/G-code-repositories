@@ -96,6 +96,8 @@ ldist_scenarios = {
     }
 }
 
+# # # bug_fix_1
+# fixed by commit a7a0a53b2612c148546ad939fa0fef229cf0c62e
 bug_fix_1 = {}
 bug_fix_1.update(ldist_scenarios['ldist_config_2'])
 bug_fix_1['name'] = 'ldist_bug_fix_1'
