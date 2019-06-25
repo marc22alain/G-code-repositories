@@ -100,7 +100,7 @@ class GCodeParser(object):
             if token in ['G17', 'G18', 'G19']:
                 self.selectPlane(token)
                 continue
-            if token[0] == '#':
+            if token[0] in ['#', '(']:
                 # this is a comment
                 break
             raise ValueError('token "%s" has no parser defined yet' % token)

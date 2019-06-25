@@ -50,8 +50,9 @@ class GeometricFeature(Observable):
 
     def drawGeometry(self):
         log('GeometricFeature drawGeometry')
-        drawer = self.drawing_class()
-        drawer.draw()
+        if len(self.observers) == 0:
+            drawer = self.drawing_class()
+        self.notifyObservers('draw')
 
     def validateParams(self):
         pass

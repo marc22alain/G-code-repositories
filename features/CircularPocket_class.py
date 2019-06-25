@@ -1,9 +1,10 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
 from ODCircularGroove_class import ODCircularGroove
 from option_queries import *
-from drawn_entities import Circle, Rectangle
+from drawn_features import HoleDrawing
 from utilities import Glib as G
 import inspect
+from utilities import log
 
 
 class CircularPocket(DepthSteppingFeature):
@@ -25,13 +26,14 @@ class CircularPocket(DepthSteppingFeature):
 
     def _getInstructions(self, sequence):
         file_text = self.addDebug(inspect.currentframe())
-        basic_params, cut_depth, diameter, refX, refY = self.getParams()
-        current_od = basic_params['bit_diameter']
+        params = self.getParams()
+        diameter = params['diameter']
+        current_od = params['bit_diameter']
         od_feature = self.child_features[ODCircularGroove]
         while current_od < diameter:
             # increase current_od
             starting_od = current_od
-            current_od = min(current_od + (2 * (basic_params['bit_diameter'] - self.getOverlap())), diameter)
+            current_od = min(current_od + (2 * (params['bit_diameter'] - self.getOverlap())), diameter)
             file_text += self.machine.setMode('INCR')
             file_text += G.G1_XY((- (current_od - starting_od) / 2, 0))
             self.setUpODcircularGroove(current_od)
@@ -63,11 +65,13 @@ class CircularPocket(DepthSteppingFeature):
 
     def getParams(self):
         basic_params = self.getBasicParams()
-        cut_depth = self.option_queries[CutDepthQuery].getValue()
-        diameter = self.option_queries[PathDiameterQuery].getValue()
-        refX = self.option_queries[ReferenceXQuery].getValue()
-        refY = self.option_queries[ReferenceYQuery].getValue()
-        return (basic_params, cut_depth, diameter, refX, refY)
+        basic_params.update({
+            'cut_depth': self.option_queries[CutDepthQuery].getValue(),
+            'diameter': self.option_queries[PathDiameterQuery].getValue(),
+            'refX': self.option_queries[ReferenceXQuery].getValue(),
+            'refY': self.option_queries[ReferenceYQuery].getValue()
+        })
+        return basic_params
 
     def getOverlap(self):
         '''
@@ -78,43 +82,11 @@ class CircularPocket(DepthSteppingFeature):
         '''
         return 0.5
 
-    def _drawXYentities(self):
-        options = {"tag":"geometry","outline":"yellow","fill":None}
-        basic_params, cut_depth, diameter, refX, refY = self.getParams()
-        radius = diameter / 2
-        if len(self.entities['XY']) == 0:
-            self.entities['XY'].append(Circle(self.view_space).setAllByCenterRadius((refX, refY, radius), options).draw())
-        else:
-            self.entities['XY'][0].setAllByCenterRadius((refX, refY, radius), options).draw()
-
-    def _drawYZentities(self):
-        options = {"tag":"geometry","outline":"yellow","fill":None}
-        basic_params, cut_depth, diameter, refX, refY = self.getParams()
-        radius = diameter / 2
-        stock_height = basic_params['stock_height']
-        if len(self.entities['YZ']) == 0:
-            self.entities['YZ'].append(Rectangle(self.view_space).setAll(
-                (refY - radius, stock_height - cut_depth, refY + radius, stock_height),
-                options
-            ).draw())
-        else:
-            self.entities['YZ'][0].setAll(
-                (refY - radius, stock_height - cut_depth, refY + radius, stock_height),
-                options
-            ).draw()
-
-    def _drawXZentities(self):
-        options = {"tag":"geometry","outline":"yellow","fill":None}
-        basic_params, cut_depth, diameter, refX, refY = self.getParams()
-        radius = diameter / 2
-        stock_height = basic_params['stock_height']
-        if len(self.entities['XZ']) == 0:
-            self.entities['XZ'].append(Rectangle(self.view_space).setAll(
-                (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
-                options
-            ).draw())
-        else:
-            self.entities['XZ'][0].setAll(
-                (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
-                options
-            ).draw()
+    def makeDrawingClass(self):
+        log('CircularPocket makeDrawingClass')
+        class Anon(HoleDrawing):
+            params = self.getParams()
+            # options = self.getOptions()
+            observable = self
+            view_space = self.view_space
+        return Anon
