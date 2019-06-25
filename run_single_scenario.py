@@ -10,14 +10,10 @@ from tests import ScenarioRunner
 # scenario = ScenarioRunner.test_scenarios.ldist_scenarios['ldist_config_2']
 # feature = classes_dict['LinearDistribution']
 
-# scenario = ScenarioRunner.test_scenarios.ldist_scenarios['ldist_bug_fix_1']
-# feature = classes_dict['LinearDistribution']
 
 # scenario = ScenarioRunner.test_scenarios.peck_scenarios['peck_config_1']
 # feature = classes_dict['Peck']
 
-scenario = ScenarioRunner.test_scenarios.peck_scenarios['peck_bug_fix_1']
-feature = classes_dict['Peck']
 
 # scenario = ScenarioRunner.test_scenarios.circ_pock_scenarios['circ_pock_config_2']
 # feature = classes_dict['CircularPocket']
@@ -28,7 +24,20 @@ feature = classes_dict['Peck']
 # scenario = ScenarioRunner.test_scenarios.rect_pocket_scenarios['rect_pocket_config_2']
 # feature = classes_dict['RectangularPocket']
 
-# scenario = ScenarioRunner.test_scenarios.lg_scenarios['lg_config_1']
-# feature = classes_dict['LinearGroove']
+scenario = ScenarioRunner.test_scenarios.lg_scenarios['lg_config_1']
+feature = classes_dict['LinearGroove']
 
 ScenarioRunner.ScenarioRunner().runScenario(feature, scenario, True)
+
+# # # BUG FIXES
+# # # BUG FIXES
+# # # BUG FIXES
+# scenario = ScenarioRunner.test_scenarios.ldist_scenarios['ldist_bug_fix_1']
+# feature = classes_dict['LinearDistribution']
+
+# ScenarioRunner.ScenarioRunner().runScenario(feature, scenario, False)
+
+# scenario = ScenarioRunner.test_scenarios.peck_scenarios['peck_bug_fix_1']
+# feature = classes_dict['Peck']
+
+# ScenarioRunner.ScenarioRunner().runScenario(feature, scenario, False)
