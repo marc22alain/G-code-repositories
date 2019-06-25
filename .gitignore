@@ -2,5 +2,8 @@
 *.pyc
 *.ngc
 
+trials/
+notes/
+
 cable_car_1.py
 cable_car_2.py
