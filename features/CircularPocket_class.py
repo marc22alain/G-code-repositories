@@ -82,7 +82,7 @@ class CircularPocket(DepthSteppingFeature):
         '''
         return 0.5
 
-    def makeDrawingClass(self):
+    def _makeDrawingClass(self):
         log('CircularPocket makeDrawingClass')
         class Anon(HoleDrawing):
             params = self.getParams()

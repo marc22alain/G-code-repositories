@@ -52,7 +52,7 @@ class Peck(GeometricFeature):
         })
         return basic_params
 
-    def makeDrawingClass(self):
+    def _makeDrawingClass(self):
         log('Peck makeDrawingClass')
         class Anon(HoleDrawing):
             params = self.getParams()
