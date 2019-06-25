@@ -59,7 +59,8 @@ ldist_scenarios = {
         'benchmark': {
             'num_drawn_entities': {
                 'XY': {
-                    'oval': 3
+                    'oval': 3,
+                    'rectangle': 1  # includes workpiece
                 },
                 'YZ': {
                     'oval': 0,
@@ -98,8 +99,8 @@ ldist_scenarios = {
 bug_fix_1 = {}
 bug_fix_1.update(ldist_scenarios['ldist_config_2'])
 bug_fix_1['name'] = 'ldist_bug_fix_1'
-bug_fix_1['description'] = 'Chalenges whether LinearDistribution deletes child entities on view change'
-bug_fix_1['test-drawing-instructions']= {
+bug_fix_1['description'] = 'Challenges whether LinearDistribution deletes child entities on view change'
+bug_fix_1['test-drawing-pre-instructions']= {
     'YZ': [
         'feature_manager.features[0].features[0].option_queries[CutDepthQuery].setValue(6)',
         'feature_manager.features[0].features[0].didUpdateQueries()'
