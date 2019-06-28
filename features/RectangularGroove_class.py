@@ -70,4 +70,5 @@ class RectangularGroove(DepthSteppingFeature):
             observable = self
             view_space = self.view_space
             reference_point = 'lower-left'
+            path_reference = 'center'
         return Anon
