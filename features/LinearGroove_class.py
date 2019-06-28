@@ -71,4 +71,5 @@ class LinearGroove(DepthSteppingFeature):
             # options = self.getOptions()
             observable = self
             view_space = self.view_space
+            reference_point = 'lower-left'
         return Anon

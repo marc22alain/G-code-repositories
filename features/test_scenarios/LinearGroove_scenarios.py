@@ -25,7 +25,26 @@ lg_scenarios = {
             CutPerPassQuery: 2,
             CutDepthQuery: 1
         },
-        'description': 'Makes a single pass'
+        'description': 'Makes a single pass',
+        'benchmark': {
+            'num_drawn_entities': {
+                'XY': {
+                    'arc': 4,
+                    'line': 4,  # until we get smarter about drawing it
+                    'rectangle': 1  # includes workpiece
+                },
+                'YZ': {
+                    'arc': 0,
+                    'line': 0,
+                    'rectangle': 2  # includes workpiece
+                },
+                'XZ': {
+                    'arc': 0,
+                    'line': 0,
+                    'rectangle': 2  # includes workpiece
+                }
+            }
+        }
     },
 
     'lg_config_2': {

@@ -40,6 +40,23 @@ rect_scenarios = {
             CutPerPassQuery: 2,
             CutDepthQuery: 3
         },
-        'description': 'Makes two passes'
+        'description': 'Makes two passes',
+        'benchmark': {
+            'num_drawn_entities': {
+                'XY': {
+                    'arc': 4,
+                    'line': 4,
+                    'rectangle': 2  # includes workpiece
+                },
+                'YZ': {
+                    'oval': 0,
+                    'rectangle': 3  # includes workpiece
+                },
+                'XZ': {
+                    'oval': 0,
+                    'rectangle': 3  # includes workpiece
+                }
+            }
+        }
     }
 }

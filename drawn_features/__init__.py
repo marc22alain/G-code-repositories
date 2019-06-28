@@ -4,3 +4,4 @@ from HoleDrawing_class import HoleDrawing
 from LinearDistributionDrawing_class import LinearDistributionDrawing
 from RoundEndedRectangleDrawing_class import RoundEndedRectangleDrawing
 from ODCircularGrooveDrawing_class import ODCircularGrooveDrawing
+from RectangularGrooveDrawing_class import RectangularGrooveDrawing

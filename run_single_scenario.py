@@ -21,6 +21,9 @@ from tests import ScenarioRunner
 # scenario = ScenarioRunner.test_scenarios.odrect_scenarios['odrect_config_2']
 # feature = classes_dict['ODRectangularGroove']
 
+# scenario = ScenarioRunner.test_scenarios.rect_scenarios['rect_config_2']
+# feature = classes_dict['RectangularGroove']
+
 # scenario = ScenarioRunner.test_scenarios.rect_pocket_scenarios['rect_pocket_config_2']
 # feature = classes_dict['RectangularPocket']
 
