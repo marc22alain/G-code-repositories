@@ -2,7 +2,7 @@ from DepthSteppingFeature_class import DepthSteppingFeature
 from DepthStepper_class import DepthStepper
 from utilities import Glib as G
 from option_queries import *
-from drawn_features import RoundedRectangleDrawing
+from drawn_features import RoundEndedRectangleDrawing
 from utilities import log
 
 
@@ -66,7 +66,7 @@ class LinearGroove(DepthSteppingFeature):
 
     def _makeDrawingClass(self):
         log('LinearGroove makeDrawingClass: %s' % (self.__repr__()))
-        class Anon(RoundedRectangleDrawing):
+        class Anon(RoundEndedRectangleDrawing):
             params = self.getParams()
             # options = self.getOptions()
             observable = self
