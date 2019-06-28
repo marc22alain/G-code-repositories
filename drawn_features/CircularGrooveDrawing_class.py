@@ -1,17 +1,11 @@
 from FeatureDrawing_class import FeatureDrawing
+from GrooveDrawing_class import GrooveDrawing
 from observeder import AutoObserver
 from drawn_entities import Circle, Rectangle
 from errors import *
 
 # used by CircularGroove, ODCircularGroove
-class CircularGrooveDrawing(FeatureDrawing, AutoObserver):
-    '''
-    The drawing's path reference is one of ['center', 'od', 'id']
-    'center' path reference is at the very center of bit's path.
-    'od' path reference is the outer diameter of bit's path.
-    'id' path reference is the inner diameter of bit's path.
-    '''
-    path_reference = None
+class CircularGrooveDrawing(FeatureDrawing, GrooveDrawing, AutoObserver):
 
     def __init__(self):
         AutoObserver.__init__(self)
@@ -23,22 +17,12 @@ class CircularGrooveDrawing(FeatureDrawing, AutoObserver):
         refX = self.params['refX']
         refY = self.params['refY']
         radius = self.params['diameter'] /2
-        bit_diameter = self.params['bit_diameter'] / 2
-        bit_radius = bit_diameter
+        inner_adj, outer_adj = self.getAdjustments()
         if len(self.entities[plane]) == 0:
             self.entities[plane].append(Circle(self.view_space))
             self.entities[plane].append(Circle(self.view_space))
-        if self.path_reference == 'center':
-            self.entities[plane][0].setAllByCenterRadius((refX, refY, radius - bit_radius), options).draw()
-            self.entities[plane][1].setAllByCenterRadius((refX, refY, radius + bit_radius), options).draw()
-        elif self.path_reference == 'od':
-            self.entities[plane][0].setAllByCenterRadius((refX, refY, radius - bit_diameter), options).draw()
-            self.entities[plane][1].setAllByCenterRadius((refX, refY, radius), options).draw()
-        elif self.path_reference == 'id':
-            self.entities[plane][0].setAllByCenterRadius((refX, refY, radius), options).draw()
-            self.entities[plane][1].setAllByCenterRadius((refX, refY, radius + bit_diameter), options).draw()
-        else:
-            raise PathReferenceError(self, self.path_reference)
+        self.entities[plane][0].setAllByCenterRadius((refX, refY, radius + inner_adj), options).draw()
+        self.entities[plane][1].setAllByCenterRadius((refX, refY, radius + outer_adj), options).draw()
 
     def _drawYZentities(self):
         plane = 'YZ'
@@ -46,41 +30,19 @@ class CircularGrooveDrawing(FeatureDrawing, AutoObserver):
         cut_depth = self.params['cut_depth']
         refY = self.params['refY']
         radius = self.params['diameter'] /2
-        bit_diameter = self.params['bit_diameter'] / 2
-        bit_radius = bit_diameter
         stock_height = self.params['stock_height']
+        inner_adj, outer_adj = self.getAdjustments()
         if len(self.entities[plane]) == 0:
             self.entities[plane].append(Rectangle(self.view_space))
             self.entities[plane].append(Rectangle(self.view_space))
-        if self.path_reference == 'center':
-            self.entities[plane][0].setAll(
-                (refY - radius - bit_radius, stock_height - cut_depth, refY + radius + bit_radius, stock_height),
-                options
-            ).draw()
-            self.entities[plane][1].setAll(
-                (refY - radius + bit_radius, stock_height - cut_depth, refY + radius - bit_radius, stock_height),
-                options
-            ).draw()
-        elif self.path_reference == 'od':
-            self.entities[plane][0].setAll(
-                (refY - radius + bit_diameter, stock_height - cut_depth, refY + radius - bit_diameter, stock_height),
-                options
-            ).draw()
-            self.entities[plane][1].setAll(
-                (refY - radius, stock_height - cut_depth, refY + radius, stock_height),
-                options
-            ).draw()
-        elif self.path_reference == 'id':
-            self.entities[plane][0].setAll(
-                (refY - radius, stock_height - cut_depth, refY + radius, stock_height),
-                options
-            ).draw()
-            self.entities[plane][1].setAll(
-                (refY - radius - bit_diameter, stock_height - cut_depth, refY + radius + bit_diameter, stock_height),
-                options
-            ).draw()
-        else:
-            raise PathReferenceError(self, self.path_reference)
+        self.entities[plane][0].setAll(
+            (refY - radius - inner_adj, stock_height - cut_depth, refY + radius + inner_adj, stock_height),
+            options
+        ).draw()
+        self.entities[plane][1].setAll(
+            (refY - radius - outer_adj, stock_height - cut_depth, refY + radius + outer_adj, stock_height),
+            options
+        ).draw()
 
     def _drawXZentities(self):
         plane = 'XZ'
@@ -88,38 +50,16 @@ class CircularGrooveDrawing(FeatureDrawing, AutoObserver):
         cut_depth = self.params['cut_depth']
         refX = self.params['refX']
         radius = self.params['diameter'] /2
-        bit_diameter = self.params['bit_diameter'] / 2
-        bit_radius = bit_diameter
         stock_height = self.params['stock_height']
+        inner_adj, outer_adj = self.getAdjustments()
         if len(self.entities[plane]) == 0:
             self.entities[plane].append(Rectangle(self.view_space))
             self.entities[plane].append(Rectangle(self.view_space))
-        if self.path_reference == 'center':
-            self.entities[plane][0].setAll(
-                (refX - radius - bit_radius, stock_height - cut_depth, refX + radius + bit_radius, stock_height),
-                options
-            ).draw()
-            self.entities[plane][1].setAll(
-                (refX - radius + bit_radius, stock_height - cut_depth, refX + radius - bit_radius, stock_height),
-                options
-            ).draw()
-        elif self.path_reference == 'od':
-            self.entities[plane][0].setAll(
-                (refX - radius + bit_diameter, stock_height - cut_depth, refX + radius - bit_diameter, stock_height),
-                options
-            ).draw()
-            self.entities[plane][1].setAll(
-                (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
-                options
-            ).draw()
-        elif self.path_reference == 'id':
-            self.entities[plane][0].setAll(
-                (refX - radius, stock_height - cut_depth, refX + radius, stock_height),
-                options
-            ).draw()
-            self.entities[plane][1].setAll(
-                (refX - radius - bit_diameter, stock_height - cut_depth, refX + radius + bit_diameter, stock_height),
-                options
-            ).draw()
-        else:
-            raise PathReferenceError(self, self.path_reference)
+        self.entities[plane][0].setAll(
+            (refX - radius - inner_adj, stock_height - cut_depth, refX + radius + inner_adj, stock_height),
+            options
+        ).draw()
+        self.entities[plane][1].setAll(
+            (refX - radius - outer_adj, stock_height - cut_depth, refX + radius + outer_adj, stock_height),
+            options
+        ).draw()
