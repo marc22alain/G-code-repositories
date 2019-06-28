@@ -5,7 +5,12 @@ from errors import *
 
 # used by CircularGroove, ODCircularGroove
 class CircularGrooveDrawing(FeatureDrawing, AutoObserver):
-
+    '''
+    The drawing's path reference is one of ['center', 'od', 'id']
+    'center' path reference is at the very center of bit's path.
+    'od' path reference is the outer diameter of bit's path.
+    'id' path reference is the inner diameter of bit's path.
+    '''
     path_reference = None
 
     def __init__(self):
