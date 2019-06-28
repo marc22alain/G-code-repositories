@@ -53,4 +53,5 @@ class CircularGroove(DepthSteppingFeature):
             params = self.getParams()
             observable = self
             view_space = self.view_space
+            path_reference = 'center'
         return Anon

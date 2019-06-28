@@ -1,7 +1,7 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
 from CircularGroove_class import CircularGroove
 from option_queries import *
-from drawn_features import ODCircularGrooveDrawing
+from drawn_features import CircularGrooveDrawing
 import inspect
 
 
@@ -58,8 +58,9 @@ class ODCircularGroove(DepthSteppingFeature):
         child.self_managed_depth = False
 
     def _makeDrawingClass(self):
-        class Anon(ODCircularGrooveDrawing):
+        class Anon(CircularGrooveDrawing):
             params = self.getParams()
             observable = self
             view_space = self.view_space
+            path_reference = 'od'
         return Anon
