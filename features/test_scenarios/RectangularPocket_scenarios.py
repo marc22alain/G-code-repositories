@@ -41,5 +41,22 @@ rect_pocket_scenarios = {
             CutDepthQuery: 3
         },
         'description': 'Makes two passes',
+        'benchmark': {
+            'num_drawn_entities': {
+                'XY': {
+                    'arc': 4,
+                    'line': 4,
+                    'rectangle': 1  # includes workpiece
+                },
+                'YZ': {
+                    'arc': 0,
+                    'rectangle': 2  # includes workpiece
+                },
+                'XZ': {
+                    'arc': 0,
+                    'rectangle': 2  # includes workpiece
+                }
+            }
+        }
     }
 }
