@@ -8,7 +8,7 @@ import inspect
 
 class ODRectangularGroove(DepthSteppingFeature):
     '''
-    Reference position is center.
+    Reference position is lower-left, and path reference is outer diameter.
     The queries determine the path of the center of the cutter.
     '''
     name = 'ODRectangular Groove'
