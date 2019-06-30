@@ -43,7 +43,7 @@ class CircularGroove(DepthSteppingFeature):
         basic_params.update({
             'cut_depth': self.option_queries[CutDepthQuery].getValue(),
             'refX': self.option_queries[ReferenceXQuery].getValue(),
-            'refY': self.option_queries[ReferenceYQuery].getValue(),
+            'ref_Y': self.option_queries[ReferenceYQuery].getValue(),
             'diameter': self.option_queries[PathDiameterQuery].getValue()
         })
         return basic_params

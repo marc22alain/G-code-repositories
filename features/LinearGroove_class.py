@@ -58,7 +58,7 @@ class LinearGroove(DepthSteppingFeature):
         basic_params.update({
             'cut_depth': self.option_queries[CutDepthQuery].getValue(),
             'refX': self.option_queries[ReferenceXQuery].getValue(),
-            'refY': self.option_queries[ReferenceYQuery].getValue(),
+            'ref_Y': self.option_queries[ReferenceYQuery].getValue(),
             'delta_X': self.option_queries[DeltaXQuery].getValue(),
             'delta_Y': self.option_queries[DeltaYQuery].getValue()
         })

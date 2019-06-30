@@ -31,7 +31,7 @@ class RectangularGrooveDrawing(FeatureDrawing, GrooveDrawing, AutoObserver):
         options = {"tag":"geometry","outline":"yellow","fill":None}
         cut_depth = self.params['cut_depth']
         refX = self.params['refX']
-        refY = self.params['refY']
+        ref_Y = self.params['ref_Y']
         side_X = self.params['side_X']
         side_Y = self.params['side_Y']
         half_side_x = side_X / 2
@@ -43,20 +43,20 @@ class RectangularGrooveDrawing(FeatureDrawing, GrooveDrawing, AutoObserver):
             self.entities[plane].append(RoundedRectangle(self.view_space)) # outer edge
         if self.reference_point == 'center':
             self.entities[plane][0].setAll(
-                (refX - half_side_x - inner_adj, refY - half_side_y - inner_adj, refX + half_side_x + inner_adj, refY + half_side_y + inner_adj),
+                (refX - half_side_x - inner_adj, ref_Y - half_side_y - inner_adj, refX + half_side_x + inner_adj, ref_Y + half_side_y + inner_adj),
                 options
             ).draw()
             self.entities[plane][1].setAll(
-                (refX - half_side_x - outer_adj, refY - half_side_y - outer_adj, refX + half_side_x + outer_adj, refY + half_side_y + outer_adj, bit_radius),
+                (refX - half_side_x - outer_adj, ref_Y - half_side_y - outer_adj, refX + half_side_x + outer_adj, ref_Y + half_side_y + outer_adj, bit_radius),
                 options
             ).draw()
         elif self.reference_point == 'lower-left':
             self.entities[plane][0].setAll(
-                (refX - inner_adj, refY - inner_adj, refX + side_X + inner_adj, refY + side_Y + inner_adj),
+                (refX - inner_adj, ref_Y - inner_adj, refX + side_X + inner_adj, ref_Y + side_Y + inner_adj),
                 options
             ).draw()
             self.entities[plane][1].setAll(
-                (refX - outer_adj, refY - outer_adj, refX + side_X + outer_adj, refY + side_Y + outer_adj, bit_radius),
+                (refX - outer_adj, ref_Y - outer_adj, refX + side_X + outer_adj, ref_Y + side_Y + outer_adj, bit_radius),
                 options
             ).draw()
         else:
@@ -66,7 +66,7 @@ class RectangularGrooveDrawing(FeatureDrawing, GrooveDrawing, AutoObserver):
         plane = 'YZ'
         options = {"tag":"geometry","outline":"yellow","fill":None}
         cut_depth = self.params['cut_depth']
-        refY = self.params['refY']
+        ref_Y = self.params['ref_Y']
         side_X = self.params['side_X']
         side_Y = self.params['side_Y']
         half_side_x = side_X / 2
@@ -79,20 +79,20 @@ class RectangularGrooveDrawing(FeatureDrawing, GrooveDrawing, AutoObserver):
             self.entities[plane].append(Rectangle(self.view_space)) # outer edge
         if self.reference_point == 'center':
             self.entities[plane][0].setAll(
-                (refY - half_side_y - inner_adj, stock_height - cut_depth, refY + half_side_y + inner_adj, stock_height),
+                (ref_Y - half_side_y - inner_adj, stock_height - cut_depth, ref_Y + half_side_y + inner_adj, stock_height),
                 options
             ).draw()
             self.entities[plane][1].setAll(
-                (refY - half_side_y - outer_adj, stock_height - cut_depth, refY + half_side_y + outer_adj, stock_height),
+                (ref_Y - half_side_y - outer_adj, stock_height - cut_depth, ref_Y + half_side_y + outer_adj, stock_height),
                 options
             ).draw()
         elif self.reference_point == 'lower-left':
             self.entities[plane][0].setAll(
-                (refY - inner_adj, stock_height - cut_depth, refY + side_Y + inner_adj, stock_height),
+                (ref_Y - inner_adj, stock_height - cut_depth, ref_Y + side_Y + inner_adj, stock_height),
                 options
             ).draw()
             self.entities[plane][1].setAll(
-                (refY - outer_adj, stock_height - cut_depth, refY + side_Y + outer_adj, stock_height),
+                (ref_Y - outer_adj, stock_height - cut_depth, ref_Y + side_Y + outer_adj, stock_height),
                 options
             ).draw()
         else:

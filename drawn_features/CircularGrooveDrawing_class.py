@@ -15,20 +15,20 @@ class CircularGrooveDrawing(FeatureDrawing, GrooveDrawing, AutoObserver):
         plane = 'XY'
         options = {"tag":"geometry","outline":"yellow","fill":None}
         refX = self.params['refX']
-        refY = self.params['refY']
+        ref_Y = self.params['ref_Y']
         radius = self.params['diameter'] /2
         inner_adj, outer_adj = self.getAdjustments()
         if len(self.entities[plane]) == 0:
             self.entities[plane].append(Circle(self.view_space))
             self.entities[plane].append(Circle(self.view_space))
-        self.entities[plane][0].setAllByCenterRadius((refX, refY, radius + inner_adj), options).draw()
-        self.entities[plane][1].setAllByCenterRadius((refX, refY, radius + outer_adj), options).draw()
+        self.entities[plane][0].setAllByCenterRadius((refX, ref_Y, radius + inner_adj), options).draw()
+        self.entities[plane][1].setAllByCenterRadius((refX, ref_Y, radius + outer_adj), options).draw()
 
     def _drawYZentities(self):
         plane = 'YZ'
         options = {"tag":"geometry","outline":"yellow","fill":None}
         cut_depth = self.params['cut_depth']
-        refY = self.params['refY']
+        ref_Y = self.params['ref_Y']
         radius = self.params['diameter'] /2
         stock_height = self.params['stock_height']
         inner_adj, outer_adj = self.getAdjustments()
@@ -36,11 +36,11 @@ class CircularGrooveDrawing(FeatureDrawing, GrooveDrawing, AutoObserver):
             self.entities[plane].append(Rectangle(self.view_space))
             self.entities[plane].append(Rectangle(self.view_space))
         self.entities[plane][0].setAll(
-            (refY - radius - inner_adj, stock_height - cut_depth, refY + radius + inner_adj, stock_height),
+            (ref_Y - radius - inner_adj, stock_height - cut_depth, ref_Y + radius + inner_adj, stock_height),
             options
         ).draw()
         self.entities[plane][1].setAll(
-            (refY - radius - outer_adj, stock_height - cut_depth, refY + radius + outer_adj, stock_height),
+            (ref_Y - radius - outer_adj, stock_height - cut_depth, ref_Y + radius + outer_adj, stock_height),
             options
         ).draw()
 

@@ -1,5 +1,5 @@
 import abc
-from GeometricFeature_class import GeometricFeature
+from geometric_feature_class import GeometricFeature
 from DepthStepper_class import DepthStepper
 from option_queries import *
 

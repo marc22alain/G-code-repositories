@@ -53,7 +53,7 @@ class LinearDistribution(DistributedFeature):
         basic_params = self.getBasicParams()
         basic_params.update({
             'refX': self.option_queries[ReferenceXQuery].getValue(),
-            'refY': self.option_queries[ReferenceYQuery].getValue(),
+            'ref_Y': self.option_queries[ReferenceYQuery].getValue(),
             'delta_X': self.option_queries[DeltaXQuery].getValue(),
             'delta_Y': self.option_queries[DeltaYQuery].getValue(),
             'num_repeats': self.option_queries[NumRepeatQuery].getValue()

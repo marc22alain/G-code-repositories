@@ -1,4 +1,4 @@
-from GeometricFeature_class import GeometricFeature
+from geometric_feature_class import GeometricFeature
 from drawn_features import HoleDrawing
 from utilities import Glib as G
 from option_queries import *
@@ -47,7 +47,7 @@ class Peck(GeometricFeature):
         basic_params.update({
             'cut_depth': self.option_queries[CutDepthQuery].getValue(),
             'refX': self.option_queries[ReferenceXQuery].getValue(),
-            'refY': self.option_queries[ReferenceYQuery].getValue(),
+            'ref_Y': self.option_queries[ReferenceYQuery].getValue(),
             'diameter': diameter
         })
         return basic_params

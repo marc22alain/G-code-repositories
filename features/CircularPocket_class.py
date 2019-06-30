@@ -69,7 +69,7 @@ class CircularPocket(DepthSteppingFeature):
             'cut_depth': self.option_queries[CutDepthQuery].getValue(),
             'diameter': self.option_queries[PathDiameterQuery].getValue(),
             'refX': self.option_queries[ReferenceXQuery].getValue(),
-            'refY': self.option_queries[ReferenceYQuery].getValue()
+            'ref_Y': self.option_queries[ReferenceYQuery].getValue()
         })
         return basic_params
 

@@ -1,4 +1,4 @@
-from GeometricFeature_class import GeometricFeature
+from geometric_feature_class import GeometricFeature
 from feature_manager import AbstractFeatureManager
 import abc
 

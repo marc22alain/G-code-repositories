@@ -57,7 +57,7 @@ class RectangularGroove(DepthSteppingFeature):
         basic_params.update({
             'cut_depth': self.option_queries[CutDepthQuery].getValue(),
             'refX': self.option_queries[ReferenceXQuery].getValue(),
-            'refY': self.option_queries[ReferenceYQuery].getValue(),
+            'ref_Y': self.option_queries[ReferenceYQuery].getValue(),
             'side_X': self.option_queries[SideXQuery].getValue(),
             'side_Y': self.option_queries[SideYQuery].getValue(),
         })

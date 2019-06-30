@@ -1,4 +1,4 @@
-from GeometricFeature_class import GeometricFeature
+from geometric_feature_class import GeometricFeature
 from option_queries import *
 from utilities import Glib as G
 import inspect
