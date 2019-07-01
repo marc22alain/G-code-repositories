@@ -3,12 +3,10 @@
 ''' The GeometricFeature serves as the base Abstract class. '''
 import abc
 import inspect
-import os
 import pdb
 from observeder import Observable
 from option_queries import ReferenceXQuery, ReferenceYQuery
-from utilities import Glib as G
-from utilities import log
+from utilities import log, addDebug, Glib as G
 
 
 class GeometricFeature(Observable):
@@ -140,7 +138,7 @@ class GeometricFeature(Observable):
         '''
         Core interface
         '''
-        file_text = self.addDebug(inspect.currentframe())
+        file_text = addDebug(inspect.currentframe())
         ref_X = self.option_queries[ReferenceXQuery].getValue()
         ref_Y = self.option_queries[ReferenceYQuery].getValue()
         file_text += self.machine.setMode('INCR')
@@ -152,22 +150,12 @@ class GeometricFeature(Observable):
         '''
         Core interface
         '''
-        file_text = self.addDebug(inspect.currentframe())
+        file_text = addDebug(inspect.currentframe())
         ref_X = self.option_queries[ReferenceXQuery].getValue()
         ref_Y = self.option_queries[ReferenceYQuery].getValue()
         file_text += self.returnToHome()
         file_text += self.machine.setMode('INCR')
         file_text += G.G0_XY((- ref_X, - ref_Y))
-        return file_text
-
-    def addDebug(self, frame):
-        '''Generates a debug statement formatted to add to g-code.'''
-        file_text = ''
-        if 'DEBUG_GCODE' in os.environ.keys():
-            trace = inspect.getframeinfo(frame)
-            class_file = trace.filename.split('/')[-1].split('_class')[0]
-            file_text = G.comment(\
-                '# %s' % (class_file + '.' + trace.function + ' - line:' + str(trace.lineno)))
         return file_text
 
     def didUpdateQueries(self):

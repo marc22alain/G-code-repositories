@@ -4,7 +4,7 @@ from option_queries import *
 from utilities import Glib as G
 from drawn_features import RectangularPocketDrawing
 import inspect
-from utilities import log
+from utilities import addDebug, log
 
 
 class RectangularPocket(DepthSteppingFeature):
@@ -35,7 +35,7 @@ class RectangularPocket(DepthSteppingFeature):
         current_side_Y = params['side_Y']
         step_increment = bit_diameter - self.getOverlap()
         child = self.child_features[ODRectangularGroove]
-        file_text = self.addDebug(inspect.currentframe())
+        file_text = addDebug(inspect.currentframe())
         # do the full size outline first
         file_text += child.getGCode()
         while current_side_X >= (2 * bit_diameter) and current_side_Y >= (2 * bit_diameter):
@@ -47,7 +47,7 @@ class RectangularPocket(DepthSteppingFeature):
             file_text += G.G1_XY(((starting_side_X - current_side_X) / 2, (starting_side_Y - current_side_Y) / 2))
             self.setUpODRectangularGroove(current_side_X, current_side_Y)
             file_text += child.getGCode()
-            file_text += self.addDebug(inspect.currentframe())
+            file_text += addDebug(inspect.currentframe())
         if sequence not in ['last', 'only']:
             # returns to center of pocket, for
             file_text += self.returnToHome()
@@ -55,7 +55,7 @@ class RectangularPocket(DepthSteppingFeature):
         return file_text
 
     def moveToStart(self):
-        file_text = self.addDebug(inspect.currentframe())
+        file_text = addDebug(inspect.currentframe())
         params = self.getParams()
         self.setUpODRectangularGroove(params['side_X'], params['side_Y'])
         file_text += self.child_features[ODRectangularGroove].moveToStart()
@@ -65,7 +65,7 @@ class RectangularPocket(DepthSteppingFeature):
         '''
         Called on the conclusion of each depth step, except for the last.
         '''
-        file_text = self.addDebug(inspect.currentframe())
+        file_text = addDebug(inspect.currentframe())
         file_text += self.child_features[ODRectangularGroove].returnToHome()
         return file_text
 
