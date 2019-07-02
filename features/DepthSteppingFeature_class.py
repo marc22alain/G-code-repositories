@@ -12,6 +12,12 @@ class DepthSteppingFeature(GeometricFeature):
         if self.self_managed_depth:
             self.depth_stepper = DepthStepper(feature_manager, view_space)
 
+    def getGCode(self, sequence = None):
+        # manage height - optionally -
+        if self.self_managed_depth:
+            return self.getManagedDepthInstructions()
+        return self._getInstructions(sequence)
+
     def getManagedDepthInstructions(self):
         self.depth_stepper.option_queries[CutPerPassQuery] = self.option_queries[CutPerPassQuery]
         self.depth_stepper.option_queries[CutDepthQuery] = self.option_queries[CutDepthQuery]
