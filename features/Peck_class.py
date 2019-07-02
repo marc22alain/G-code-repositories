@@ -1,15 +1,13 @@
+import inspect
 from geometric_feature_class import GeometricFeature
 from drawn_features import HoleDrawing
-from utilities import Glib as G
-from option_queries import *
-import inspect
-from utilities import addDebug, log
+from utilities import addDebug, log, Glib as G
+from option_queries import CutDepthQuery, ReferenceXQuery, ReferenceYQuery
 
 
 class Peck(GeometricFeature):
-    '''
-    This feature does not require composition with DepthSteppingFeature.
-    '''
+    """The Peck is a straight drill down to specified depth.
+    This feature does not require the features of the DepthSteppingFeature."""
     name = 'Peck'
     user_selectable = True
     option_query_classes = [
@@ -36,9 +34,11 @@ class Peck(GeometricFeature):
         return file_text
 
     def moveToStart(self):
+        """The reference point is the Peck operation's center, and requires no movement."""
         return ''
 
     def returnToHome(self):
+        """The reference point is the Peck operation's center, and requires no movement."""
         return ''
 
     def getParams(self):
@@ -56,7 +56,6 @@ class Peck(GeometricFeature):
         log('Peck makeDrawingClass')
         class Anon(HoleDrawing):
             params = self.getParams()
-            # options = self.getOptions()
             observable = self
             view_space = self.view_space
         return Anon

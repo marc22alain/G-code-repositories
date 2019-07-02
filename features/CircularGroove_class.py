@@ -1,10 +1,13 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
 from utilities import Glib as G
-from option_queries import *
+from option_queries import PathDiameterQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery
 from drawn_features import CircularGrooveDrawing
 
 
 class CircularGroove(DepthSteppingFeature):
+    """The CircularGroove is a single cut of a full circle. The feature's
+    reference point is the center of the circle, and the path reference is the
+    center of the bit."""
     name = 'Circular Groove'
     user_selectable = True
     option_query_classes = [
@@ -23,16 +26,18 @@ class CircularGroove(DepthSteppingFeature):
     def _getInstructions(self, sequence):
         diameter = self.getParams()['diameter']
         file_text = self.machine.setMode('INCR')
-        file_text += G.G2XY((0,0),(diameter / 2, 0))
+        file_text += G.G2XY((0, 0), (diameter / 2, 0))
         return file_text
 
     def moveToStart(self):
+        """Assumes reference point at center."""
         diameter = self.getParams()['diameter']
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((- diameter / 2, 0))
         return file_text
 
     def returnToHome(self):
+        """Assumes reference point at center."""
         diameter = self.getParams()['diameter']
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((diameter / 2, 0))
