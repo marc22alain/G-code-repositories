@@ -14,7 +14,6 @@ class Arc(GeometricEntity):
         self.radius = None
         self.start = None
         self.extent = None
-        self.options = None
         GeometricEntity.__init__(self, view_space)
 
 

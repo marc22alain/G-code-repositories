@@ -1,7 +1,16 @@
-from GeometricEntity_class import GeometricEntity
 from Tkinter import *
+from GeometricEntity_class import GeometricEntity
+
 
 class RoundedRectangle(GeometricEntity):
+    """Draws rectangles with radii in the Tkinter canvas."""
+    def __init__(self, view_space):
+        self.x1 = None
+        self.y1 = None
+        self.x2 = None
+        self.y2 = None
+        self.radius = None
+        GeometricEntity.__init__(self, view_space)
 
     def assertValid(self):
         pass
@@ -43,29 +52,29 @@ class RoundedRectangle(GeometricEntity):
             mapping_x(self.x1),
             mapping_y(self.y1 + self.radius),
             mapping_x(self.x1),
-            mapping_y(self.y2 - self.radius))
-        )
+            mapping_y(self.y2 - self.radius)
+        ))
         # right side line
         ids.append(canvas.create_line(
             mapping_x(self.x2),
             mapping_y(self.y1 + self.radius),
             mapping_x(self.x2),
-            mapping_y(self.y2 - self.radius))
-        )
+            mapping_y(self.y2 - self.radius)
+        ))
         # bottom side line
         ids.append(canvas.create_line(
             mapping_x(self.x1 + self.radius),
             mapping_y(self.y1),
             mapping_x(self.x2 - self.radius),
-            mapping_y(self.y1))
-        )
+            mapping_y(self.y1)
+        ))
         # top side line
         ids.append(canvas.create_line(
             mapping_x(self.x1 + self.radius),
             mapping_y(self.y2),
             mapping_x(self.x2 - self.radius),
-            mapping_y(self.y2))
-        )
+            mapping_y(self.y2)
+        ))
         # lower left corner
         ids.append(canvas.create_arc(
             mapping_x(self.x1),
@@ -73,8 +82,8 @@ class RoundedRectangle(GeometricEntity):
             mapping_x(self.x1 + diameter),
             mapping_y(self.y1 + diameter),
             start=180,
-            extent=90)
-        )
+            extent=90
+        ))
         # lower right corner
         ids.append(canvas.create_arc(
             mapping_x(self.x2),
@@ -82,8 +91,8 @@ class RoundedRectangle(GeometricEntity):
             mapping_x(self.x2 - diameter),
             mapping_y(self.y1 + diameter),
             start=270,
-            extent=90)
-        )
+            extent=90
+        ))
         # upper left corner
         ids.append(canvas.create_arc(
             mapping_x(self.x1),
@@ -91,8 +100,8 @@ class RoundedRectangle(GeometricEntity):
             mapping_x(self.x1 + diameter),
             mapping_y(self.y2 - diameter),
             start=90,
-            extent=90)
-        )
+            extent=90
+        ))
         # upper right corner
         ids.append(canvas.create_arc(
             mapping_x(self.x2),
@@ -100,8 +109,8 @@ class RoundedRectangle(GeometricEntity):
             mapping_x(self.x2 - diameter),
             mapping_y(self.y2 - diameter),
             start=0,
-            extent=90)
-        )
+            extent=90
+        ))
         return ids
 
     def _update(self):
@@ -109,47 +118,63 @@ class RoundedRectangle(GeometricEntity):
         mapping_x = self.view_space.x_conv
         mapping_y = self.view_space.y_conv
         diameter = 2 * self.radius
-        canvas.coords(self.ids[0],
+        canvas.coords(
+            self.ids[0],
             mapping_x(self.x1),
             mapping_y(self.y1 + self.radius),
             mapping_x(self.x1),
-            mapping_y(self.y2 - self.radius))
-        canvas.coords(self.ids[1],
+            mapping_y(self.y2 - self.radius)
+        )
+        canvas.coords(
+            self.ids[1],
             mapping_x(self.x2),
             mapping_y(self.y1 + self.radius),
             mapping_x(self.x2),
-            mapping_y(self.y2 - self.radius))
-        canvas.coords(self.ids[2],
+            mapping_y(self.y2 - self.radius)
+        )
+        canvas.coords(
+            self.ids[2],
             mapping_x(self.x1 + self.radius),
             mapping_y(self.y1),
             mapping_x(self.x2 - self.radius),
-            mapping_y(self.y1))
-        canvas.coords(self.ids[3],
+            mapping_y(self.y1)
+        )
+        canvas.coords(
+            self.ids[3],
             mapping_x(self.x1 + self.radius),
             mapping_y(self.y2),
             mapping_x(self.x2 - self.radius),
-            mapping_y(self.y2))
+            mapping_y(self.y2)
+        )
         # arcs
-        canvas.coords(self.ids[4],
+        canvas.coords(
+            self.ids[4],
             mapping_x(self.x1),
             mapping_y(self.y1),
             mapping_x(self.x1 + diameter),
-            mapping_y(self.y1 + diameter))
-        canvas.coords(self.ids[5],
+            mapping_y(self.y1 + diameter)
+        )
+        canvas.coords(
+            self.ids[5],
             mapping_x(self.x2),
             mapping_y(self.y1),
             mapping_x(self.x2 - diameter),
-            mapping_y(self.y1 + diameter))
-        canvas.coords(self.ids[6],
+            mapping_y(self.y1 + diameter)
+        )
+        canvas.coords(
+            self.ids[6],
             mapping_x(self.x1),
             mapping_y(self.y2),
             mapping_x(self.x1 + diameter),
-            mapping_y(self.y2 - diameter))
-        canvas.coords(self.ids[7],
+            mapping_y(self.y2 - diameter)
+        )
+        canvas.coords(
+            self.ids[7],
             mapping_x(self.x2),
             mapping_y(self.y2),
             mapping_x(self.x2 - diameter),
-            mapping_y(self.y2 - diameter))
+            mapping_y(self.y2 - diameter)
+        )
 
     def getParams(self):
         return (

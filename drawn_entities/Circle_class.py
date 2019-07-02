@@ -12,7 +12,6 @@ class Circle(GeometricEntity):
         self.center_x = None
         self.center_y = None
         self.radius = None
-        self.options = None
         GeometricEntity.__init__(self, view_space)
 
     def assertValid(self):
