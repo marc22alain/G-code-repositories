@@ -1,20 +1,14 @@
-from geometric_feature_class import GeometricFeature
-from option_queries import *
-from utilities import addDebug, Glib as G
 import inspect
+from geometric_feature_class import GeometricFeature
+from option_queries import CutPerPassQuery, CutDepthQuery
+from utilities import addDebug, Glib as G
 
 class DepthStepper(GeometricFeature):
-    '''
-    Conceived as a class that will automatically wrap <any> user-specified
-    feature. Does this break the pattern by presenting a different
-    initialization interface ?
-    Alternatively, could satisfy the requirement by adding an OptionQuery.
+    """For composition with features that are required to make repetitive machining
+    operations to achieve the required depth of cut.
     ---
-    Consider the challenge of using the DepthStepper to cause the child feature
-    to make a tabbed cut.
-    '''
-    # Consider if this might get over-written by the child feature's name
-    # name = 'Depth Stepper'
+    TODO: consider the challenge of using the DepthStepper to cause the child feature
+    to make a tabbed cut."""
     user_selectable = False
     option_query_classes = [
         CutPerPassQuery,
