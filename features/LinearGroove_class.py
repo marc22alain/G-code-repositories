@@ -1,12 +1,14 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
-from DepthStepper_class import DepthStepper
-from utilities import Glib as G
-from option_queries import *
+from utilities import log, Glib as G
+from option_queries import CutDepthQuery, ReferenceXQuery, ReferenceYQuery, \
+    DeltaXQuery, DeltaYQuery
 from drawn_features import RoundEndedRectangleDrawing
-from utilities import log
 
 
 class LinearGroove(DepthSteppingFeature):
+    """A straight cut, defined by deltas in X, Y, (and later Z), with reference
+    point at the starting point.
+    Radius of the cutter at the ends of the cut is outside of the defined deltas."""
     name = 'Linear Groove'
     user_selectable = True
     option_query_classes = [
@@ -16,14 +18,12 @@ class LinearGroove(DepthSteppingFeature):
 
     child_feature_classes = []
 
-    def getGCode(self):
-        # manage height - optionally -
-        if self.self_managed_depth:
-            return self.getManagedDepthInstructions()
-        else:
-            return self._getInstructions()
+    def __init__(self, feature_manager, view_space, manages_depth=True):
+        self.at_start = None
+        DepthSteppingFeature.__init__(self, feature_manager, view_space, manages_depth)
 
     def _getInstructions(self, sequence):
+        assert self.at_start is not None, 'moveToStart not yet called'
         params = self.getParams()
         delta_X = params['delta_X']
         delta_Y = params['delta_Y']
