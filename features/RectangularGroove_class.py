@@ -1,14 +1,12 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
 from utilities import Glib as G
-from option_queries import *
+from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery
 from drawn_features import RectangularGrooveDrawing
 
 
 class RectangularGroove(DepthSteppingFeature):
-    '''
-    Reference position is center.
-    The queries determine the path of the center of the cutter.
-    '''
+    """Reference position is the lower-left corner. The path reference is the
+    bit's center. The queries determine the path of the center of the cutter."""
     name = 'Rectangular Groove'
     user_selectable = True
     option_query_classes = [
@@ -18,17 +16,8 @@ class RectangularGroove(DepthSteppingFeature):
 
     child_feature_classes = []
 
-    def getGCode(self, sequence = None):
-        # manage height - optionally -
-        if self.self_managed_depth:
-            return self.getManagedDepthInstructions()
-        else:
-            return self._getInstructions(sequence)
-
     def _getInstructions(self, sequence):
-        '''
-        Climb cutting ?
-        '''
+        """Climb cutting ?"""
         side_X = self.option_queries[SideXQuery].getValue()
         side_Y = self.option_queries[SideYQuery].getValue()
         file_text = self.machine.setMode('INCR')

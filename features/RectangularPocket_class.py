@@ -1,13 +1,13 @@
+import inspect
 from DepthSteppingFeature_class import DepthSteppingFeature
 from ODRectangularGroove_class import ODRectangularGroove
-from option_queries import *
-from utilities import Glib as G
+from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery
+from utilities import addDebug, log, Glib as G
 from drawn_features import RectangularPocketDrawing
-import inspect
-from utilities import addDebug, log
 
 
 class RectangularPocket(DepthSteppingFeature):
+    """The RectangularPocket's reference point is the lower-left corner."""
     name = 'Rectangular Pocket'
     user_selectable = True
     option_query_classes = [
@@ -23,10 +23,7 @@ class RectangularPocket(DepthSteppingFeature):
         self.validateParams()
         params = self.getParams()
         self.setUpODRectangularGroove(params['side_X'], params['side_Y'])
-        if self.self_managed_depth:
-            return self.getManagedDepthInstructions()
-        else:
-            return self._getInstructions(sequence)
+        return DepthSteppingFeature.getGCode(self, sequence)
 
     def _getInstructions(self, sequence):
         params = self.getParams()
@@ -44,7 +41,10 @@ class RectangularPocket(DepthSteppingFeature):
             current_side_X = max(current_side_X - (2 * step_increment), 2 * step_increment)
             current_side_Y = max(current_side_Y - (2 * step_increment), 2 * step_increment)
             file_text += self.machine.setMode('INCR')
-            file_text += G.G1_XY(((starting_side_X - current_side_X) / 2, (starting_side_Y - current_side_Y) / 2))
+            file_text += G.G1_XY((
+                (starting_side_X - current_side_X) / 2,
+                (starting_side_Y - current_side_Y) / 2
+            ))
             self.setUpODRectangularGroove(current_side_X, current_side_Y)
             file_text += child.getGCode()
             file_text += addDebug(inspect.currentframe())
@@ -62,14 +62,13 @@ class RectangularPocket(DepthSteppingFeature):
         return file_text
 
     def returnToHome(self):
-        '''
-        Called on the conclusion of each depth step, except for the last.
-        '''
+        """Called on the conclusion of each depth step, except for the last."""
         file_text = addDebug(inspect.currentframe())
         file_text += self.child_features[ODRectangularGroove].returnToHome()
         return file_text
 
     def setUpODRectangularGroove(self, side_X, side_Y):
+        """Set up and delegate to ODRectangularGroove."""
         child = self.child_features[ODRectangularGroove]
         child.option_queries[SideXQuery].setValue(side_X)
         child.option_queries[SideYQuery].setValue(side_Y)
@@ -89,12 +88,10 @@ class RectangularPocket(DepthSteppingFeature):
         return basic_params
 
     def getOverlap(self):
-        '''
-        Returns a figure that determines the overlap between adjacent cuts that
+        """Returns a figure that determines the overlap between adjacent cuts that
         form the pocket.
         TBD, but probably based on a constant to begin with.
-        Unit is mm of course.
-        '''
+        Unit is mm of course."""
         return 0.5
 
     def validateParams(self):
