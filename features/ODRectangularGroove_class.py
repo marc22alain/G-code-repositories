@@ -1,16 +1,14 @@
+import inspect
 from DepthSteppingFeature_class import DepthSteppingFeature
 from RectangularGroove_class import RectangularGroove
-from utilities import addDebug, Glib as G
-from option_queries import *
+from utilities import addDebug
+from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery
 from drawn_features import RectangularGrooveDrawing
-import inspect
 
 
 class ODRectangularGroove(DepthSteppingFeature):
-    '''
-    Reference position is lower-left, and path reference is outer diameter.
-    The queries determine the path of the center of the cutter.
-    '''
+    """Reference position is lower-left, and path reference is outer diameter.
+    The queries determine the path of the center of the cutter."""
     name = 'ODRectangular Groove'
     user_selectable = True
     option_query_classes = [
@@ -25,16 +23,12 @@ class ODRectangularGroove(DepthSteppingFeature):
     def getGCode(self, sequence = None):
         self.validateParams()
         self.setUpChild()
-        # manage height - optionally -
-        if self.self_managed_depth:
-            return self.getManagedDepthInstructions()
-        else:
-            return self._getInstructions(sequence)
+        return DepthSteppingFeature.getGCode(self, sequence)
 
     def _getInstructions(self, sequence):
-        '''
+        """
         Climb cutting ?
-        '''
+        """
         file_text = addDebug(inspect.currentframe())
         self.setUpChild()
         file_text += self.child_features.values()[0].getGCode(sequence)
@@ -51,6 +45,7 @@ class ODRectangularGroove(DepthSteppingFeature):
         return file_text
 
     def setUpChild(self):
+        """Set up to delegate to RectangularGroove."""
         params = self.getParams()
         bit_diameter = params['bit_diameter']
 
@@ -82,7 +77,6 @@ class ODRectangularGroove(DepthSteppingFeature):
     def _makeDrawingClass(self):
         class Anon(RectangularGrooveDrawing):
             params = self.getParams()
-            # options = self.getOptions()
             observable = self
             view_space = self.view_space
             reference_point = 'lower-left'

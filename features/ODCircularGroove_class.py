@@ -1,12 +1,15 @@
+import inspect
 from DepthSteppingFeature_class import DepthSteppingFeature
 from CircularGroove_class import CircularGroove
-from option_queries import *
+from option_queries import PathDiameterQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery
 from drawn_features import CircularGrooveDrawing
 from utilities import addDebug
-import inspect
 
 
 class ODCircularGroove(DepthSteppingFeature):
+    """The ODCircularGroove is a single cut of a full circle. The feature's
+    reference point is the center of the circle, and the path reference is the
+    OD of the cut."""
     name = 'OD Circular Groove'
     user_selectable = True
     option_query_classes = [
@@ -19,11 +22,7 @@ class ODCircularGroove(DepthSteppingFeature):
 
     def getGCode(self, sequence = None):
         self.setUpChild()
-        # manage height - optionally -
-        if self.self_managed_depth:
-            return self.getManagedDepthInstructions()
-        else:
-            return self._getInstructions(sequence)
+        return DepthSteppingFeature.getGCode(self, sequence)
 
     def getParams(self):
         basic_params = self.getBasicParams()
@@ -51,6 +50,7 @@ class ODCircularGroove(DepthSteppingFeature):
         return file_text
 
     def setUpChild(self):
+        """Set up to delegate to CircularGroove."""
         params = self.getParams()
         center_diameter = params['diameter'] - params['bit_diameter']
 
