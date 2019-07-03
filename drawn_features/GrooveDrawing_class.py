@@ -1,15 +1,14 @@
-from errors import *
+from errors import PathReferenceError
 
-class GrooveDrawing:
-    '''
-    The drawing's path reference is one of ['center', 'od', 'id']
+class GrooveDrawing(object):
+    """The drawing's path reference is one of ['center', 'od', 'id']
     'center' path reference is at the very center of bit's path.
     'od' path reference is the outer diameter of bit's path.
-    'id' path reference is the inner diameter of bit's path.
-    '''
+    'id' path reference is the inner diameter of bit's path."""
     path_reference = None
 
     def getAdjustments(self):
+        """Produce adjustments for the various `path_reference` types."""
         bit_diameter = self.params['bit_diameter']
         bit_radius = bit_diameter / 2
         if self.path_reference == 'center':
