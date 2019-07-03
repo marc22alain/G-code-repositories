@@ -23,7 +23,7 @@ class OptionQueryDialog(BasicDialog):
         return master
 
     def validate(self):
-        '''
+        """
         Need to validate that user's input can be converted to the required.
         variable type.
         ? Any other validation ?
@@ -34,7 +34,7 @@ class OptionQueryDialog(BasicDialog):
 
         Note that this is a short-circuiting validation: returns False on first
         failure.
-        '''
+        """
         for query in self.option_queries.values():
             try:
                 query.getValue()
@@ -48,9 +48,9 @@ class OptionQueryDialog(BasicDialog):
         return True
 
     def apply(self):
-        '''
+        """
         Override to set the OptionQuery values
-        '''
+        """
         # for query in self.option_queries.values():
         #     log(query.name)
         #     log(query.getValue())

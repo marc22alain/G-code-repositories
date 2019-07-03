@@ -1,7 +1,7 @@
 import os
 
 def addDebug(frame):
-    '''Generates a debug statement formatted to add to g-code.'''
+    """Generates a debug statement formatted to add to g-code."""
     file_text = ''
     if 'DEBUG_GCODE' in os.environ.keys():
         trace = inspect.getframeinfo(frame)

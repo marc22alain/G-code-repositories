@@ -14,10 +14,10 @@ import math
 
 def bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter):
-    '''use G2; from specified diameter and thickness;
+    """use G2; from specified diameter and thickness;
        cutter compensation in function.
        Note that this method mixes ABSOLUTE with INCREMENTAL modes:
-       all moves in XY are in INCR and all moves in Z are ABS.'''
+       all moves in XY are in INCR and all moves in Z are ABS."""
 
     assert cutter_diameter <= circle_diameter, "bit is too large for desired hole"
     assert Z_safe > stock_thickness, "Z_safe is too short for stock thickness"
@@ -64,7 +64,7 @@ def bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
 
 def bore_circle_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, circle_diameter):
-    ''' TODO: error check the off-set calculation.'''
+    """ TODO: error check the off-set calculation."""
     off_set_hole_diam = circle_diameter  + (2.0 * cutter_diameter)
     return bore_circle_ID(Z_safe, stock_thickness, cut_per_pass, target_depth,
               cutter_diameter, off_set_hole_diam)
@@ -72,7 +72,7 @@ def bore_circle_OD(Z_safe, stock_thickness, cut_per_pass, target_depth,
 
 def bore_tabbed_ID(Z_safe, stock_thickness, cut_per_pass, tab_thickness,
               cutter_diameter, circle_diameter, tab_width):
-    ''' Cut three tabs.'''
+    """ Cut three tabs."""
     assert tab_thickness <= cut_per_pass, "script not set to handle cut_per_pass when it's less than tab thickness"
 
     off_set = (circle_diameter  - cutter_diameter) / 2.0
@@ -447,7 +447,7 @@ def startProgram(feed_rate):
 
 
 def endProgram():
-    '''
+    """
     Ends the program with an M2
-    '''
+    """
     return G.set_ABS_mode() + 'M2 \n'

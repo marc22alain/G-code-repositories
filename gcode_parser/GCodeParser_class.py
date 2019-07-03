@@ -1,6 +1,6 @@
 import re
 
-'''
+"""
 Note the assumptions made here:
 - the low-level G-Code tokens are mostly correct:
    . number types are not checked
@@ -9,7 +9,7 @@ Note the assumptions made here:
 - axis words that might be omitted are still supplied
 
 REF: http://www.linuxcnc.org/docs/html/gcode/g-code.html
-'''
+"""
 
 class GCodeParser(object):
     int_p = re.compile(r'(-*\d+)')

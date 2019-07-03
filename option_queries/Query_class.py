@@ -3,14 +3,14 @@ import abc
 class Query:
     __metaclass__ = abc.ABCMeta
 
-    '''
+    """
     Instantiated with sub-class's options dict:
     {
         'name' - required
         'type' - required
         'default' - optional
     }
-    '''
+    """
     def __init__(self):
         self.assertValidInit()
         # Is used to set/get query dialog data.
@@ -31,9 +31,9 @@ class Query:
         self.var.set(value)
 
     def updateValue(self):
-        '''
+        """
         Update from query dialog.
-        '''
+        """
         self.value = self.var.get()
 
     def getName(self):
@@ -45,14 +45,14 @@ class Query:
 
     @abc.abstractmethod
     def insertQuery(self, master, row_num):
-        '''
+        """
         Insert into query dialogs.
-        '''
+        """
         pass
 
     @abc.abstractmethod
     def validate(self):
-        '''
+        """
         Intended to validate user input.
-        '''
+        """
         pass

@@ -8,10 +8,10 @@ from Tkinter import *
 Tk()
 
 class MockCanvas(object):
-    '''
+    """
     Mocks the Tkinter Canvas Widget.
     Private methods (prefixed with `_`) are not part of the Canvas interface.
-    '''
+    """
     def __init__(self):
         self.entities = {}
         self.id_count = 0

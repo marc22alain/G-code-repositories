@@ -2,9 +2,9 @@ from Tkinter import *
 from utilities import log
 
 class BasicDialog(Toplevel):
-    '''
+    """
     Magic from https://effbot.org/tkinterbook/tkinter-dialog-windows.htm
-    '''
+    """
 
     def __init__(self, parent, title = None, ok_callback=None, cancel_callback=None):
         self.ok_callback = ok_callback
@@ -110,13 +110,13 @@ class BasicDialog(Toplevel):
         self.destroy()
 
     def validate(self):
-        '''
+        """
         Override to validate user's input
-        '''
+        """
         pass # override
 
     def apply(self):
-        '''
+        """
         Override to do stuff
-        '''
+        """
         pass # override
