@@ -47,7 +47,7 @@ class LinearDistribution(DistributedFeature):
     def getParams(self):
         basic_params = self.getBasicParams()
         basic_params.update({
-            'refX': self.option_queries[ReferenceXQuery].getValue(),
+            'ref_X': self.option_queries[ReferenceXQuery].getValue(),
             'ref_Y': self.option_queries[ReferenceYQuery].getValue(),
             'delta_X': self.option_queries[DeltaXQuery].getValue(),
             'delta_Y': self.option_queries[DeltaYQuery].getValue(),

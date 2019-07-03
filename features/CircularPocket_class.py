@@ -7,7 +7,7 @@ from utilities import addDebug, log, Glib as G
 
 
 class CircularPocket(DepthSteppingFeature):
-    """The CircularGroove reference point is the center of the circle."""
+    """The CircularPocket reference point is the center of the circle."""
     name = 'Circular Pocket'
     user_selectable = True
     option_query_classes = [
@@ -64,7 +64,7 @@ class CircularPocket(DepthSteppingFeature):
         basic_params.update({
             'cut_depth': self.option_queries[CutDepthQuery].getValue(),
             'diameter': self.option_queries[PathDiameterQuery].getValue(),
-            'refX': self.option_queries[ReferenceXQuery].getValue(),
+            'ref_X': self.option_queries[ReferenceXQuery].getValue(),
             'ref_Y': self.option_queries[ReferenceYQuery].getValue()
         })
         return basic_params

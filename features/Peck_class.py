@@ -46,7 +46,7 @@ class Peck(GeometricFeature):
         diameter = basic_params['bit_diameter']
         basic_params.update({
             'cut_depth': self.option_queries[CutDepthQuery].getValue(),
-            'refX': self.option_queries[ReferenceXQuery].getValue(),
+            'ref_X': self.option_queries[ReferenceXQuery].getValue(),
             'ref_Y': self.option_queries[ReferenceYQuery].getValue(),
             'diameter': diameter
         })
