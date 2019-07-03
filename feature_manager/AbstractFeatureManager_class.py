@@ -1,9 +1,10 @@
 import abc
 from ui import OptionQueryDialog
-from option_queries import *
+from option_queries import GeometricFeatureQuery
 from utilities import log
 
 class AbstractFeatureManager:
+    """The meta class for all feature managers."""
     __metaclass__ = abc.ABCMeta
 
     app = None
@@ -15,8 +16,9 @@ class AbstractFeatureManager:
 
 
     def addChild(self, feature_class = None):
+        """Add child, by argument or inferred from option_query."""
         # for ComposedFeature
-        if feature_class == None:
+        if feature_class is None:
             query = self.option_queries[GeometricFeatureQuery]
             query.updateValue()
             feature_class = query.getValue()
@@ -25,7 +27,6 @@ class AbstractFeatureManager:
         self.features.append(feature)
         # passed in as callback
         def addFunction():
-            queries = feature.getOptionQueries().values()
             log('running FeatureManager OK function: %s' % (self.__repr__()))
             if hasattr(feature, 'is_composed'):
                 feature.addChild()
@@ -40,11 +41,15 @@ class AbstractFeatureManager:
             self.features.pop()
             log('running CANCEL function')
         if self.app:
-            OptionQueryDialog(self.app, feature.getOptionQueries(), feature.name, addFunction, cancelFunction)
+            OptionQueryDialog(
+                self.app,
+                feature.getOptionQueries(),
+                feature.name,
+                addFunction,
+                cancelFunction
+            )
 
     @abc.abstractmethod
     def deleteChild(self, feature_instance):
-        '''
-        Delete the feature instance
-        '''
+        """Delete the feature instance."""
         pass
