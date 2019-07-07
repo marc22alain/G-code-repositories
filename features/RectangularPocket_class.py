@@ -7,7 +7,7 @@ from drawn_features import RectangularPocketDrawing
 
 
 class RectangularPocket(DepthSteppingFeature):
-    """The RectangularPocket's reference point is the lower-left corner."""
+    """The RectangularPocket's (default?) reference point is its center."""
     name = 'Rectangular Pocket'
     user_selectable = True
     option_query_classes = [
@@ -109,5 +109,5 @@ class RectangularPocket(DepthSteppingFeature):
             # options = self.getOptions()
             observable = self
             view_space = self.view_space
-            reference_point = 'lower-left'
+            reference_point = 'center'
         return Anon

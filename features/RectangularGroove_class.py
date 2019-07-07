@@ -6,7 +6,9 @@ from drawn_features import RectangularGrooveDrawing
 
 class RectangularGroove(DepthSteppingFeature):
     """Reference position is the lower-left corner. The path reference is the
-    bit's center. The queries determine the path of the center of the cutter."""
+    bit's center. The queries determine the path of the center of the cutter.
+    As it is cut with straight moves only, the outer cut edge is radiused
+    according to the bit's radius, while the inner cut edge has sharp corners."""
     name = 'Rectangular Groove'
     user_selectable = True
     option_query_classes = [

@@ -46,7 +46,8 @@ class AbstractFeatureManager:
                 feature.getOptionQueries(),
                 feature.name,
                 addFunction,
-                cancelFunction
+                cancelFunction,
+                feature.__doc__
             )
 
     @abc.abstractmethod

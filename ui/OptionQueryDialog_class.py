@@ -4,9 +4,10 @@ from BasicDialog_class import BasicDialog
 from utilities import log
 
 class OptionQueryDialog(BasicDialog):
-    def __init__(self, parent, option_queries, feature_name, ok_callback=None, cancel_callback=None):
+    def __init__(self, parent, option_queries, feature_name, ok_callback=None, cancel_callback=None, feature_docstring=None):
         self.option_queries = option_queries
         self.feature_name = feature_name
+        self.feature_docstring = feature_docstring
         BasicDialog.__init__(self, parent, 'Choose feature settings', ok_callback, cancel_callback)
 
     def body(self, master):
@@ -20,6 +21,12 @@ class OptionQueryDialog(BasicDialog):
             row_num += 1
             query.insertQuery(master, row_num)
         # need to get a better grip on returning the proper entry field
+
+        if self.feature_docstring:
+            row_num += 1
+            self.doc = Text(master, wrap=CHAR)
+            self.doc.insert(INSERT, self.feature_docstring)
+            self.doc.grid(row=row_num, column=0, columnspan=2)
         return master
 
     def validate(self):
@@ -39,8 +46,7 @@ class OptionQueryDialog(BasicDialog):
             try:
                 query.getValue()
                 if not query.validate():
-                    log(query.name)
-                    log('query FAILED validation')
+                    log('%s FAILED validation' % (query.name))
                     return False
             # for instance attempting to convert 'bogus' to a numerical type
             except ValueError:
