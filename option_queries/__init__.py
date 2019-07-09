@@ -16,3 +16,4 @@ from NumRepeatQuery_class import NumRepeatQuery
 from BogusQuery_class import BogusQuery
 from SideXQuery_class import SideXQuery
 from SideYQuery_class import SideYQuery
+from PathReferenceQuery_class import PathReferenceQuery

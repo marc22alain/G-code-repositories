@@ -1,6 +1,7 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
 from utilities import Glib as G
-from option_queries import PathDiameterQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery
+from option_queries import PathDiameterQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
+    PathReferenceQuery
 from drawn_features import CircularGrooveDrawing
 
 
@@ -11,27 +12,28 @@ class CircularGroove(DepthSteppingFeature):
     name = 'Circular Groove'
     user_selectable = True
     option_query_classes = [
-        PathDiameterQuery
+        PathDiameterQuery,
+        PathReferenceQuery
     ]
 
     child_feature_classes = []
 
     def _getInstructions(self, sequence):
-        diameter = self.getParams()['diameter']
+        diameter = self._getAdjustedDiameter()
         file_text = self.machine.setMode('INCR')
         file_text += G.G2XY((0, 0), (diameter / 2, 0))
         return file_text
 
     def moveToStart(self):
         """Assumes reference point at center."""
-        diameter = self.getParams()['diameter']
+        diameter = self._getAdjustedDiameter()
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((- diameter / 2, 0))
         return file_text
 
     def returnToHome(self):
         """Assumes reference point at center."""
-        diameter = self.getParams()['diameter']
+        diameter = self._getAdjustedDiameter()
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((diameter / 2, 0))
         return file_text
@@ -42,6 +44,7 @@ class CircularGroove(DepthSteppingFeature):
             'cut_depth': self.option_queries[CutDepthQuery].getValue(),
             'ref_X': self.option_queries[ReferenceXQuery].getValue(),
             'ref_Y': self.option_queries[ReferenceYQuery].getValue(),
+            'path_reference': self.option_queries[PathReferenceQuery].getValue(),
             'diameter': self.option_queries[PathDiameterQuery].getValue()
         })
         return basic_params
@@ -51,5 +54,18 @@ class CircularGroove(DepthSteppingFeature):
             params = self.getParams()
             observable = self
             view_space = self.view_space
-            path_reference = 'center'
         return Anon
+
+    def _getAdjustedDiameter(self):
+        params = self.getParams()
+        bit_diameter = params['bit_diameter']
+        path_reference = params['path_reference']
+        if path_reference is 'center':
+            diameter = params['diameter']
+        elif path_reference is 'od':
+            diameter = params['diameter'] - bit_diameter
+        elif path_reference is 'id':
+            diameter = params['diameter'] + bit_diameter
+        else:
+            raise PathReferenceError(self, path_reference)
+        return diameter
