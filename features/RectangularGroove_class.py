@@ -1,6 +1,7 @@
 from DepthSteppingFeature_class import DepthSteppingFeature
 from utilities import Glib as G
-from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery
+from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
+    PathReferenceQuery
 from drawn_features import RectangularGrooveDrawing
 
 
@@ -14,14 +15,14 @@ class RectangularGroove(DepthSteppingFeature):
     option_query_classes = [
         SideXQuery,
         SideYQuery,
+        PathReferenceQuery,
     ]
 
     child_feature_classes = []
 
     def _getInstructions(self, sequence):
         """Climb cutting ?"""
-        side_X = self.option_queries[SideXQuery].getValue()
-        side_Y = self.option_queries[SideYQuery].getValue()
+        side_X, side_Y = self._getAdjustedSideDims()
         file_text = self.machine.setMode('INCR')
         file_text += G.G1_XY((0, side_Y))
         file_text += G.G1_XY((side_X, 0))
@@ -30,15 +31,13 @@ class RectangularGroove(DepthSteppingFeature):
         return file_text
 
     def moveToStart(self):
-        side_X = self.option_queries[SideXQuery].getValue()
-        side_Y = self.option_queries[SideYQuery].getValue()
+        side_X, side_Y = self._getAdjustedSideDims()
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((- side_X / 2, - side_Y / 2))
         return file_text
 
     def returnToHome(self):
-        side_X = self.option_queries[SideXQuery].getValue()
-        side_Y = self.option_queries[SideYQuery].getValue()
+        side_X, side_Y = self._getAdjustedSideDims()
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((side_X / 2, side_Y / 2))
         return file_text
@@ -51,6 +50,7 @@ class RectangularGroove(DepthSteppingFeature):
             'ref_Y': self.option_queries[ReferenceYQuery].getValue(),
             'side_X': self.option_queries[SideXQuery].getValue(),
             'side_Y': self.option_queries[SideYQuery].getValue(),
+            'path_reference': self.option_queries[PathReferenceQuery].getValue()
         })
         return basic_params
 
@@ -61,5 +61,22 @@ class RectangularGroove(DepthSteppingFeature):
             observable = self
             view_space = self.view_space
             reference_point = 'lower-left'
-            path_reference = 'center'
         return Anon
+
+    def _getAdjustedSideDims(self):
+        params = self.getParams()
+        bit_diameter = params['bit_diameter']
+        path_reference = params['path_reference']
+        side_X = params['side_X']
+        side_Y = params['side_Y']
+        if path_reference is 'center':
+            pass
+        elif path_reference is 'od':
+            side_X = side_X - bit_diameter
+            side_Y = side_Y - bit_diameter
+        elif path_reference is 'id':
+            side_X = side_X + bit_diameter
+            side_Y = side_Y + bit_diameter
+        else:
+            raise PathReferenceError(self, path_reference)
+        return (side_X, side_Y)

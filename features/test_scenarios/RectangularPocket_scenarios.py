@@ -42,6 +42,7 @@ rect_pocket_scenarios = {
         },
         'description': 'Makes two passes',
         'benchmark': {
+            'program': 'F1000.0 \nG90 \nG0 Z80.0 \nG91 \nG0 X50.0 Y45.0 \nG0 X-3.9175 Y-13.45 \nG90 \nG0 Z15.0 \nG1 Z13.0 \nG4 P0.5 \n(# first)\nG91 \nG1 X0.0 Y26.9 \nG1 X7.835 Y0.0 \nG1 X0.0 Y-26.9 \nG1 X-7.835 Y0.0 \nG1 X1.2425 Y5.85 \nG1 X0.0 Y15.2 \nG1 X5.35 Y0.0 \nG1 X0.0 Y-15.2 \nG1 X-5.35 Y0.0 \nG0 X2.675 Y7.6 \nG0 X-3.9175 Y-13.45 \nG90 \nG1 Z12.0 \nG4 P0.5 \n(# last)\nG91 \nG1 X0.0 Y26.9 \nG1 X7.835 Y0.0 \nG1 X0.0 Y-26.9 \nG1 X-7.835 Y0.0 \nG1 X1.2425 Y5.85 \nG1 X0.0 Y15.2 \nG1 X5.35 Y0.0 \nG1 X0.0 Y-15.2 \nG1 X-5.35 Y0.0 \nG90 \nG0 Z80.0 \nG91 \nG0 X2.675 Y7.6 \nG0 X-50.0 Y-45.0 \nG90 \nM2 \n',
             'num_drawn_entities': {
                 'XY': {
                     'arc': 4,

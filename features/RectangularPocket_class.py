@@ -1,7 +1,8 @@
 import inspect
 from DepthSteppingFeature_class import DepthSteppingFeature
-from ODRectangularGroove_class import ODRectangularGroove
-from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery
+from RectangularGroove_class import RectangularGroove
+from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
+    PathReferenceQuery
 from utilities import addDebug, log, Glib as G
 from drawn_features import RectangularPocketDrawing
 
@@ -16,13 +17,13 @@ class RectangularPocket(DepthSteppingFeature):
     ]
 
     child_feature_classes = [
-        ODRectangularGroove,
+        RectangularGroove,
     ]
 
     def getGCode(self, sequence = None):
         self.validateParams()
         params = self.getParams()
-        self.setUpODRectangularGroove(params['side_X'], params['side_Y'])
+        self.setUpRectangularGroove(params['side_X'], params['side_Y'])
         return DepthSteppingFeature.getGCode(self, sequence)
 
     def _getInstructions(self, sequence):
@@ -31,7 +32,7 @@ class RectangularPocket(DepthSteppingFeature):
         current_side_X = params['side_X']
         current_side_Y = params['side_Y']
         step_increment = bit_diameter - self.getOverlap()
-        child = self.child_features[ODRectangularGroove]
+        child = self.child_features[RectangularGroove]
         file_text = addDebug(inspect.currentframe())
         # do the full size outline first
         file_text += child.getGCode()
@@ -45,7 +46,7 @@ class RectangularPocket(DepthSteppingFeature):
                 (starting_side_X - current_side_X) / 2,
                 (starting_side_Y - current_side_Y) / 2
             ))
-            self.setUpODRectangularGroove(current_side_X, current_side_Y)
+            self.setUpRectangularGroove(current_side_X, current_side_Y)
             file_text += child.getGCode()
             file_text += addDebug(inspect.currentframe())
         if sequence not in ['last', 'only']:
@@ -57,24 +58,25 @@ class RectangularPocket(DepthSteppingFeature):
     def moveToStart(self):
         file_text = addDebug(inspect.currentframe())
         params = self.getParams()
-        self.setUpODRectangularGroove(params['side_X'], params['side_Y'])
-        file_text += self.child_features[ODRectangularGroove].moveToStart()
+        self.setUpRectangularGroove(params['side_X'], params['side_Y'])
+        file_text += self.child_features[RectangularGroove].moveToStart()
         return file_text
 
     def returnToHome(self):
         """Called on the conclusion of each depth step, except for the last."""
         file_text = addDebug(inspect.currentframe())
-        file_text += self.child_features[ODRectangularGroove].returnToHome()
+        file_text += self.child_features[RectangularGroove].returnToHome()
         return file_text
 
-    def setUpODRectangularGroove(self, side_X, side_Y):
-        """Set up and delegate to ODRectangularGroove."""
-        child = self.child_features[ODRectangularGroove]
+    def setUpRectangularGroove(self, side_X, side_Y):
+        """Set up and delegate to RectangularGroove."""
+        params = self.getParams()
+        bit_diameter = params['bit_diameter']
+        child = self.child_features[RectangularGroove]
         child.option_queries[SideXQuery].setValue(side_X)
         child.option_queries[SideYQuery].setValue(side_Y)
+        child.option_queries[PathReferenceQuery].setValue('od')
         child.self_managed_depth = False
-        # Leaky abstraction:
-        child.setUpChild()
 
     def getParams(self):
         basic_params = self.getBasicParams()
@@ -106,7 +108,6 @@ class RectangularPocket(DepthSteppingFeature):
         log('RectangularPocket makeDrawingClass: %s' % (self.__repr__()))
         class Anon(RectangularPocketDrawing):
             params = self.getParams()
-            # options = self.getOptions()
             observable = self
             view_space = self.view_space
             reference_point = 'center'

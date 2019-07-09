@@ -19,7 +19,6 @@ class RectangularGrooveDrawing(FeatureDrawing, GrooveDrawing, AutoObserver):
     'od' path reference is the outer diameter of bit's path.
     'id' path reference is the inner diameter of bit's path.
     """
-    path_reference = None
 
     def __init__(self):
         AutoObserver.__init__(self)

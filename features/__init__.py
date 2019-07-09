@@ -5,7 +5,6 @@ from DepthStepper_class import DepthStepper
 from LinearGroove_class import LinearGroove
 from CircularPocket_class import CircularPocket
 from RectangularGroove_class import RectangularGroove
-from ODRectangularGroove_class import ODRectangularGroove
 from RectangularPocket_class import RectangularPocket
 
 classes_dict = {
@@ -16,6 +15,5 @@ classes_dict = {
     'Peck': Peck,
     'CircularPocket': CircularPocket,
     'RectangularGroove': RectangularGroove,
-    'ODRectangularGroove': ODRectangularGroove,
     'RectangularPocket': RectangularPocket,
 }
