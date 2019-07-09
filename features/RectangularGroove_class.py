@@ -6,7 +6,7 @@ from drawn_features import RectangularGrooveDrawing
 
 
 class RectangularGroove(DepthSteppingFeature):
-    """Reference position is the lower-left corner. The path reference is the
+    """Reference position is the center. The path reference is the
     bit's center. The queries determine the path of the center of the cutter.
     As it is cut with straight moves only, the outer cut edge is radiused
     according to the bit's radius, while the inner cut edge has sharp corners."""
@@ -31,12 +31,14 @@ class RectangularGroove(DepthSteppingFeature):
         return file_text
 
     def moveToStart(self):
+        """Reference position is the center, go to corner."""
         side_X, side_Y = self._getAdjustedSideDims()
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((- side_X / 2, - side_Y / 2))
         return file_text
 
     def returnToHome(self):
+        """Reference position is the center, return from corner."""
         side_X, side_Y = self._getAdjustedSideDims()
         file_text = self.machine.setMode('INCR')
         file_text += G.G0_XY((side_X / 2, side_Y / 2))
@@ -57,10 +59,9 @@ class RectangularGroove(DepthSteppingFeature):
     def _makeDrawingClass(self):
         class Anon(RectangularGrooveDrawing):
             params = self.getParams()
-            # options = self.getOptions()
             observable = self
             view_space = self.view_space
-            reference_point = 'lower-left'
+            reference_point = 'center'
         return Anon
 
     def _getAdjustedSideDims(self):
