@@ -3,7 +3,7 @@ from GrooveDrawing_class import GrooveDrawing
 from observeder import AutoObserver
 from drawn_entities import Circle, Rectangle
 
-# used by CircularGroove, ODCircularGroove
+# used by CircularGroove
 class CircularGrooveDrawing(FeatureDrawing, GrooveDrawing, AutoObserver):
     """Draws circular grooves."""
     def __init__(self):
