@@ -17,3 +17,4 @@ from BogusQuery_class import BogusQuery
 from SideXQuery_class import SideXQuery
 from SideYQuery_class import SideYQuery
 from PathReferenceQuery_class import PathReferenceQuery
+from CornerRadiusQuery_class import CornerRadiusQuery

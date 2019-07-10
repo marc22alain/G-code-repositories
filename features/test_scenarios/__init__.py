@@ -5,6 +5,7 @@ from Peck_scenarios import peck_scenarios
 from CircularPocket_scenarios import circ_pock_scenarios
 from RectangularGroove_scenarios import rect_scenarios
 from RectangularPocket_scenarios import rect_pocket_scenarios
+from RadiusedRectangularGroove_scenarios import rad_rect_scenarios
 from features import *
 
 scenarios = {
@@ -15,4 +16,5 @@ scenarios = {
     CircularPocket: circ_pock_scenarios,
     RectangularGroove: rect_scenarios,
     RectangularPocket: rect_pocket_scenarios,
+    RadiusedRectangularGroove: rad_rect_scenarios,
 }

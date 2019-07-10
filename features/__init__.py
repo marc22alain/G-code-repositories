@@ -6,6 +6,7 @@ from LinearGroove_class import LinearGroove
 from CircularPocket_class import CircularPocket
 from RectangularGroove_class import RectangularGroove
 from RectangularPocket_class import RectangularPocket
+from RadiusedRectangularGroove_class import RadiusedRectangularGroove
 
 classes_dict = {
     'CircularGroove': CircularGroove,
@@ -16,4 +17,5 @@ classes_dict = {
     'CircularPocket': CircularPocket,
     'RectangularGroove': RectangularGroove,
     'RectangularPocket': RectangularPocket,
+    'RadiusedRectangularGroove': RadiusedRectangularGroove,
 }
