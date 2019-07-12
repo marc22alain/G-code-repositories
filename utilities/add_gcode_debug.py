@@ -1,4 +1,6 @@
+import inspect
 import os
+import Glib as G
 
 def addDebug(frame):
     """Generates a debug statement formatted to add to g-code."""

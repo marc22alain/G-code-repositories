@@ -6,3 +6,4 @@ from RoundEndedRectangleDrawing_class import RoundEndedRectangleDrawing
 from RectangularPocketDrawing_class import RectangularPocketDrawing
 from RectangularGrooveDrawing_class import RectangularGrooveDrawing
 from RadiusedRectangularGrooveDrawing_class import RadiusedRectangularGrooveDrawing
+from TenonDrawing_class import TenonDrawing

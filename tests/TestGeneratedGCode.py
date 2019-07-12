@@ -16,9 +16,12 @@ def testWithProgram(program, scenario):
             self.assertEqual(len(self.program_data['program_errors'].keys()), 0, 'No errors were raised)')
 
         def test_program_ends_at_origin(self):
-            self.assertEqual(round(self.program_data['ending_x_pos'], 5), 0, 'Program ends at X=0')
-            self.assertEqual(round(self.program_data['ending_y_pos'], 5), 0, 'Program ends at Y=0')
-            self.assertEqual(round(self.program_data['ending_z_pos'], 5), 80, 'Program ends at Z=80')
+            ending_x_pos = round(self.program_data['ending_x_pos'], 5)
+            ending_y_pos = round(self.program_data['ending_y_pos'], 5)
+            ending_z_pos = round(self.program_data['ending_z_pos'], 5)
+            self.assertEqual(ending_x_pos, 0, 'Program should end at X=0; ended at %f' % (ending_x_pos))
+            self.assertEqual(ending_y_pos, 0, 'Program should end at Y=0; ended at %f' % (ending_y_pos))
+            self.assertEqual(ending_z_pos, 80, 'Program should end at Z=80; ended at %f' % (ending_z_pos))
 
         def test_program_ends_in_ABS_mode(self):
             self.assertEqual(self.program_data['ending_mode'], 'abs', 'Program ends in ABS mode')

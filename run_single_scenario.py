@@ -22,8 +22,11 @@ from tests import ScenarioRunner
 # scenario = ScenarioRunner.test_scenarios.lg_scenarios['lg_config_1']
 # feature = classes_dict['LinearGroove']
 
-scenario = ScenarioRunner.test_scenarios.rad_rect_scenarios['rad_rect_config_3']
-feature = classes_dict['RadiusedRectangularGroove']
+# scenario = ScenarioRunner.test_scenarios.rad_rect_scenarios['rad_rect_config_3']
+# feature = classes_dict['RadiusedRectangularGroove']
+
+scenario = ScenarioRunner.test_scenarios.tenon_scenarios['tenon_config_3']
+feature = classes_dict['Tenon']
 
 ScenarioRunner.ScenarioRunner().runScenario(feature, scenario, True)
 
