@@ -1,7 +1,7 @@
 import inspect
 from geometric_feature_class import GeometricFeature
 from option_queries import CutPerPassQuery, CutDepthQuery
-from utilities import addDebug, Glib as G
+from utilities import addDebugFrame, Glib as G
 
 class DepthStepper(GeometricFeature):
     """For composition with features that are required to make repetitive machining
@@ -18,7 +18,7 @@ class DepthStepper(GeometricFeature):
     child_feature_classes = []
 
     def getGCode(self, instruction_callback, to_start_callback, return_callback):
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         basic_params, cut_per_pass, cut_depth = self.getParams()
         stock_height = basic_params['stock_height']
         target_depth = stock_height - cut_depth
@@ -29,7 +29,7 @@ class DepthStepper(GeometricFeature):
         file_text += self.machine.setMode('ABS')
         file_text += G.G0_Z(basic_params['safe_z'])
         file_text += to_start_callback()
-        file_text += addDebug(inspect.currentframe())
+        file_text += addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('ABS')
         file_text += G.G0_Z(stock_height)
 
@@ -45,20 +45,20 @@ class DepthStepper(GeometricFeature):
                 file_text += G.set_dwell(0.5)
                 file_text += G.comment('# ' + sequence)
                 file_text += instruction_callback(sequence)
-                file_text += addDebug(inspect.currentframe())
+                file_text += addDebugFrame(inspect.currentframe())
                 sequence = 'next'
         else:
             sequence = 'only'
             file_text += G.G1_Z(target_depth)
             file_text += G.set_dwell(0.5)
             file_text += instruction_callback(sequence)
-            file_text += addDebug(inspect.currentframe())
+            file_text += addDebugFrame(inspect.currentframe())
 
         # post-amble
         file_text += self.machine.setMode('ABS')
         file_text += G.G0_Z(basic_params['safe_z'])
         file_text += return_callback()
-        file_text += addDebug(inspect.currentframe())
+        file_text += addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('ABS')
 
         return file_text

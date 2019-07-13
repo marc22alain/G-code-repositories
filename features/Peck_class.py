@@ -1,7 +1,7 @@
 import inspect
 from geometric_feature_class import GeometricFeature
 from drawn_features import HoleDrawing
-from utilities import addDebug, log, Glib as G
+from utilities import addDebugFrame, log, Glib as G
 from option_queries import CutDepthQuery, ReferenceXQuery, ReferenceYQuery
 
 
@@ -17,12 +17,12 @@ class Peck(GeometricFeature):
     child_feature_classes = []
 
     def getGCode(self):
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         params = self.getParams()
         file_text += self.machine.setMode('ABS')
         file_text += G.G0_Z(params['safe_z'])
         file_text += self.moveToReference()
-        file_text += addDebug(inspect.currentframe())
+        file_text += addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('ABS')
         file_text += G.G0_Z(params['stock_height'])
         file_text += self.machine.setMode('INCR')

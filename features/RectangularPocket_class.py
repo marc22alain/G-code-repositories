@@ -3,7 +3,7 @@ from DepthSteppingFeature_class import DepthSteppingFeature
 from RectangularGroove_class import RectangularGroove
 from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
     PathReferenceQuery
-from utilities import addDebug, log, Glib as G
+from utilities import addDebugFrame, log, Glib as G
 from drawn_features import RectangularPocketDrawing
 
 
@@ -33,7 +33,7 @@ class RectangularPocket(DepthSteppingFeature):
         current_side_Y = params['side_Y']
         step_increment = bit_diameter - self.getOverlap()
         child = self.child_features[RectangularGroove]
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         # do the full size outline first
         file_text += child.getGCode()
         while current_side_X >= (2 * bit_diameter) and current_side_Y >= (2 * bit_diameter):
@@ -48,7 +48,7 @@ class RectangularPocket(DepthSteppingFeature):
             ))
             self.setUpRectangularGroove(current_side_X, current_side_Y)
             file_text += child.getGCode()
-            file_text += addDebug(inspect.currentframe())
+            file_text += addDebugFrame(inspect.currentframe())
         if sequence not in ['last', 'only']:
             # returns to center of pocket, for
             file_text += self.returnToHome()
@@ -56,7 +56,7 @@ class RectangularPocket(DepthSteppingFeature):
         return file_text
 
     def moveToStart(self):
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         params = self.getParams()
         self.setUpRectangularGroove(params['side_X'], params['side_Y'])
         file_text += self.child_features[RectangularGroove].moveToStart()
@@ -64,7 +64,7 @@ class RectangularPocket(DepthSteppingFeature):
 
     def returnToHome(self):
         """Called on the conclusion of each depth step, except for the last."""
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += self.child_features[RectangularGroove].returnToHome()
         return file_text
 

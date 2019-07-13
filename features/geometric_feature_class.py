@@ -6,7 +6,7 @@ import inspect
 import pdb
 from observeder import Observable
 from option_queries import ReferenceXQuery, ReferenceYQuery
-from utilities import log, addDebug, Glib as G
+from utilities import log, addDebugFrame, Glib as G
 
 
 class GeometricFeature(Observable):
@@ -124,7 +124,7 @@ class GeometricFeature(Observable):
 
     def moveToReference(self):
         """Core interface."""
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         ref_X = self.option_queries[ReferenceXQuery].getValue()
         ref_Y = self.option_queries[ReferenceYQuery].getValue()
         file_text += self.machine.setMode('INCR')
@@ -134,7 +134,7 @@ class GeometricFeature(Observable):
 
     def returnFromReference(self):
         """Core interface."""
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         ref_X = self.option_queries[ReferenceXQuery].getValue()
         ref_Y = self.option_queries[ReferenceYQuery].getValue()
         file_text += self.returnToHome()

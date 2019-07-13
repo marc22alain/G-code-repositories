@@ -1,6 +1,6 @@
 import inspect
 from DepthSteppingFeature_class import DepthSteppingFeature
-from utilities import addDebug, Glib as G
+from utilities import addDebugFrame, Glib as G
 from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
     PathReferenceQuery
 from drawn_features import RectangularGrooveDrawing
@@ -24,7 +24,7 @@ class RectangularGroove(DepthSteppingFeature):
     def _getInstructions(self, sequence):
         """Climb cutting ?"""
         side_X, side_Y = self.getGrooveAdjustments()
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('INCR')
         file_text += G.G1_XY((0, side_Y))
         file_text += G.G1_XY((side_X, 0))
@@ -35,7 +35,7 @@ class RectangularGroove(DepthSteppingFeature):
     def moveToStart(self):
         """Reference position is the center, go to corner."""
         side_X, side_Y = self.getGrooveAdjustments()
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('INCR')
         file_text += G.G0_XY((- side_X / 2, - side_Y / 2))
         return file_text
@@ -43,7 +43,7 @@ class RectangularGroove(DepthSteppingFeature):
     def returnToHome(self):
         """Reference position is the center, return from corner."""
         side_X, side_Y = self.getGrooveAdjustments()
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('INCR')
         file_text += G.G0_XY((side_X / 2, side_Y / 2))
         return file_text

@@ -6,7 +6,7 @@ from option_queries import CornerRadiusQuery, CutDepthQuery, PathReferenceQuery,
     ReferenceXQuery, ReferenceYQuery, ShoulderOffsetQuery, SideXQuery, SideYQuery
 from RadiusedRectangularGroove_class import RadiusedRectangularGroove
 from RectangularGroove_class import RectangularGroove
-from utilities import addDebug, log, Glib as G
+from utilities import addDebugFrame, log, Glib as G
 
 
 class Tenon(DepthSteppingFeature):
@@ -38,7 +38,7 @@ class Tenon(DepthSteppingFeature):
         stock_Y -= (2 * max_offset)
         rect_groove = self.child_features[RectangularGroove]
         rad_rect_groove = self.child_features[RadiusedRectangularGroove]
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('INCR')
         # get the base case first cut of rectangular groove
         file_text += rect_groove.getGCode()
@@ -102,7 +102,7 @@ class Tenon(DepthSteppingFeature):
         return min(round(bit_diameter / math.sqrt(2), 5), shoulder_offset)
 
     def moveToStart(self):
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         params = self.getParams()
         stock_X = params['stock_length']
         stock_Y = params['stock_width']
@@ -113,7 +113,7 @@ class Tenon(DepthSteppingFeature):
         return file_text
 
     def returnToHome(self):
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += self.child_features[RadiusedRectangularGroove].returnToHome()
         return file_text
 

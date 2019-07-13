@@ -1,6 +1,6 @@
 import inspect
 from DepthSteppingFeature_class import DepthSteppingFeature
-from utilities import addDebug, Glib as G
+from utilities import addDebugFrame, Glib as G
 from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
     PathReferenceQuery, CornerRadiusQuery
 from drawn_features import RadiusedRectangularGrooveDrawing
@@ -24,7 +24,7 @@ class RadiusedRectangularGroove(DepthSteppingFeature):
     def _getInstructions(self, sequence):
         """CW direction ATM"""
         side_X, side_Y, corner_radius = self.getGrooveAdjustments()
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('INCR')
         file_text += G.G1_XY((0, side_Y - (2* corner_radius)))
         file_text += G.G2XY((corner_radius, corner_radius), (corner_radius, 0))
@@ -39,7 +39,7 @@ class RadiusedRectangularGroove(DepthSteppingFeature):
     def moveToStart(self):
         """Where does it start ?"""
         side_X, side_Y, corner_radius = self.getGrooveAdjustments()
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('INCR')
         file_text += G.G0_XY((- side_X / 2, corner_radius - (side_Y / 2)))
         return file_text
@@ -47,7 +47,7 @@ class RadiusedRectangularGroove(DepthSteppingFeature):
     def returnToHome(self):
         """Where does it finish ?"""
         side_X, side_Y, corner_radius = self.getGrooveAdjustments()
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('INCR')
         file_text += G.G0_XY((side_X / 2, - corner_radius + (side_Y / 2)))
         return file_text

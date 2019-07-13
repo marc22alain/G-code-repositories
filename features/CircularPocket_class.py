@@ -4,7 +4,7 @@ from CircularGroove_class import CircularGroove
 from option_queries import PathDiameterQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
     PathReferenceQuery
 from drawn_features import HoleDrawing
-from utilities import addDebug, log, Glib as G
+from utilities import addDebugFrame, log, Glib as G
 
 
 class CircularPocket(DepthSteppingFeature):
@@ -20,7 +20,7 @@ class CircularPocket(DepthSteppingFeature):
     ]
 
     def _getInstructions(self, sequence):
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         params = self.getParams()
         diameter = params['diameter']
         current_od = params['bit_diameter']
@@ -36,7 +36,7 @@ class CircularPocket(DepthSteppingFeature):
             file_text += G.G1_XY((- (current_od - starting_od) / 2, 0))
             self.setUpCircularGroove(current_od)
             file_text += od_feature.getGCode()
-            file_text += addDebug(inspect.currentframe())
+            file_text += addDebugFrame(inspect.currentframe())
         if sequence not in ['last', 'only']:
             # returns to center of pocket
             file_text += od_feature.returnToHome()
@@ -49,7 +49,7 @@ class CircularPocket(DepthSteppingFeature):
     def returnToHome(self):
         """Called after the last depth step in the pocket has been cut."""
         od_feature = self.child_features[CircularGroove]
-        file_text = addDebug(inspect.currentframe())
+        file_text = addDebugFrame(inspect.currentframe())
         file_text += od_feature.returnToHome()
         return file_text
 
