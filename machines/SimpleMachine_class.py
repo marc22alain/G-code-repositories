@@ -20,7 +20,7 @@ class SimpleMachine(object):
     def getOptionQueries(self):
         if len(self.option_queries.keys()) == 0:
             self.option_queries = { key: key() for key in self.option_query_classes }
-        return self.option_queries
+        return self.option_queries.values()
 
     def getParams(self):
         params = {

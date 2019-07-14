@@ -31,10 +31,13 @@ class ListItem(Frame):
             # self.sub_item['row_num'] = row_num
 
     def openEditDialog(self):
-        OptionQueryDialog(self, self.item.getOptionQueries(), self.item.name, self.okFunction)
+        if hasattr(self.item, 'getOptionQueriesForEdit'):
+            OptionQueryDialog(self, self.item.getOptionQueriesForEdit(), self.item.name, self.okFunction)
+        else:
+            OptionQueryDialog(self, self.item.getOptionQueries(), self.item.name, self.okFunction)
 
     def okFunction(self):
-        queries = self.item.getOptionQueries().values()
+        queries = self.item.getOptionQueries()
         log('confirming new value')
         for q in queries:
             log(q.var.get())

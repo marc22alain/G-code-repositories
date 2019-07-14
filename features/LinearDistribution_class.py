@@ -63,3 +63,10 @@ class LinearDistribution(DistributedFeature):
             child_object_function = self.getChild().makeDrawingClass()
             view_space = self.view_space
         return Anon
+
+    def getOptionQueriesForEdit(self):
+        # is a list
+        option_queries = self.getOptionQueries()
+        geo_query = self.option_queries[GeometricFeatureQuery]
+        option_queries.remove(geo_query)
+        return option_queries

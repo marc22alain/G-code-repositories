@@ -78,7 +78,7 @@ class GeometricFeature(Observable):
             child_query_instances = self._getChildOptionQueries()
             child_query_instances.update(self._getOwnOptionQueries())
             self.option_queries.update(child_query_instances)
-        return self.option_queries
+        return self.option_queries.values()
 
     def _getOwnOptionQueries(self):
         """Core interface."""
@@ -152,7 +152,11 @@ class GeometricFeature(Observable):
             self.makeDrawingClass()
         else:
             # pdb.set_trace()
-            self.drawing_class.params = self.getParams()
+            if hasattr(self, 'getDrawingParams'):
+                drawing_params = self.getDrawingParams()
+            else:
+                drawing_params = self.getParams()
+            self.drawing_class.params = drawing_params
             self.notifyObservers('draw')
 
     def changeViewPlane(self):

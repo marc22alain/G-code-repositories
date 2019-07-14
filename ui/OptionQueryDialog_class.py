@@ -17,7 +17,7 @@ class OptionQueryDialog(BasicDialog):
         row_num = 1
         self.label = Label(master, text=self.feature_name)
         self.label.grid(row=row_num, column=0)
-        for query in self.option_queries.values():
+        for query in self.option_queries:
             row_num += 1
             query.insertQuery(master, row_num)
         # need to get a better grip on returning the proper entry field
@@ -42,7 +42,7 @@ class OptionQueryDialog(BasicDialog):
         Note that this is a short-circuiting validation: returns False on first
         failure.
         """
-        for query in self.option_queries.values():
+        for query in self.option_queries:
             try:
                 query.getValue()
                 if not query.validate():
@@ -57,6 +57,6 @@ class OptionQueryDialog(BasicDialog):
         """
         Override to set the OptionQuery values
         """
-        # for query in self.option_queries.values():
+        # for query in self.option_queries:
         #     log(query.name)
         #     log(query.getValue())
