@@ -19,3 +19,4 @@ from SideYQuery_class import SideYQuery
 from PathReferenceQuery_class import PathReferenceQuery
 from CornerRadiusQuery_class import CornerRadiusQuery
 from ShoulderOffsetQuery_class import ShoulderOffsetQuery
+from QueryManager_class import QueryManager

@@ -5,11 +5,11 @@ import abc
 import inspect
 import pdb
 from observeder import Observable
-from option_queries import ReferenceXQuery, ReferenceYQuery
+from option_queries import QueryManager, ReferenceXQuery, ReferenceYQuery
 from utilities import log, addDebugFrame, Glib as G
 
 
-class GeometricFeature(Observable):
+class GeometricFeature(Observable, QueryManager):
     """Serve as the base Abstract class."""
     __metaclass__ = abc.ABCMeta
 
@@ -28,7 +28,7 @@ class GeometricFeature(Observable):
         self.view_space = view_space
         self.machine = feature_manager.machine
         self.work_piece = feature_manager.work_piece
-        self.option_queries = {key: None for key in self.option_query_classes}
+        QueryManager.__init__(self)
         self.option_queries.update({key: None for key in self.common_query_classes})
         self.child_features = {key: None for key in self.child_feature_classes}
         self.makeChildren()
@@ -71,7 +71,8 @@ class GeometricFeature(Observable):
         pass
 
     def getOptionQueries(self):
-        """Return the feature's own (and any children's) option queries."""
+        """ Override of QueryManager.
+        Return the feature's own (and any children's) option queries."""
         # To prevent overwriting instantiated queries
         if None in self.option_queries.values():
             # https://treyhunner.com/2016/02/how-to-merge-dictionaries-in-python/
@@ -142,12 +143,10 @@ class GeometricFeature(Observable):
         file_text += G.G0_XY((- ref_X, - ref_Y))
         return file_text
 
-    def didUpdateQueries(self):
+    def postQueryUpdateHook(self):
         """A callback to call when the feature's parameters are changed, to
         trigger other changes."""
-        for query in self.option_queries.values():
-            query.updateValue()
-        log('GeometricFeature didUpdateQueries')
+        log('GeometricFeature postQueryUpdateHook')
         if self.drawing_class is None:
             self.makeDrawingClass()
         else:

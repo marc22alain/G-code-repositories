@@ -1,7 +1,8 @@
-from option_queries import *
+from option_queries import QueryManager, StockLengthQuery, StockWidthQuery,\
+    StockHeightQuery
 from drawn_entities import Rectangle
 
-class SimpleWorkpiece(object):
+class SimpleWorkpiece(QueryManager):
     name = 'Simple Workpiece'
     option_query_classes = [
         StockLengthQuery,
@@ -10,15 +11,10 @@ class SimpleWorkpiece(object):
     ]
 
     def __init__(self, feature_manager, view_space):
-        self.option_queries = {}
+        QueryManager.__init__(self)
         self.feature_manager = feature_manager
         self.view_space = view_space
         self.entities = []
-
-    def getOptionQueries(self):
-        if len(self.option_queries.keys()) == 0:
-            self.option_queries = { key: key() for key in self.option_query_classes }
-        return self.option_queries.values()
 
     def getParams(self):
         params = {
@@ -56,9 +52,7 @@ class SimpleWorkpiece(object):
                   "extents": {"width": extent_X, "height": extent_Y, "center": (extent_X / 2, extent_Y / 2)}}
         self.view_space.setExtents(view_init)
 
-    def didUpdateQueries(self):
-        for query in self.option_queries.values():
-            query.updateValue()
+    def postQueryUpdateHook(self):
         self.drawGeometry()
         self.feature_manager.reDrawAll()
 

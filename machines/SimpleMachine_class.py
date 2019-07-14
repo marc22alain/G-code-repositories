@@ -1,7 +1,7 @@
-from option_queries import *
+from option_queries import BitDiameterQuery, FeedRateQuery, QueryManager, SafeZQuery
 from utilities import Glib as G
 
-class SimpleMachine(object):
+class SimpleMachine(QueryManager):
     name = 'Simple Machine'
     option_query_classes = [
         BitDiameterQuery,
@@ -10,17 +10,12 @@ class SimpleMachine(object):
     ]
 
     def __init__(self, feature_manager):
-        self.option_queries = {}
+        QueryManager.__init__(self)
         self.feature_manager = feature_manager
         self.mode = None
         # to auto-initialize itself to default values
         # ... all of its option queries have defaults
         self.getOptionQueries()
-
-    def getOptionQueries(self):
-        if len(self.option_queries.keys()) == 0:
-            self.option_queries = { key: key() for key in self.option_query_classes }
-        return self.option_queries.values()
 
     def getParams(self):
         params = {
@@ -54,8 +49,6 @@ class SimpleMachine(object):
         file_text += G.end_program()
         return file_text
 
-    def didUpdateQueries(self):
-        for query in self.option_queries.values():
-            query.updateValue()
+    def postQueryUpdateHook(self):
         self.feature_manager.reDrawAll()
 
