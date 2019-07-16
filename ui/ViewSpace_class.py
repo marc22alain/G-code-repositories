@@ -154,3 +154,13 @@ class ViewSpace(Frame):
         self.canvas.delete("grid_num")
         self._drawGridNumbers()
         # if it changes, get FeatureManager to redraw all
+
+    def insertViewPlaneSelector(self, entry_frame, options, callback):
+        def callBack():
+            plane = self.view_plane_var.get()
+            self.changeViewPlane(plane)
+            callback()
+        self.view_plane_var = StringVar()
+        self.view_plane_button = Spinbox(entry_frame, values=["XY","YZ","XZ"], textvariable=self.view_plane_var, width=options['width'], command=callBack)
+        self.view_plane_button.grid(row=options['row_num'], column=options['column'])
+

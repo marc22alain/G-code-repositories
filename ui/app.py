@@ -3,7 +3,6 @@ from Tkinter import *
 from option_queries import GeometricFeatureQuery
 from feature_manager import AbstractFeatureManager, FeatureManager
 
-from OptionQueryDialog_class import OptionQueryDialog
 from FeatureList_class import FeatureList
 from ListItem_class import ListItem
 from ViewSpace_class import ViewSpace
@@ -33,6 +32,7 @@ class Application(Frame):
         self.feature_manager = FeatureManager(self.view_space)
         self.feature_manager.root = True
 
+        # entry panel
         row_num = 1
         self.entry_frame = Frame(self)
         self.entry_frame.grid(row=0, column=1)
@@ -58,10 +58,12 @@ class Application(Frame):
         self.makePrintButton(self.entry_frame, row_num)
 
         row_num += 1
-        self.view_plane_var = StringVar()
-        self.view_plane_button = Spinbox(self.entry_frame, values=["XY","YZ","XZ"], textvariable=self.view_plane_var, width=13, command=self.setViewPlane)
-        self.view_plane_button.grid(row=row_num, column=0)
-
+        button_options = {
+            'row_num': row_num,
+            'column': 0,
+            'width': 13
+        }
+        self.view_space.insertViewPlaneSelector(self.entry_frame, button_options, self.setViewPlane)
 
     def createFeature(self):
         choice = self.current_feature_choice
@@ -81,8 +83,6 @@ class Application(Frame):
         item.grid(row=row_num, column=0, columnspan=2, pady=5)
 
     def setViewPlane(self):
-        plane = self.view_plane_var.get()
-        self.view_space.changeViewPlane(plane)
         self.feature_manager.changeViewPlane()
 
     def makePrintButton(self, master, row_num):
