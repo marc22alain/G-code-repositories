@@ -20,3 +20,8 @@ from PathReferenceQuery_class import PathReferenceQuery
 from CornerRadiusQuery_class import CornerRadiusQuery
 from ShoulderOffsetQuery_class import ShoulderOffsetQuery
 from QueryManager_class import QueryManager
+from MortiseDepthQuery_class import MortiseDepthQuery
+from RailFaceWidthQuery_class import RailFaceWidthQuery
+from StileFaceWidthQuery_class import StileFaceWidthQuery
+from StileEdgeWidthQuery_class import StileEdgeWidthQuery
+from TenonShoulderQuery_class import TenonShoulderQuery
