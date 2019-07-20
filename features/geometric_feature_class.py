@@ -77,13 +77,9 @@ class GeometricFeature(Observable, QueryManager):
         if None in self.option_queries.values():
             # https://treyhunner.com/2016/02/how-to-merge-dictionaries-in-python/
             child_query_instances = self._getChildOptionQueries()
-            child_query_instances.update(self._getOwnOptionQueries())
+            child_query_instances.update(QueryManager.getOptionQueriesObject(self))
             self.option_queries.update(child_query_instances)
         return self.option_queries
-
-    def _getOwnOptionQueries(self):
-        """Core interface."""
-        return {key: key() for key in self.option_queries}
 
     def _getChildOptionQueries(self):
         """May be spun out to other interface."""

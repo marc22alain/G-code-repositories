@@ -13,7 +13,7 @@ class QueryManager(object):
     def getOptionQueriesObject(self):
         """Retrieves option queries dict; instantiates them if not already created."""
         if None in self.option_queries.values():
-            self.option_queries = { key: key() for key in self.option_query_classes }
+            self.option_queries = { key: key() for key in self.option_queries }
         return self.option_queries
 
     def didUpdateQueries(self):
