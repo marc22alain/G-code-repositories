@@ -9,7 +9,7 @@ class SimpleMachine(QueryManager):
         FeedRateQuery
     ]
 
-    def __init__(self, feature_manager):
+    def __init__(self, feature_manager=None):
         QueryManager.__init__(self)
         self.feature_manager = feature_manager
         self.mode = None
@@ -50,5 +50,10 @@ class SimpleMachine(QueryManager):
         return file_text
 
     def postQueryUpdateHook(self):
-        self.feature_manager.reDrawAll()
+        if self.feature_manager:
+            self.feature_manager.reDrawAll()
 
+    def registerFeatureManager(self, feature_manager):
+        """Add a feature manager as instance prop, and do other stuff as
+        required."""
+        self.feature_manager = feature_manager

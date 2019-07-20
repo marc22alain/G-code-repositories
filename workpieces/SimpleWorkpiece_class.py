@@ -10,7 +10,7 @@ class SimpleWorkpiece(QueryManager):
         StockHeightQuery
     ]
 
-    def __init__(self, feature_manager, view_space):
+    def __init__(self, feature_manager=None, view_space=None):
         QueryManager.__init__(self)
         self.feature_manager = feature_manager
         self.view_space = view_space
@@ -53,6 +53,17 @@ class SimpleWorkpiece(QueryManager):
         self.view_space.setExtents(view_init)
 
     def postQueryUpdateHook(self):
-        self.drawGeometry()
-        self.feature_manager.reDrawAll()
+        if self.view_space:
+            self.drawGeometry()
+        if self.feature_manager:
+            self.feature_manager.reDrawAll()
 
+    def registerFeatureManager(self, feature_manager):
+        """Add a feature manager as instance prop, and do other stuff as
+        required."""
+        self.feature_manager = feature_manager
+
+    def registerViewSpace(self, view_space):
+        """Add a view space as instance prop, and do other stuff as
+        required."""
+        self.view_space = view_space
