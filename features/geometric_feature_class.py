@@ -166,3 +166,13 @@ class GeometricFeature(Observable, QueryManager):
         anon = self._makeDrawingClass()
         self.drawing_class = anon
         return anon
+
+    def registerFeatureManager(self, feature_manager):
+        """Add a feature manager as instance prop, and do other stuff as
+        required."""
+        self.feature_manager = feature_manager
+        if not self.machine:
+            self.machine = self.feature_manager.machine
+        if not self.work_piece:
+            self.work_piece = self.feature_manager.work_piece
+
