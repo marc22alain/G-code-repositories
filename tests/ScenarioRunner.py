@@ -111,8 +111,7 @@ class ScenarioRunner(object):
         return fm
 
     def configure(self, thing, config):
-        queries = thing.getOptionQueries()
-        # print queries
+        queries = thing.getOptionQueriesObject()
         for item in config.keys():
             queries[item].setValue(config[item])
 

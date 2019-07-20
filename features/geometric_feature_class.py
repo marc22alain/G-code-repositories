@@ -70,7 +70,7 @@ class GeometricFeature(Observable, QueryManager):
         """Validate its own parameters."""
         pass
 
-    def getOptionQueries(self):
+    def getOptionQueriesObject(self):
         """ Override of QueryManager.
         Return the feature's own (and any children's) option queries."""
         # To prevent overwriting instantiated queries
@@ -79,7 +79,7 @@ class GeometricFeature(Observable, QueryManager):
             child_query_instances = self._getChildOptionQueries()
             child_query_instances.update(self._getOwnOptionQueries())
             self.option_queries.update(child_query_instances)
-        return self.option_queries.values()
+        return self.option_queries
 
     def _getOwnOptionQueries(self):
         """Core interface."""
@@ -90,7 +90,7 @@ class GeometricFeature(Observable, QueryManager):
         try:
             child_query_instances = {}
             for child in self.child_features.values():
-                child_query_instances.update(child.getOptionQueries().copy())
+                child_query_instances.update(child.getOptionQueriesObject().copy())
         except IndexError:
             child_query_instances = {}
         return child_query_instances
