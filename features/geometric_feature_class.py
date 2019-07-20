@@ -26,8 +26,9 @@ class GeometricFeature(Observable, QueryManager):
         Observable.__init__(self)
         self.feature_manager = feature_manager
         self.view_space = view_space
-        self.machine = feature_manager.machine
-        self.work_piece = feature_manager.work_piece
+        if feature_manager:
+            self.machine = feature_manager.machine
+            self.work_piece = feature_manager.work_piece
         QueryManager.__init__(self)
         self.option_queries.update({key: None for key in self.common_query_classes})
         self.child_features = {key: None for key in self.child_feature_classes}
