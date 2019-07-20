@@ -8,10 +8,10 @@ from RadiusedRectangularGroove_class import RadiusedRectangularGroove
 from RectangularGroove_class import RectangularGroove
 from utilities import addDebugFrame, log, Glib as G
 
+# TODO: make the Tenon responsive to workpiece query changes
 
 class Tenon(DepthSteppingFeature):
-    """The Tenon is co-centric with the work-piece, but the machining reference
-    starting point is the 'lower-left' (0,0) point.
+    """The Tenon is co-centric with the work-piece.
     The shoulder offset determines the distance from the tenon to
     the rail faces. The cut depth is the tenon's length."""
     name = 'Tenon'
@@ -142,3 +142,19 @@ class Tenon(DepthSteppingFeature):
             view_space = self.view_space
             reference_point = 'center'
         return Anon
+
+    def getOptionQueries(self):
+        option_queries = DepthSteppingFeature.getOptionQueries(self)
+        option_queries.remove(self.option_queries[ReferenceXQuery])
+        option_queries.remove(self.option_queries[ReferenceYQuery])
+        option_queries.remove(self.option_queries[SideXQuery])
+        option_queries.remove(self.option_queries[SideYQuery])
+        option_queries.remove(self.option_queries[PathReferenceQuery])
+        return option_queries
+
+    def postQueryUpdateHook(self):
+        params = self.getParams()
+        self.option_queries[ReferenceXQuery].setValue(params['stock_length'] / 2)
+        self.option_queries[ReferenceYQuery].setValue(params['stock_width'] / 2)
+        # to trigger re-draw etc...
+        DepthSteppingFeature.postQueryUpdateHook(self)
