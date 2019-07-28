@@ -1,4 +1,5 @@
 from CircularGroove_class import CircularGroove
+from ComposedFeature_class import ComposedFeature
 from LinearDistribution_class import LinearDistribution
 from Peck_class import Peck
 from DepthStepper_class import DepthStepper
