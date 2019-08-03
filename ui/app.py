@@ -5,6 +5,7 @@ from feature_manager import AbstractFeatureManager, FeatureManager
 
 from FeatureList_class import FeatureList
 from ListItem_class import ListItem
+from AxisPrintButton_class import AxisPrintButton
 from ViewSpace_class import ViewSpace
 import os
 from utilities import log
@@ -55,7 +56,7 @@ class Application(Frame):
         self.feature_list.grid(row=row_num, column=0, columnspan=2, pady=5)
 
         row_num += 1
-        self.makePrintButton(self.entry_frame, row_num)
+        self.print_button_object = AxisPrintButton(self.entry_frame, row_num, self.genCode)
 
         row_num += 1
         button_options = {
@@ -84,28 +85,3 @@ class Application(Frame):
 
     def setViewPlane(self):
         self.feature_manager.changeViewPlane()
-
-    def makePrintButton(self, master, row_num):
-        # self.button_frame = Frame(master)
-        # self.button_frame.grid(row=row, column=0, columnspan=2)
-
-        # row_num = 0
-        if IN_AXIS:
-            self.printButton = Button(master, text='Write to AXIS and Quit',\
-                command=self.writeToAxis)
-        else:
-            self.printButton = Button(master, text='Print', command=self.printToConsole)
-        self.printButton.grid(row=row_num, column=0, columnspan=2)
-
-    def printToConsole(self):
-        log(self.genCode())
-        # since self.quit() does not work on OSX
-        os._exit(0)
-
-
-    def writeToAxis(self):
-        sys.stdout.write(self.genCode())
-        # may want to keep this alive, for writing many similar holes
-        # of course if AXIS does not delete the program, then maybe this
-        # does work fine for UI
-        self.quit()
