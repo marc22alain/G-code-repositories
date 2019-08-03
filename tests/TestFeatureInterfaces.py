@@ -17,17 +17,17 @@ def testWithFeature(feature):
             self.assertGreater(len(result),0, 'No option queries were returned.')
 
         def test_composable_feature_updates_child(self):
-            self.assertTrue(hasattr(feature, 'addChild'), '%s does not support `addChild`' % (class_name))
+            self.assertTrue(hasattr(feature, 'addChildByClass'), '%s does not support `addChildByClass`' % (class_name))
             feature.option_queries[GeometricFeatureQuery].setValue('LinearGroove')
             original_children = feature.child_features.copy()
             self.assertEqual(original_children, feature.child_features)
-            feature.addChild()
+            feature.addChildByClass()
             self.assertNotEqual(original_children, feature.child_features)
 
         def test_composable_feature_deletes_features(self):
             self.assertTrue(hasattr(feature, 'deleteFeature'), '%s does not support `deleteFeature`' % (class_name))
             feature.option_queries[GeometricFeatureQuery].setValue('LinearGroove')
-            feature.addChild()
+            feature.addChildByClass()
             original_children = feature.child_features.copy()
             feature.deleteFeature(original_children[LinearGroove])
             self.assertNotEqual(original_children, feature.child_features)

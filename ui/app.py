@@ -70,7 +70,7 @@ class Application(Frame):
         choice = self.current_feature_choice
         choice.updateValue()
         feature_class = choice.getValue()
-        self.feature_manager.addChild(feature_class)
+        self.feature_manager.addChildByClass(feature_class)
 
     def genCode(self):
         return self.feature_manager.getGCode()

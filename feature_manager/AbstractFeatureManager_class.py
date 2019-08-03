@@ -15,7 +15,7 @@ class AbstractFeatureManager:
         self.root = False   # default value; set to True for root by app
 
 
-    def addChild(self, feature_class = None):
+    def addChildByClass(self, feature_class = None):
         """Add child, by argument or inferred from option_query."""
         # for ComposedFeature
         if feature_class is None:
@@ -29,7 +29,7 @@ class AbstractFeatureManager:
         def addFunction():
             log('running FeatureManager OK function: %s' % (self.__repr__()))
             if hasattr(feature, 'is_composed'):
-                feature.addChild()
+                feature.addChildByClass()
             # makes the initial call to makeDrawingClass()
             feature.didUpdateQueries()
             # root FeatureManager has special responsibilities
@@ -49,6 +49,9 @@ class AbstractFeatureManager:
                 cancelFunction,
                 feature.__doc__
             )
+
+    def addChild(self, feature_instance):
+        self.features.append(feature_instance)
 
     @abc.abstractmethod
     def deleteChild(self, feature_instance):

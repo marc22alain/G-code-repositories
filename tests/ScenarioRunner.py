@@ -105,7 +105,7 @@ class ScenarioRunner(object):
         self.configure(fm.work_piece, scenario['work_piece_config'])
         self.configure(feat, scenario['config'])
         if hasattr(feat, 'is_composed'):
-            feat.addChild()
+            feat.addChildByClass()
             for child in feat.features:
                 self.configure(child, scenario['child_features'][child.__class__])
         return fm

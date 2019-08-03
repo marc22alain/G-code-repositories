@@ -44,7 +44,7 @@ class ListItem(Frame):
         if hasattr(self.item, 'is_composed'):
             log('ListItem row_num')
             # log(self.sub_item['row_num'])
-            self.item.addChild()
+            self.item.addChildByClass()
         self.item.didUpdateQueries()
 
     def deleteItem(self):
