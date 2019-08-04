@@ -39,3 +39,11 @@ class DepthSteppingFeature(GeometricFeature):
         procedures depending on the current sequence for the requested cutting
         instructions."""
         pass
+
+    def setWorkpiece(self, work_piece):
+        self.depth_stepper.setWorkpiece(work_piece)
+        GeometricFeature.setWorkpiece(self, work_piece)
+
+    def setMachine(self, machine):
+        self.depth_stepper.setMachine(machine)
+        GeometricFeature.setMachine(self, machine)

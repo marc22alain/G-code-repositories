@@ -176,3 +176,16 @@ class GeometricFeature(Observable, QueryManager):
         if not self.work_piece:
             self.work_piece = self.feature_manager.work_piece
 
+    def setWorkpiece(self, work_piece):
+        log('%s setWorkpiece' % (self.__class__.__name__))
+        self.work_piece = work_piece
+        if self.child_features:
+            for child in self.child_features.values():
+                child.setWorkpiece(work_piece)
+
+    def setMachine(self, machine):
+        log('%s setMachine' % (self.__class__.__name__))
+        self.machine = machine
+        if self.child_features:
+            for child in self.child_features.values():
+                child.setMachine(machine)

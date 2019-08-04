@@ -17,21 +17,23 @@ class MortiseAndTenonJoint(QueryManager):
     # allow space for glue to pool at the bottom of the mortise; unit is mm
     glue_well = 2
 
-    def __init__(self, machine):
+    def __init__(self, feature_manager):
         QueryManager.__init__(self)
-        self.machine = machine
+        self.machine = feature_manager.machine
         # note that critical arguments must be later supplied
         self.stile = SimpleWorkpiece(None, None)
         self.stile.getOptionQueries()
         self.rail = SimpleWorkpiece(None, None)
         self.rail.getOptionQueries()
-        self.tenon = Tenon(None, None)
-        self.tenon.work_piece = self.rail
-        self.tenon.machine = self.machine
+        # set up tenon
+        self.tenon = Tenon(feature_manager, None)
+        self.tenon.setWorkpiece(self.rail)
+        self.tenon.setMachine(self.machine)
         self.tenon.getOptionQueries()
+        # set up mortise
         self.mortise = RectangularPocket(None, None)
-        self.mortise.work_piece = self.stile
-        self.mortise.machine = self.machine
+        self.mortise.setWorkpiece(self.stile)
+        self.mortise.setMachine(self.machine)
         self.mortise.getOptionQueries()
 
     def getFeatures(self):
@@ -44,21 +46,16 @@ class MortiseAndTenonJoint(QueryManager):
 
     def getAllStuff(self):
         return {
-            'mortise': {
-                'feature': self.mortise,
-                'workpiece': self.stile
-            },
-            'tenon': {
-                'feature': self.tenon,
-                'workpiece': self.rail
-            }
+            'mortise': self.mortise,
+            'stile': self.stile,
+            'tenon': self.tenon,
+            'rail': self.rail,
         }
 
     def cancelFunction(self):
         print 'cancelFunction passed'
 
     def postQueryUpdateHook(self):
-        print 'postQueryUpdateHook passed'
         self.designJoint()
 
     def designJoint(self):
@@ -70,6 +67,7 @@ class MortiseAndTenonJoint(QueryManager):
         bit_radius = self.machine.option_queries[BitDiameterQuery].getValue() / 2
 
         # adjust the stile
+        # adds some length for visual effect
         self.stile.option_queries[StockLengthQuery].setValue(rail_face_width + 30)
         self.stile.option_queries[StockWidthQuery].setValue(stile_edge_width)
         self.stile.option_queries[StockHeightQuery].setValue(stile_face_width)
