@@ -12,6 +12,7 @@ from utilities import addDebugFrame, log, Glib as G
 
 class Tenon(DepthSteppingFeature):
     """The Tenon is co-centric with the work-piece.
+    Its reference point is the lower-left corner.
     The shoulder offset determines the distance from the tenon to
     the rail faces. The cut depth is the tenon's length."""
     name = 'Tenon'

@@ -27,7 +27,7 @@ mortisingJig = {
     'locationHoleYcoord': 0,
     'jigCenterlineOffset': 0,
     'jigWidth': 100,
-    'stileEndReference': 1000,
-    'railEndReference': 1000,
+    'stileEndReference': 100,
+    'railEndReference': 120,
     'railFaceReferenceOffset': 0, # offset from jig width
 }
