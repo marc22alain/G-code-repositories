@@ -4,6 +4,7 @@ from utilities import addDebugFrame, Glib as G
 from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
     PathReferenceQuery
 from drawn_features import RectangularGrooveDrawing
+from errors import PathReferenceError
 
 
 class RectangularGroove(DepthSteppingFeature):
@@ -74,12 +75,12 @@ class RectangularGroove(DepthSteppingFeature):
         path_reference = params['path_reference']
         side_X = params['side_X']
         side_Y = params['side_Y']
-        if path_reference is 'center':
+        if path_reference == 'center':
             pass
-        elif path_reference is 'od':
+        elif path_reference == 'od':
             side_X = side_X - bit_diameter
             side_Y = side_Y - bit_diameter
-        elif path_reference is 'id':
+        elif path_reference == 'id':
             side_X = side_X + bit_diameter
             side_Y = side_Y + bit_diameter
         else:

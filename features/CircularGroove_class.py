@@ -3,6 +3,7 @@ from utilities import Glib as G
 from option_queries import PathDiameterQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
     PathReferenceQuery
 from drawn_features import CircularGrooveDrawing
+from errors import PathReferenceError
 
 
 class CircularGroove(DepthSteppingFeature):
@@ -60,11 +61,11 @@ class CircularGroove(DepthSteppingFeature):
         params = self.getParams()
         bit_diameter = params['bit_diameter']
         path_reference = params['path_reference']
-        if path_reference is 'center':
+        if path_reference == 'center':
             diameter = params['diameter']
-        elif path_reference is 'od':
+        elif path_reference == 'od':
             diameter = params['diameter'] - bit_diameter
-        elif path_reference is 'id':
+        elif path_reference == 'id':
             diameter = params['diameter'] + bit_diameter
         else:
             raise PathReferenceError(self, path_reference)

@@ -4,6 +4,7 @@ from utilities import addDebugFrame, Glib as G
 from option_queries import SideXQuery, SideYQuery, CutDepthQuery, ReferenceXQuery, ReferenceYQuery,\
     PathReferenceQuery, CornerRadiusQuery
 from drawn_features import RadiusedRectangularGrooveDrawing
+from errors import PathReferenceError
 
 
 class RadiusedRectangularGroove(DepthSteppingFeature):
@@ -95,13 +96,13 @@ class RadiusedRectangularGroove(DepthSteppingFeature):
         side_X = params['side_X']
         side_Y = params['side_Y']
         corner_radius = params['corner_radius']
-        if path_reference is 'center':
+        if path_reference == 'center':
             pass
-        elif path_reference is 'od':
+        elif path_reference == 'od':
             side_X -= bit_diameter
             side_Y -= bit_diameter
             corner_radius -= (bit_diameter / 2)
-        elif path_reference is 'id':
+        elif path_reference == 'id':
             side_X += bit_diameter
             side_Y += bit_diameter
             corner_radius += (bit_diameter / 2)
