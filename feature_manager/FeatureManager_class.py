@@ -1,6 +1,7 @@
 from AbstractFeatureManager_class import AbstractFeatureManager
 from machines import SimpleMachine
 from workpieces import SimpleWorkpiece
+import json
 
 
 class FeatureManager(AbstractFeatureManager):
@@ -36,3 +37,19 @@ class FeatureManager(AbstractFeatureManager):
         """Generic trigger for redrawing all feature geometry."""
         for feature in self.features:
             feature.drawGeometry()
+
+    def saveFeatureConfigs(self, file_name):
+        """Saves the composition of the Feature Manager to disk.
+        Current format is JSON."""
+        collection = self.genFeatureCollection()
+        file = open(file_name + '.json', 'w')
+        json.dump(collection, file)
+
+    def genFeatureCollection(self):
+        """Creates a dict representation of the FeatureManager's composition."""
+        collection = { 'machine': {}, 'work_piece': {}, 'features': [] }
+        collection['machine'] = self.machine.getRepresentationForCollection()
+        collection['work_piece'] = self.work_piece.getRepresentationForCollection()
+        for feat in self.features:
+            collection['features'].append(feat.getRepresentationForCollection())
+        return collection

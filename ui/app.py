@@ -23,8 +23,6 @@ class Application(Frame):
         self.createSubframes()
         AbstractFeatureManager.app = self
 
-        # create or inject machine and workpiece
-
     def createSubframes(self):
         self.geo_frame = Frame(self)
         self.geo_frame.grid(row=0, column=0)
@@ -56,7 +54,7 @@ class Application(Frame):
         self.feature_list.grid(row=row_num, column=0, columnspan=2, pady=5)
 
         row_num += 1
-        self.print_button_object = AxisPrintButton(self.entry_frame, row_num, self.genCode)
+        self.print_button_object = AxisPrintButton(self.entry_frame, row_num, self.genCode, save_config=self.saveConfig)
 
         row_num += 1
         button_options = {
@@ -85,3 +83,12 @@ class Application(Frame):
 
     def setViewPlane(self):
         self.feature_manager.changeViewPlane()
+
+    def saveConfig(self):
+        # generate a unique filename
+        file_name = self.getFeatureConfigsFileName()
+        self.feature_manager.saveFeatureConfigs(file_name)
+
+    def getFeatureConfigsFileName(self):
+        # TODO: pop up a dialog to name the file
+        return 'json/features_%d' % (int(time.time()))

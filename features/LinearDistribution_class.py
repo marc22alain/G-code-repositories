@@ -70,3 +70,12 @@ class LinearDistribution(DistributedFeature):
         geo_query = self.option_queries[GeometricFeatureQuery]
         option_queries.remove(geo_query)
         return option_queries
+
+    def getRepresentationForCollection(self):
+        """Creates a dict representation of the FeatureManager's composition.
+        Overrides the GeometricFeature."""
+        feat_data = self.getOptionQueryValues()
+        feat_data['feature'] = self.name
+        feat_data['GeometricFeatureQuery'] = feat_data['GeometricFeatureQuery'].name
+        feat_data['child'] = self.features[0].getRepresentationForCollection()
+        return feat_data

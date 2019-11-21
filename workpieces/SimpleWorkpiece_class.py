@@ -67,3 +67,7 @@ class SimpleWorkpiece(QueryManager):
         """Add a view space as instance prop, and do other stuff as
         required."""
         self.view_space = view_space
+
+    def getRepresentationForCollection(self):
+        """Creates a dict representation of the FeatureManager's composition."""
+        return self.getOptionQueryValues()

@@ -189,3 +189,9 @@ class GeometricFeature(Observable, QueryManager):
         if self.child_features:
             for child in self.child_features.values():
                 child.setMachine(machine)
+
+    def getRepresentationForCollection(self):
+        """Creates a dict representation of the FeatureManager's composition."""
+        feat_data = self.getOptionQueryValues()
+        feat_data['feature'] = self.name
+        return feat_data

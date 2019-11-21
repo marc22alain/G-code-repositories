@@ -57,3 +57,7 @@ class SimpleMachine(QueryManager):
         """Add a feature manager as instance prop, and do other stuff as
         required."""
         self.feature_manager = feature_manager
+
+    def getRepresentationForCollection(self):
+        """Creates a dict representation of the FeatureManager's composition."""
+        return self.getOptionQueryValues()

@@ -27,3 +27,6 @@ class QueryManager(object):
 
         if hasattr(self, 'postQueryUpdateHook'):
             self.postQueryUpdateHook()
+
+    def getOptionQueryValues(self):
+        return { option.name: option.getValue() for option in self.getOptionQueries() }
