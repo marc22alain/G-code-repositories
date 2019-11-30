@@ -1,5 +1,6 @@
 import abc
 from ComposedFeature_class import ComposedFeature
+from utilities import log
 
 
 class DistributedFeature(ComposedFeature):
@@ -7,6 +8,7 @@ class DistributedFeature(ComposedFeature):
     distribution function."""
 
     def getGCode(self):
+        log('DistributedFeature getGCode: %s' % (self.__repr__()))
         file_text = self.moveToReference()
         file_text += self.distributeChildFeature()
         file_text += self.returnFromReference()

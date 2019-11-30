@@ -19,9 +19,11 @@ class LinearDistribution(DistributedFeature):
     child_feature_classes = []
 
     def moveToStart(self):
+        log('LinearDistribution moveToStart: %s' % (self.__repr__()))
         return ''
 
     def returnToHome(self):
+        log('LinearDistribution returnToHome: %s' % (self.__repr__()))
         delta_X = self.option_queries[DeltaXQuery].getValue()
         delta_Y = self.option_queries[DeltaYQuery].getValue()
         num_repeats = self.option_queries[NumRepeatQuery].getValue() - 1
@@ -31,14 +33,16 @@ class LinearDistribution(DistributedFeature):
 
     def getChild(self):
         """Get the single child instance."""
-        log(self.features)
         return self.features[0]
 
     def distributeChildFeature(self):
+        log('LinearDistribution distributeChildFeature: %s' % (self.__repr__()))
+        log('LinearDistribution feature: %s' % (self.features[0].__repr__()))
         file_text = self.features[0].getGCode()
         delta_X = self.option_queries[DeltaXQuery].getValue()
         delta_Y = self.option_queries[DeltaYQuery].getValue()
         for _ in xrange(self.option_queries[NumRepeatQuery].getValue() - 1):
+            log('LinearDistribution REPEAT: %s' % (self.__repr__()))
             file_text += self.machine.setMode('INCR')
             file_text += G.G0_XY((delta_X, delta_Y))
             file_text += self.features[0].getGCode()

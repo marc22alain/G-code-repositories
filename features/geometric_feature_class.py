@@ -22,7 +22,7 @@ class GeometricFeature(Observable, QueryManager):
     child_feature_classes = None
 
     def __init__(self, feature_manager, view_space):
-        log('GeometricFeature ran __init__')
+        log('%s ran __init__' % (self.__class__.__name__))
         Observable.__init__(self)
         self.feature_manager = feature_manager
         self.view_space = view_space
@@ -62,7 +62,7 @@ class GeometricFeature(Observable, QueryManager):
 
     def drawGeometry(self):
         """Add a missing drawn instance, then call `draw` on all its drawn instances."""
-        log('GeometricFeature drawGeometry')
+        log('%s drawGeometry' % (self.__class__.__name__))
         if not self.observers:
             self.drawing_class()
         self.notifyObservers('draw')
@@ -143,7 +143,7 @@ class GeometricFeature(Observable, QueryManager):
     def postQueryUpdateHook(self):
         """A callback to call when the feature's parameters are changed, to
         trigger other changes."""
-        log('GeometricFeature postQueryUpdateHook')
+        log('%s postQueryUpdateHook' % (self.__class__.__name__))
         if self.drawing_class is None:
             self.makeDrawingClass()
         else:
