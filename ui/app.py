@@ -8,6 +8,7 @@ from ListItem_class import ListItem
 from AxisPrintButton_class import AxisPrintButton
 from ViewSpace_class import ViewSpace
 import os
+import time
 from utilities import log
 
 IN_AXIS = os.environ.has_key("AXIS_PROGRESS_BAR")
