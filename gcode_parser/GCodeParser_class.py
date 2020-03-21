@@ -15,43 +15,41 @@ class GCodeParser(object):
     int_p = re.compile(r'(-*\d+)')
     float_p = re.compile(r'(-*\d+\.\d+)')
 
-    def __init__(self):
-        self._setProps()
+    def __init__(self, processors=[]):
+        # self._setProps()
+        self.processors = processors
 
     def resetProgram(self, program):
         self._setProps()
         self.program = program
+        for processor in self.processors:
+            processor.resetProgram(program)
 
     def _setProps(self):
-        self.x_pos = 0
-        self.y_pos = 0
-        self.z_pos = 0
-        self.feed_rate = None
         self.program = None
         self.program_errors = {}
-        self.abs_incr_mode = None
         self.program_ended = False
-        self.negative_Z = False
         # Default might be 'XY', but I don't want to count on it
         self.selected_plane = None
 
     def getProgramData(self):
-        return {
-            'program_errors': self.program_errors,
-            'ending_x_pos': self.x_pos,
-            'ending_y_pos': self.y_pos,
-            'ending_z_pos': self.z_pos,
-            'feed_rate': self.feed_rate,
-            'ending_mode': self.abs_incr_mode,
-            'program_ended': self.program_ended,
-            'negative_Z': self.negative_Z
+        data = {
+            'parser': {
+                'program_errors': self.program_errors,
+                'program_ended': self.program_ended
+            }
         }
+        for processor in self.processors:
+            data.update(processor.getProgramData())
+
+        return data
 
     def parseProgram(self):
         current_line = 0
         for line in self.program:
             current_line += 1
             try:
+                self.sendProcessMessage('trackLine', [{ 'current_line': current_line, 'line': line }])
                 self._parseLine(line)
             except Exception as e:
                 print e.args
@@ -69,20 +67,21 @@ class GCodeParser(object):
             if token == '':
                 break
             if token in ['G90', 'G91']:
-                self.changeMode(token)
+                self.sendProcessMessage('changeMode', token)
                 continue
             if token in ['M2']:
                 self.endProgram(token)
                 continue
             if token[0] == 'F':
-                self.setFeedRate(token)
+                self.sendProcessMessage('setFeedRate', token)
                 continue
             if token in ['G0', 'G1']:
                 linear = [token]
                 while len(tokens) > 0 and tokens[0] != '' and tokens[0][0] in ['X', 'Y', 'Z']:
                     linear.append(tokens.pop(0))
                 # TODO: raise an error if there are tokens left
-                self.processLinear(linear)
+                # self.processLinear(linear)
+                self.sendProcessMessage('processLinear', linear)
                 continue
             if token in ['G2', 'G3']:
                 circular = [token]
@@ -105,65 +104,10 @@ class GCodeParser(object):
                 break
             raise ValueError('token "%s" has no parser defined yet' % token)
 
-    def setFeedRate(self, token):
-        result = re.search(self.int_p, token)
-        if (result == None or result.group(0) == ''):
-            raise ValueError('token "%s" is not a valid feed rate' % token)
-        self.feed_rate = int(result.group(0))
-
-    def changeMode(self, token):
-        modes = {
-            'G90': 'abs',
-            'G91': 'incr'
-        }
-        self.abs_incr_mode = modes[token]
-
-    def processLinear(self, tokens):
-        # doing nothing with this for the moment
-        move_token = tokens.pop(0)
-        while len(tokens) > 0:
-            next_num = tokens.pop(0)
-            if next_num[0] == 'P':
-                continue
-            result = re.search(self.float_p, next_num)
-            if (result == None or result.group(0) == ''):
-                raise ValueError('token "%s" is not a valid move' % next_num)
-            num = float(result.group(0))
-            if next_num[0] == 'X':
-                if self.abs_incr_mode == 'incr':
-                    self.x_pos += num
-                else:
-                    self.x_pos = num
-            elif next_num[0] == 'Y':
-                if self.abs_incr_mode == 'incr':
-                    self.y_pos += num
-                else:
-                    self.y_pos = num
-            elif next_num[0] == 'Z':
-                if self.abs_incr_mode == 'incr':
-                    self.z_pos += num
-                else:
-                    self.z_pos = num
-                if self.z_pos < 0:
-                    self.negative_Z = True
-                    raise ValueError('move to negative Z')
-
     def processCircular(self, tokens):
         self._validateOffsetWords(tokens)
-        # for center format arcs, can simply submit the tokens to `processLinear()`
-        self.processLinear(tokens)
-        # radius format arcs will have an 'R' word
-
-    def selectPlane(self, token):
-        planes = {
-            'G17': 'XY',
-            'G18': 'ZX',
-            'G19': 'YZ',
-            'G17.1': 'UV',
-            'G18.1': 'WU',
-            'G19.1': 'VW'
-        }
-        self.selected_plane = planes[token]
+        for processor in self.processors:
+            processor.processCircular(tokens)
 
     def _validateOffsetWords(self, tokens):
         if not self.selected_plane:
@@ -182,3 +126,11 @@ class GCodeParser(object):
     def endProgram(self, token):
         # not doing anything with the token at the moment ... may never ?
         self.program_ended = True
+        for processor in self.processors:
+            processor.endProgram(token)
+
+    def sendProcessMessage(self, method, tokens):
+        """Only two arguments will ever get passed.
+            the first is a string, the second may or may not be a list."""
+        for processor in self.processors:
+            processor.process(method, tokens)
