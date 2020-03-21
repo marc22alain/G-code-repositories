@@ -1,1 +1,2 @@
 from MortiseAndTenonJoint_class import MortiseAndTenonJoint
+from FingerJoint_class import FingerJoint
