@@ -77,9 +77,9 @@ class FingerJoint(QueryManager):
         . there is also an algorithm to center the grooves in A part, that takes into account the narrowest tenons of B part
             .. this will pick either an odd or even number of spaces, since the spacing will be independently determined by the bit width
         """
-        num_a_grooves = self.getNumAGrooves()
+        num_a_grooves = self.getNumGrooves()
 
-    def getNumAGrooves(self):
+    def getNumGrooves(self):
         """ For the A piece to always have tabs on both sides, when A piece has
         n grooves, B piece has n-1 grooves and 2 tab cuts.
         """
