@@ -31,10 +31,6 @@ class LinearDistribution(DistributedFeature):
         file_text += G.G0_XY((- (delta_X * num_repeats), - (delta_Y * num_repeats)))
         return file_text
 
-    def getChild(self):
-        """Get the single child instance."""
-        return self.features[0]
-
     def distributeChildFeature(self):
         log('LinearDistribution distributeChildFeature: %s' % (self.__repr__()))
         log('LinearDistribution feature: %s' % (self.features[0].__repr__()))
@@ -64,7 +60,7 @@ class LinearDistribution(DistributedFeature):
         class Anon(LinearDistributionDrawing):
             params = self.getParams()
             observable = self
-            child_object_function = self.getChild().makeDrawingClass()
+            child_object_function = self.getChildren()[0].makeDrawingClass()
             view_space = self.view_space
         return Anon
 

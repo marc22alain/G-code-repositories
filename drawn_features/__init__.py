@@ -1,4 +1,5 @@
 from CircularGrooveDrawing_class import CircularGrooveDrawing
+from ComposedFeatureDrawing_class import ComposedFeatureDrawing
 from FeatureDrawing_class import FeatureDrawing
 from HoleDrawing_class import HoleDrawing
 from LinearDistributionDrawing_class import LinearDistributionDrawing

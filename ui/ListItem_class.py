@@ -25,10 +25,11 @@ class ListItem(Frame):
             self.delete_button.grid(row=row_num, column=2)
 
         if hasattr(self.item, 'is_composed'):
-            row_num += 1
-            self.sub_item = ListItem(self, self.item.getChild())
-            self.sub_item.grid(row=row_num, column=0, columnspan=2)
-            # self.sub_item['row_num'] = row_num
+            for child in self.item.getChildren():
+                row_num += 1
+                self.sub_item = ListItem(self, child)
+                self.sub_item.grid(row=row_num, column=0, columnspan=2)
+                # self.sub_item['row_num'] = row_num
 
     def openEditDialog(self):
         if hasattr(self.item, 'getOptionQueriesForEdit'):

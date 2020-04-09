@@ -13,6 +13,7 @@ from Tenon_class import Tenon
 classes_dict = {
     'CircularGroove': CircularGroove,
     'LinearDistribution': LinearDistribution,
+    'ComposedFeature': ComposedFeature,
     'DepthStepper': DepthStepper,
     'LinearGroove': LinearGroove,
     'Peck': Peck,
