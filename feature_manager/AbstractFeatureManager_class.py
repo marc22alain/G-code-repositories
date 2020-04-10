@@ -53,7 +53,5 @@ class AbstractFeatureManager:
     def addChild(self, feature_instance):
         self.features.append(feature_instance)
 
-    @abc.abstractmethod
     def deleteChild(self, feature_instance):
-        """Delete the feature instance."""
-        pass
+        self.features.remove(feature_instance)

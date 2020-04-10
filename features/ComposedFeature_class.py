@@ -23,12 +23,6 @@ class ComposedFeature(GeometricFeature, AbstractFeatureManager):
         AbstractFeatureManager.__init__(self)
         GeometricFeature.__init__(self, feature_manager, view_space)
 
-    def deleteChild(self, feature_instance):
-        """
-        Delete the feature instance.
-        """
-        self.features.remove(feature_instance)
-
     def changeViewPlane(self):
         """Overrides GeometricFeature."""
         self.removeObservers('remove')

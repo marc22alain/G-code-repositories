@@ -13,10 +13,6 @@ class FeatureManager(AbstractFeatureManager):
         self.g_code = None
         AbstractFeatureManager.__init__(self)
 
-    def deleteChild(self, feature):
-        """Delete child from app's list and from own list."""
-        self.features.remove(feature)
-
     def getGCode(self):
         """Get gcode from all app's features."""
         # wrapping the features' gcode:
