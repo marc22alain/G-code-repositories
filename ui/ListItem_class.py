@@ -9,6 +9,7 @@ class ListItem(Frame):
         self.grid()
         self.item = item
         self.createEntry()
+        self.featureListManager = master
 
     def createEntry(self):
         row_num = 1
@@ -50,5 +51,4 @@ class ListItem(Frame):
 
     def deleteItem(self):
         self.item.delete()
-
-
+        self.featureListManager.removeFeature(self.item)

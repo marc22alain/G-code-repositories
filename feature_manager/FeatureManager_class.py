@@ -15,7 +15,6 @@ class FeatureManager(AbstractFeatureManager):
 
     def deleteChild(self, feature):
         """Delete child from app's list and from own list."""
-        self.app.feature_list.removeFeature(feature)
         self.features.remove(feature)
 
     def getGCode(self):
