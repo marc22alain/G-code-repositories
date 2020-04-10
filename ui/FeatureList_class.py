@@ -18,5 +18,6 @@ class FeatureList(Frame):
         for item in self.featureItems:
             if item.item == feature:
                 for_removal = item
+                break
         self.featureItems.remove(for_removal)
         for_removal.destroy()

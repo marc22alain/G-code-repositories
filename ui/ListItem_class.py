@@ -8,8 +8,9 @@ class ListItem(Frame):
         Frame.__init__(self, master)
         self.grid()
         self.item = item
-        self.createEntry()
         self.featureListManager = master
+        self.featureItems = []
+        self.createEntry()
 
     def createEntry(self):
         row_num = 1
@@ -31,6 +32,7 @@ class ListItem(Frame):
                 self.sub_item = ListItem(self, child)
                 self.sub_item.grid(row=row_num, column=0, columnspan=2)
                 # self.sub_item['row_num'] = row_num
+                self.featureItems.append(self.sub_item)
 
     def openEditDialog(self):
         if hasattr(self.item, 'getOptionQueriesForEdit'):
@@ -52,3 +54,12 @@ class ListItem(Frame):
     def deleteItem(self):
         self.item.delete()
         self.featureListManager.removeFeature(self.item)
+
+    def removeFeature(self, feature):
+        for_removal = None
+        for item in self.featureItems:
+            if item.item == feature:
+                for_removal = item
+                break
+        self.featureItems.remove(for_removal)
+        for_removal.destroy()
