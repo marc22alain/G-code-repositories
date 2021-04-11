@@ -1,0 +1,4 @@
+from TestFeatureInterfaces import testWithFeature
+from TestQueryInterfaces import testWithQuery
+from TestGeneratedGCode import testWithProgram
+from TestDrawingGeometry import testDrawingGeometry

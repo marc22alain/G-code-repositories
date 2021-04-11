@@ -1,6 +1,7 @@
 """
 Glib for python 2, for LinuxCNC
 The purpose of this library is simple: provide G-code functions.
+REF: http://www.linuxcnc.org/docs/html/gcode/g-code.html
 """
 
 def sane(number):
@@ -80,6 +81,8 @@ def G2XY_to_ABS(point, center):
     Takes two tuples, returns a string.
     point represents the ending point.
     Runs in ABSOLUTE IJ mode G2 == CW.
+    With G90.1, is in Absolute Arc Distance Mode.
+    With G17, traces circle in XY plane.
     """
     return 'G90.1 G17 G2 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' I' + \
            sane(center[0]) + ' J' + sane(center[1]) + ' \n'
@@ -91,8 +94,19 @@ def G2XY_to_INCR_FULL(point, center_offset):
     Assumes INCREMENTAL IJ mode G2 == CW.
     ***Consider taking out the P1 and making the method more general;
         P1 seems to be optional (p.114 of LinuxCNC User Guide).
+        P1 provides up to one full turn.
     """
     return 'G91 G17 G2 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' I' + \
+           sane(center_offset[0]) + ' J' + sane(center_offset[1]) + ' P1 \n'
+
+def G2XY(point, center_offset):
+    """
+    Takes two tuples, returns a string.
+    `point` represents the ending point.
+    ***Consider taking out the P1 and making the method more general;
+        P1 seems to be optional (p.114 of LinuxCNC User Guide).
+    """
+    return 'G17 G2 X' + sane(point[0]) + ' Y' + sane(point[1]) + ' I' + \
            sane(center_offset[0]) + ' J' + sane(center_offset[1]) + ' P1 \n'
 
 
@@ -156,3 +170,9 @@ def pause():
     the next line when the cycle start button is pressed.
     """
     return 'M0 \n'
+
+def comment(message):
+    """
+    Returns the message in LinuxCNC comment format.
+    """
+    return '(%s)\n' % (message)

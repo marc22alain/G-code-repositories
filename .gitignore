@@ -2,5 +2,12 @@
 *.pyc
 *.ngc
 
+.coverage
+
+trials/
+notes/
+htmlcov/
+json/
+
 cable_car_1.py
 cable_car_2.py
