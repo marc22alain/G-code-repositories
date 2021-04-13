@@ -1,5 +1,5 @@
 import unittest
-from gcode_parser import *
+from post_processor import PostProcessor
 
 
 def testWithProgram(program, scenario):
@@ -7,8 +7,8 @@ def testWithProgram(program, scenario):
 
         @classmethod
         def setUpClass(TestGeneratedGCode):
-            g = GCodeParser()
-            g.resetProgram(program.split('\n'))
+            g = PostProcessor()
+            g.setProgram(program.split('\n'))
             g.parseProgram()
             TestGeneratedGCode.program_data = g.getProgramData()
 
