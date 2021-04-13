@@ -15,36 +15,18 @@ class GCodeParser(object):
     int_p = re.compile(r'(-*\d+)')
     float_p = re.compile(r'(-*\d+\.\d+)')
 
-    def __init__(self):
-        self._setProps()
+    def __init__(self, sim_machine):
+        self.sim_machine = sim_machine
 
-    def resetProgram(self, program):
-        self._setProps()
-        self.program = program
-
-    def _setProps(self):
-        self.x_pos = 0
-        self.y_pos = 0
-        self.z_pos = 0
-        self.feed_rate = None
-        self.program = None
+    def setProgram(self, program):
         self.program_errors = {}
-        self.abs_incr_mode = None
         self.program_ended = False
-        self.negative_Z = False
-        # Default might be 'XY', but I don't want to count on it
-        self.selected_plane = None
+        self.program = program
 
     def getProgramData(self):
         return {
             'program_errors': self.program_errors,
-            'ending_x_pos': self.x_pos,
-            'ending_y_pos': self.y_pos,
-            'ending_z_pos': self.z_pos,
-            'feed_rate': self.feed_rate,
-            'ending_mode': self.abs_incr_mode,
-            'program_ended': self.program_ended,
-            'negative_Z': self.negative_Z
+            'program_ended': self.program_ended
         }
 
     def parseProgram(self):
@@ -106,47 +88,35 @@ class GCodeParser(object):
             raise ValueError('token "%s" has no parser defined yet' % token)
 
     def setFeedRate(self, token):
+        # TODO: extract to common method that checks for float or int
         result = re.search(self.int_p, token)
         if (result == None or result.group(0) == ''):
             raise ValueError('token "%s" is not a valid feed rate' % token)
-        self.feed_rate = int(result.group(0))
+        self.sim_machine.setFeedRate(int(result.group(0)))
 
     def changeMode(self, token):
         modes = {
             'G90': 'abs',
             'G91': 'incr'
         }
-        self.abs_incr_mode = modes[token]
+        self.sim_machine.changeMode(modes[token])
 
     def processLinear(self, tokens):
         # doing nothing with this for the moment
         move_token = tokens.pop(0)
+        move_coords = {}
         while len(tokens) > 0:
             next_num = tokens.pop(0)
             if next_num[0] == 'P':
                 continue
+            # TODO: extract to common method that checks for float or int
             result = re.search(self.float_p, next_num)
             if (result == None or result.group(0) == ''):
                 raise ValueError('token "%s" is not a valid move' % next_num)
             num = float(result.group(0))
-            if next_num[0] == 'X':
-                if self.abs_incr_mode == 'incr':
-                    self.x_pos += num
-                else:
-                    self.x_pos = num
-            elif next_num[0] == 'Y':
-                if self.abs_incr_mode == 'incr':
-                    self.y_pos += num
-                else:
-                    self.y_pos = num
-            elif next_num[0] == 'Z':
-                if self.abs_incr_mode == 'incr':
-                    self.z_pos += num
-                else:
-                    self.z_pos = num
-                if self.z_pos < 0:
-                    self.negative_Z = True
-                    raise ValueError('move to negative Z')
+            if next_num[0] in ['X', 'Y', 'Z']:
+                move_coords[next_num[0]] = num
+        self.sim_machine.makeMove(move_coords)
 
     def processCircular(self, tokens):
         self._validateOffsetWords(tokens)
@@ -182,3 +152,4 @@ class GCodeParser(object):
     def endProgram(self, token):
         # not doing anything with the token at the moment ... may never ?
         self.program_ended = True
+
