@@ -1,24 +1,20 @@
 Notes:
 
-GCodeParser is actually two things:
-- parser of g-code
-- keeper of machine's state
-
-This is a blocker for implementing the post-processor that actually does stuff, like optimize Z-safe moves.
-A keeper of the machine's state should also be mindful of what the program's meta settings are, such as Z-safe height, work-piece, features ... whatever else might become relevant.
-
-Time to refactor !
-
 CONCEPT #1:
 - establish the PostProcessor as the umbrella class for managing ... post-processing
 - give it an interface that provides high-level control of options, settings, operations, and returnable data from the post-processing
 - example return data:
     . optimized gcode (for various optimizations TBD ... selectable as options)
     . error-checking ... so errors, and/or summary status
--
+- extract the SimMachine from the GCodeParser
+- add a state monitor to the SimMachine, at least for Z-Safe
+    . requires the program's SimpleMachine configuration that defines Z-safe height
+- option A: SimMachine has hooks that get triggered with changes of state, such as entering and exiting Z-safe state, that also add data (abs or incr (x,y) coords)
+- want a unit testing story with the optimizer(s) and with the SimMachine to verify correctness
+- optimizer must feed the program line-by-line to GCodeParser, and then get calls from SimMachine to instruct what lines to write verbatim
 
 
-BTW, confirmed that the GCodeParser is used for tests with the ScenarioRunner.
+GCodeParser is used for tests with the ScenarioRunner.
 - can check for regressions easily with run_single_scenario.py
 
 Ummm, some more technical debt:

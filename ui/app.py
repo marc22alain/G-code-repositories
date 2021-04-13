@@ -6,6 +6,7 @@ from feature_manager import AbstractFeatureManager, FeatureManager
 from FeatureList_class import FeatureList
 from ListItem_class import ListItem
 from AxisPrintButton_class import AxisPrintButton
+from post_processor import PostProcessor
 from ViewSpace_class import ViewSpace
 import os
 import time
@@ -72,7 +73,9 @@ class Application(Frame):
         self.feature_manager.addChildByClass(feature_class)
 
     def genCode(self):
-        return self.feature_manager.getGCode()
+        gcode = self.feature_manager.getGCode()
+        gcode = PostProcessor().process(gcode)
+        return gcode
 
     def insertMachine(self, row_num):
         item = ListItem(self.entry_frame, self.feature_manager.machine)

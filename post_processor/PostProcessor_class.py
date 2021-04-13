@@ -20,3 +20,5 @@ class PostProcessor(object):
         results.update(self.parser.getProgramData())
         return results
 
+    def process(self, gcode):
+        return gcode
