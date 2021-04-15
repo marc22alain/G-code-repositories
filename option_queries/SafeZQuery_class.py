@@ -1,4 +1,5 @@
 from EntryQuery_class import *
+from utilities import MC
 
 class SafeZQuery(EntryQuery):
     name = 'SafeZQuery'
@@ -6,7 +7,7 @@ class SafeZQuery(EntryQuery):
         'name': 'Safe Z',
         'type': DoubleVar,
         'hint': 'What height is safe',
-        'default': 80
+        'default': MC.default_safe_Z
     }
 
     def validate(self):

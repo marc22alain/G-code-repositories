@@ -2,13 +2,13 @@ import unittest
 from post_processor import PostProcessor
 
 
-def testWithProgram(program, scenario):
+def testWithProgram(program, scenario, machine_params):
     class TestGeneratedGCode(unittest.TestCase):
 
         @classmethod
         def setUpClass(TestGeneratedGCode):
-            g = PostProcessor()
-            g.setProgram(program.split('\n'))
+            g = PostProcessor(machine_params)
+            g.setProgram(program)
             g.parseProgram()
             TestGeneratedGCode.program_data = g.getProgramData()
 

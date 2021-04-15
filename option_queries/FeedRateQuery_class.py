@@ -1,4 +1,5 @@
 from EntryQuery_class import *
+from utilities import MC
 
 class FeedRateQuery(EntryQuery):
     name = 'FeedRateQuery'
@@ -6,7 +7,7 @@ class FeedRateQuery(EntryQuery):
         'name': 'Feed rate',
         'type': IntVar,
         'hint': 'What feed rate',
-        'default': 1000
+        'default': MC.default_feed_rate
     }
 
     def validate(self):

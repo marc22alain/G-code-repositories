@@ -8,5 +8,5 @@ class BitDiameterQuery(SpinboxQuery):
         'type': DoubleVar,
         'values': MC.bits,
         'hint': 'What diameter for bit',
-        'default': 6.35
+        'default': MC.default_bit
     }

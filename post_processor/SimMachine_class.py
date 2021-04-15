@@ -1,5 +1,6 @@
 class SimMachine(object):
-    def __init__(self):
+    def __init__(self, machine_params):
+        self.safe_z = machine_params['safe_z']
         self._setProps()
 
     def reset(self):
@@ -12,6 +13,7 @@ class SimMachine(object):
         self.feed_rate = None
         self.abs_incr_mode = None
         self.negative_Z = False
+        self.at_safe_z = False
         # Default might be 'XY', but I don't want to count on it
         self.selected_plane = None
 
@@ -22,7 +24,8 @@ class SimMachine(object):
             'ending_z_pos': self.z_pos,
             'feed_rate': self.feed_rate,
             'ending_mode': self.abs_incr_mode,
-            'negative_Z': self.negative_Z
+            'negative_Z': self.negative_Z,
+            'at_safe_z': self.at_safe_z
         }
 
     def changeMode(self, mode):
@@ -46,6 +49,11 @@ class SimMachine(object):
         #     if self.z_pos < 0:
         #         self.negative_Z = True
         #         raise ValueError('move to negative Z')
+        if self.z_pos == self.safe_z and self.at_safe_z == False:
+            self.at_safe_z = True
+        if self.z_pos != self.safe_z and self.at_safe_z == True:
+            self.at_safe_z = False
+
 
     def setFeedRate(self, feed_rate):
         self.feed_rate = feed_rate

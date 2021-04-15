@@ -7,8 +7,9 @@
 #   12.7mm = 1/2"
 #   19.05mm = 3/4"
 bits = (3.175, 4.763, 6.35, 9.525, 11.135, 12.7, 19.05)
+default_bit = 6.35
 ball_noses = (9.525, 12.7, 19.05)
-default_safe_Z = 100
+default_safe_Z = 80
 default_feed_rate = 1000
 default_tab_width = 6.35
 

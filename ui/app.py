@@ -74,7 +74,7 @@ class Application(Frame):
 
     def genCode(self):
         gcode = self.feature_manager.getGCode()
-        gcode = PostProcessor().process(gcode)
+        gcode = PostProcessor(self.feature_manager.machine.getParams()).process(gcode)
         return gcode
 
     def insertMachine(self, row_num):

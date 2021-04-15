@@ -49,7 +49,7 @@ class ScenarioRunner(object):
 
     def _runTests(self, feature_manager, output_program, scenario):
         program = feature_manager.getGCode()
-        testWithProgram(program, scenario)
+        testWithProgram(program, scenario, feature_manager.machine.getParams())
         if output_program:
             print program
         testDrawingGeometry(feature_manager, scenario)
