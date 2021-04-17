@@ -1,3 +1,4 @@
 from PostProcessor_class import PostProcessor
 from GCodeParser_class import GCodeParser
 from SimMachine_class import SimMachine
+from Optimizer_class import Optimizer

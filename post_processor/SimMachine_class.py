@@ -1,7 +1,10 @@
-class SimMachine(object):
+from observeder import Observable
+
+class SimMachine(Observable):
     def __init__(self, machine_params):
         self.safe_z = machine_params['safe_z']
         self._setProps()
+        Observable.__init__(self)
 
     def reset(self):
         self._setProps()
@@ -32,6 +35,9 @@ class SimMachine(object):
         self.abs_incr_mode = mode
 
     def makeMove(self, move_coords):
+        initial_state = {}
+        initial_state.update(self.getMachineState())
+        state_name = ''
         if self.abs_incr_mode == 'incr':
             if 'X' in move_coords:
                 self.x_pos += move_coords['X']
@@ -51,8 +57,19 @@ class SimMachine(object):
         #         raise ValueError('move to negative Z')
         if self.z_pos == self.safe_z and self.at_safe_z == False:
             self.at_safe_z = True
-        if self.z_pos != self.safe_z and self.at_safe_z == True:
+            state_name = 'to-safe-Z'
+        elif self.z_pos == self.safe_z and self.at_safe_z == True:
+            state_name = 'at-safe-Z'
+        elif self.z_pos != self.safe_z and self.at_safe_z == True:
             self.at_safe_z = False
+            state_name = 'off-safe-Z'
+        else:
+            state_name = 'not-safe-Z'
+
+        ending_state = {}
+        ending_state.update(self.getMachineState())
+
+        self.notifyObservers('onStateTransition', state_name, { 'initial_state': initial_state, 'ending_state': ending_state,})
 
 
     def setFeedRate(self, feed_rate):

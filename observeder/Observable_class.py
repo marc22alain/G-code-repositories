@@ -20,6 +20,6 @@ class Observable:
             if message != None:
                 o.notify(message)
 
-    def notifyObservers(self, message):
+    def notifyObservers(self, message, *args):
         for o in self.observers:
-            o.notify(message)
+            o.notify(message, *args)
