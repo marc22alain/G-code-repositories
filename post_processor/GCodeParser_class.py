@@ -18,30 +18,6 @@ class GCodeParser(object):
     def __init__(self, sim_machine):
         self.sim_machine = sim_machine
 
-    def setProgram(self, program):
-        self.program_errors = {}
-        self.program_ended = False
-        self.program = program
-
-    def getProgramData(self):
-        return {
-            'program_errors': self.program_errors,
-            'program_ended': self.program_ended
-        }
-
-    def parseProgram(self):
-        current_line = 0
-        for line in self.program:
-            current_line += 1
-            try:
-                self._parseLine(line)
-            except Exception as e:
-                print e.args
-                self.program_errors[current_line] = {
-                    'error': e,
-                    'line': line
-                }
-
     def _parseLine(self, line):
         # go into FSM mode
         tokens = line.split(' ')

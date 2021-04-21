@@ -1,6 +1,5 @@
-from GCodeParser_class import GCodeParser
-from SimMachine_class import SimMachine
-from Optimizer_class import Optimizer
+from ErrorScanner_class import ErrorScanner
+from SafeZOptimizer_class import SafeZOptimizer
 from utilities import MC
 
 default_machine_params = {
@@ -9,33 +8,36 @@ default_machine_params = {
     'safe_z': MC.default_safe_Z
 }
 
-# TODO: define flows per post-processor option
-#   . safe-z optimization being just one of the options
-#   . obtaining program errors should probably be another
-
 class PostProcessor(object):
     def __init__(self, machine_params=default_machine_params):
-        self.sim_machine = SimMachine(machine_params)
-        self.parser = GCodeParser(self.sim_machine)
-        self.optimizer = Optimizer(self.sim_machine, self.parser)
+        self.error_scanner = ErrorScanner(machine_params)
+        self.safe_z_optimizer = SafeZOptimizer(machine_params)
 
     def setProgram(self, program):
-        self.parser.setProgram(program.split('\n'))
-        self.sim_machine.reset()
+        self.error_scanner.setProgram(program.split('\n'))
+        self.safe_z_optimizer.setProgram(program.split('\n'))
 
     def parseProgram(self):
-        self.parser.parseProgram()
+        self.error_scanner.parseProgram()
+        error_checks = self.getProgramData()['program_errors']
+        if len(error_checks):
+            print('GOT ERRORS')
+            # TODO: some behaviour to warn consuming applications from returning gcode
+        else:
+            self.safe_z_optimizer.parseProgram()
 
     def getProgramData(self):
         """
         Collates machine state, errors.
         """
         results = {}
-        results.update(self.sim_machine.getMachineState())
-        results.update(self.parser.getProgramData())
+        results.update(self.error_scanner.observable.getMachineState())
+        results.update(self.error_scanner.getProgramData())
+        results.update({ 'processed_gcode': self.safe_z_optimizer.getOptimizedGCode() })
         return results
 
     def process(self, gcode):
         self.setProgram(gcode)
         self.parseProgram()
-        return gcode
+        processed_gcode = self.safe_z_optimizer.getOptimizedGCode()
+        return processed_gcode

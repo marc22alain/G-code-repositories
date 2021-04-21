@@ -1,4 +1,5 @@
 from PostProcessor_class import PostProcessor
+from ErrorScanner_class import ErrorScanner
 from GCodeParser_class import GCodeParser
 from SimMachine_class import SimMachine
-from Optimizer_class import Optimizer
+from SafeZOptimizer_class import SafeZOptimizer

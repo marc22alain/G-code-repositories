@@ -44,6 +44,9 @@ def testWithProgram(program, scenario, machine_params):
             self.assertEqual(len1, len2, 'Program g-code matches benchmark length')
             self.assertEqual(program, scenario['benchmark']['program'], 'Program g-code matches benchmark')
 
+        def test_optimized_program(self):
+            print(self.program_data['processed_gcode'])
+
 
     suite = unittest.TestSuite()
     suite.addTest(TestGeneratedGCode("test_program_ends_without_errors"))
@@ -52,6 +55,7 @@ def testWithProgram(program, scenario, machine_params):
     suite.addTest(TestGeneratedGCode("test_program_ends"))
     suite.addTest(TestGeneratedGCode("test_program_defines_feed_rate"))
     suite.addTest(TestGeneratedGCode("test_program_avoids_negative_Z"))
+    suite.addTest(TestGeneratedGCode("test_optimized_program"))
 
     if 'benchmark' in scenario.keys():
         if 'program' in scenario['benchmark'].keys():
