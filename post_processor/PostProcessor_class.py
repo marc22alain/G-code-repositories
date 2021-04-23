@@ -19,7 +19,7 @@ class PostProcessor(object):
 
     def parseProgram(self):
         self.error_scanner.parseProgram()
-        error_checks = self.getProgramData()['program_errors']
+        error_checks = self.error_scanner.getProgramData()['program_errors']
         if len(error_checks):
             print('GOT ERRORS')
             # TODO: some behaviour to warn consuming applications from returning gcode
