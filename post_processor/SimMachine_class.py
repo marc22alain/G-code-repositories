@@ -32,7 +32,16 @@ class SimMachine(Observable):
         }
 
     def changeMode(self, mode):
+        initial_state = {}
+        initial_state.update(self.getMachineState())
+
         self.abs_incr_mode = mode
+
+        ending_state = {}
+        ending_state.update(self.getMachineState())
+
+        if mode == 'abs' and self.at_safe_z:
+            self.notifyObservers('onStateTransition', 'to-ABS-mode-at-safe-Z', { 'initial_state': initial_state, 'ending_state': ending_state,})
 
     def makeMove(self, move_coords):
         initial_state = {}

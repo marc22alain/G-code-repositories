@@ -8,6 +8,7 @@ class Processor(AutoObserver):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, machine_params):
+        self.machine_params = machine_params
         sim_machine = SimMachine(machine_params)
         self.observable = sim_machine
         self.gcode_parser = GCodeParser(sim_machine)

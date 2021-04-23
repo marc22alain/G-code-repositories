@@ -1,29 +1,35 @@
 from observeder import AutoObserver
+from ErrorScanner_class import ErrorScanner
 from GCodeParser_class import GCodeParser
 from Processor_class import Processor
+from utilities import Glib as G
 
 
 class SafeZOptimizer(Processor):
 
     def onStateTransition(self, state_name, states):
+        ending_state = states['ending_state']
+        self.ending_state = ending_state
         if state_name == 'to-safe-Z':
-            # set the starting point, setting (self.total_x = 0,self.total_y = 0)
-            pass
+            # assuming that this always occurs in ABS mode, and there is always
+            # an instance of this immediately preceding any reference point moves
+            # at safe-z
+            self.at_safe_Z_start_state = ending_state
         elif state_name == 'at-safe-Z':
-            # do what ? ... ignore
-            # keep track of additional transit, updating (self.total_x,self.total_y)
-            # self.next_line = ''
-            pass
-        elif state_name == 'off-safe-Z':
-            # end the accounting and write the stuff
-            # self.next_line = G.G0_XY((self.total_x,self.total_y)) + self.next_line
-            pass
-        elif state_name == 'not-safe-Z':
-            #
-            pass
-        else:
-            raise ValueError('state_name "%s" not handled' % state_name)
-        self.next_line = ('(STATE: %s)\n' % state_name) + self.next_line
+            self.at_safe_Z_interim_state = ending_state
+            # annulling movement instructions
+            self.next_line = ''
+        elif state_name == 'to-ABS-mode-at-safe-Z':
+            cached_line = self.next_line
+            self.next_line = '(optimized move)\n'
+            self.next_line += G.G0_XY((
+                self.at_safe_Z_interim_state['ending_x_pos'] - self.at_safe_Z_start_state['ending_x_pos'],
+                self.at_safe_Z_interim_state['ending_y_pos'] - self.at_safe_Z_start_state['ending_y_pos']
+            ))
+            self.next_line += cached_line
+            self.at_safe_Z_start_state = None
+            self.at_safe_Z_interim_state = None
+
 
     def setProgram(self, program):
         self.program_errors = {}
@@ -47,4 +53,15 @@ class SafeZOptimizer(Processor):
             self.gcode_parser._parseLine(line)
 
     def getOptimizedGCode(self):
-        return self.optimized_program + '(optimized)\n'
+        errors = self.testOptimizedProgram()
+        if len(errors) == 0:
+            return self.optimized_program + '(with safe-Z optimizations)\n'
+        else:
+            return errors
+
+    def testOptimizedProgram(self):
+        error_scanner = ErrorScanner(self.machine_params)
+        error_scanner.setProgram(self.optimized_program.split('\n'))
+        error_scanner.parseProgram()
+        errors = error_scanner.getProgramData()['program_errors']
+        return errors
