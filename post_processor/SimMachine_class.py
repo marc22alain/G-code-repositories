@@ -40,8 +40,12 @@ class SimMachine(Observable):
         ending_state = {}
         ending_state.update(self.getMachineState())
 
-        if mode == 'abs' and self.at_safe_z:
-            self.notifyObservers('onStateTransition', 'to-ABS-mode-at-safe-Z', { 'initial_state': initial_state, 'ending_state': ending_state,})
+        if initial_state['ending_mode'] == 'incr' and mode == 'abs' and self.at_safe_z:
+            self.notifyObservers(
+                'onStateTransition',
+                'to-ABS-mode-at-safe-Z',
+                { 'initial_state': initial_state, 'ending_state': ending_state }
+            )
 
     def makeMove(self, move_coords):
         initial_state = {}

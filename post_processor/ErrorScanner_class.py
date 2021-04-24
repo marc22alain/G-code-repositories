@@ -1,4 +1,3 @@
-from observeder import AutoObserver
 from GCodeParser_class import GCodeParser
 from Processor_class import Processor
 
@@ -23,7 +22,7 @@ class ErrorScanner(Processor):
             try:
                 self.gcode_parser._parseLine(line)
             except Exception as e:
-                print e.args
+                print(e.args)
                 self.program_errors[current_line] = {
                     'error': e,
                     'line': line
