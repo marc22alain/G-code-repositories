@@ -115,8 +115,7 @@ class FingerJointedSplice(object):
     def returnToStart(self, order_int):
         distribution = self.getDistribution()
         stock_span = self.workpiece_params['stock_width'] + self.machine_params['bit_diameter']
-        file_text = G.set_ABS_mode()
-        file_text += G.G0_Z(self.machine_params['safe_z'])
+        file_text = self.machine.moveToSafeZ()
         file_text += G.set_INCR_mode()
         if distribution['num_fingers'] % 2 == 0:
             file_text += G.G0_XY(( \
@@ -137,9 +136,8 @@ class FingerJointedSplice(object):
         return file_text
 
     def returnToHome(self):
-        file_text = G.set_ABS_mode()
-        file_text += G.G0_Z(self.machine_params['safe_z'])
-        file_text = G.set_INCR_mode()
+        file_text = self.machine.moveToSafeZ()
+        file_text += G.set_INCR_mode()
         file_text += G.G0_XY(( \
             - self.startRefs['x_starting_ref'], \
             - self.startRefs['y_starting_ref'], \
@@ -187,12 +185,10 @@ class FingerJointedSplice(object):
 
     def _startProgram(self):
         file_text = G.F_rate(self.machine_params['feed_rate'])
-        file_text += G.set_ABS_mode()
-        file_text += G.G0_Z(self.machine_params['safe_z'])
+        file_text += self.machine.moveToSafeZ()
         return file_text
 
     def _endProgram(self):
-        file_text = G.set_ABS_mode()
-        file_text += G.G0_Z(self.machine_params['safe_z'])
+        file_text = self.machine.moveToSafeZ()
         file_text += G.end_program()
         return file_text
