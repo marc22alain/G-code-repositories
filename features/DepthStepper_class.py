@@ -26,8 +26,7 @@ class DepthStepper(GeometricFeature):
         sequence = 'first'
         # pre-amble
         # Z-axis move to starting point from Z-safe
-        file_text += self.machine.setMode('ABS')
-        file_text += G.G0_Z(basic_params['safe_z'])
+        file_text += self.machine.moveToSafeZ()
         file_text += to_start_callback()
         file_text += addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('ABS')
@@ -55,8 +54,7 @@ class DepthStepper(GeometricFeature):
             file_text += addDebugFrame(inspect.currentframe())
 
         # post-amble
-        file_text += self.machine.setMode('ABS')
-        file_text += G.G0_Z(basic_params['safe_z'])
+        file_text += self.machine.moveToSafeZ()
         file_text += return_callback()
         file_text += addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('ABS')

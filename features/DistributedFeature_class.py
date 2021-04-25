@@ -10,8 +10,7 @@ class DistributedFeature(ComposedFeature):
     def getGCode(self):
         log('DistributedFeature getGCode: %s' % (self.__repr__()))
         params = self.getParams()
-        file_text = self.machine.setMode('ABS')
-        file_text += G.G0_Z(params['safe_z'])
+        file_text = self.machine.moveToSafeZ()
         file_text += self.moveToReference()
         file_text += self.distributeChildFeature()
         file_text += self.returnFromReference()
