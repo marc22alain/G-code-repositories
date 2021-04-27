@@ -19,8 +19,7 @@ class Peck(GeometricFeature):
     def getGCode(self):
         file_text = addDebugFrame(inspect.currentframe())
         params = self.getParams()
-        file_text += self.machine.setMode('ABS')
-        file_text += G.G0_Z(params['safe_z'])
+        file_text += self.machine.moveToSafeZ()
         file_text += self.moveToReference()
         file_text += addDebugFrame(inspect.currentframe())
         file_text += self.machine.setMode('ABS')
@@ -28,8 +27,7 @@ class Peck(GeometricFeature):
         file_text += self.machine.setMode('INCR')
         file_text += G.G1_Z(- params['cut_depth'])
         file_text += G.set_dwell(0.5)
-        file_text += self.machine.setMode('ABS')
-        file_text += G.G0_Z(params['safe_z'])
+        file_text += self.machine.moveToSafeZ()
         file_text += self.returnFromReference()
         return file_text
 

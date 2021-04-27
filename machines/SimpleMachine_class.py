@@ -11,6 +11,7 @@ class SimpleMachine(QueryManager):
 
     def __init__(self, feature_manager=None):
         QueryManager.__init__(self)
+        self.params = None
         self.feature_manager = feature_manager
         self.mode = None
         # to auto-initialize itself to default values
@@ -52,6 +53,7 @@ class SimpleMachine(QueryManager):
     def postQueryUpdateHook(self):
         if self.feature_manager:
             self.feature_manager.reDrawAll()
+        self.params = self.getParams()
 
     def registerFeatureManager(self, feature_manager):
         """Add a feature manager as instance prop, and do other stuff as
@@ -61,3 +63,10 @@ class SimpleMachine(QueryManager):
     def getRepresentationForCollection(self):
         """Creates a dict representation of the FeatureManager's composition."""
         return self.getOptionQueryValues()
+
+    def moveToSafeZ(self):
+        if self.params is None:
+            self.params = self.getParams()
+        file_text = self.setMode('ABS')
+        file_text += G.G0_Z(self.params['safe_z'])
+        return file_text
